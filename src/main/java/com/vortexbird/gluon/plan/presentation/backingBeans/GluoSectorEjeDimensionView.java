@@ -1,31 +1,11 @@
 package com.vortexbird.gluon.plan.presentation.backingBeans;
 
-import com.vortexbird.gluon.plan.exceptions.*;
-import com.vortexbird.gluon.plan.modelo.*;
-import com.vortexbird.gluon.plan.modelo.dto.GluoSectorEjeDimensionDTO;
-import com.vortexbird.gluon.plan.presentation.businessDelegate.*;
-import com.vortexbird.gluon.plan.utilities.*;
-
-import org.primefaces.component.calendar.*;
-import org.primefaces.component.commandbutton.CommandButton;
-import org.primefaces.component.inputtext.InputText;
-
-import org.primefaces.event.RowEditEvent;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.Serializable;
-
-import java.sql.*;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.TimeZone;
 
 import javax.faces.application.FacesMessage;
@@ -34,6 +14,21 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.model.SelectItem;
+
+import org.primefaces.component.calendar.Calendar;
+import org.primefaces.component.commandbutton.CommandButton;
+import org.primefaces.component.inputtext.InputText;
+import org.primefaces.component.selectonemenu.SelectOneMenu;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.vortexbird.gluon.plan.exceptions.ZMessManager;
+import com.vortexbird.gluon.plan.modelo.GluoPlanDesarrollo;
+import com.vortexbird.gluon.plan.modelo.GluoSectorEjeDimension;
+import com.vortexbird.gluon.plan.modelo.dto.GluoSectorEjeDimensionDTO;
+import com.vortexbird.gluon.plan.presentation.businessDelegate.IBusinessDelegatorView;
+import com.vortexbird.gluon.plan.utilities.FacesUtils;
 
 
 /**
@@ -58,7 +53,11 @@ public class GluoSectorEjeDimensionView implements Serializable {
     private CommandButton btnModify;
     private CommandButton btnDelete;
     private CommandButton btnClear;
-    private List<GluoSectorEjeDimensionDTO> data;
+    private SelectOneMenu somPlan;
+    private List<SelectItem> losPlanesItem;
+    
+
+	private List<GluoSectorEjeDimensionDTO> data;
     private GluoSectorEjeDimensionDTO selectedGluoSectorEjeDimension;
     private GluoSectorEjeDimension entity;
     private boolean showDialog;
@@ -359,8 +358,33 @@ public class GluoSectorEjeDimensionView implements Serializable {
 
         return "";
     }
+    
+    public SelectOneMenu getSomPlan() {
+		return somPlan;
+	}
 
-    public InputText getTxtActivo() {
+	public void setSomPlan(SelectOneMenu somPlan) {
+		this.somPlan = somPlan;
+	}
+
+
+    public List<SelectItem> getLosPlanesItem() throws Exception {
+    	if(losPlanesItem==null){
+    		losPlanesItem=new ArrayList<SelectItem>();
+			List<GluoPlanDesarrollo> losPlanesDesarrollo=businessDelegatorView.findAllGluoPlanDesarrollo();
+			for (GluoPlanDesarrollo planesDesarrollo : losPlanesDesarrollo) {
+				losPlanesItem.add(new SelectItem(planesDesarrollo.getPlanId(), planesDesarrollo.getDescripcion()));
+			}
+			
+    	}
+		return losPlanesItem;
+	}
+
+	public void setLosPlanesItem(List<SelectItem> losPlanesItem) {
+		this.losPlanesItem = losPlanesItem;
+	}
+
+	public InputText getTxtActivo() {
         return txtActivo;
     }
 

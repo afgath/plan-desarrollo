@@ -263,6 +263,21 @@ public class GluoPlanDesarrolloLogic implements IGluoPlanDesarrolloLogic {
 
         return entity;
     }
+    
+    @Transactional(readOnly = true)
+    public List<GluoPlanDesarrollo> findAllGluoPlanDesarrollo() throws Exception {
+    	List<GluoPlanDesarrollo> entity = null;
+
+        try {
+            entity = gluoPlanDesarrolloDAO.findAll();
+        } catch (Exception e) {
+            throw new ZMessManager().new FindingException(
+                "GluoPlanDesarrollo findAll");
+        } finally {
+        }
+
+        return entity;
+    }
 
     /**
     *

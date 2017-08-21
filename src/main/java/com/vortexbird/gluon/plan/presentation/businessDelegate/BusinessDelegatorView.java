@@ -603,7 +603,7 @@ public class BusinessDelegatorView implements IBusinessDelegatorView {
         throws Exception {
         return gluoObjetivoLogic.getDataGluoObjetivo();
     }
-
+    
     public void validateGluoObjetivo(GluoObjetivo gluoObjetivo)
         throws Exception {
         gluoObjetivoLogic.validateGluoObjetivo(gluoObjetivo);
@@ -659,6 +659,11 @@ public class BusinessDelegatorView implements IBusinessDelegatorView {
     public Long findTotalNumberGluoPlanDesarrollo() throws Exception {
         return gluoPlanDesarrolloLogic.findTotalNumberGluoPlanDesarrollo();
     }
+    
+    public List<GluoPlanDesarrollo> findAllGluoPlanDesarrollo() throws Exception{
+    	return gluoPlanDesarrolloLogic.findAllGluoPlanDesarrollo();
+    };
+
 
     public List<GluoPlanDesarrolloDTO> getDataGluoPlanDesarrollo()
         throws Exception {

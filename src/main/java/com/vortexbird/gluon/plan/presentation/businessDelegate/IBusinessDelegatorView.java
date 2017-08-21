@@ -339,6 +339,8 @@ public interface IBusinessDelegatorView {
         int maxResults) throws Exception;
 
     public Long findTotalNumberGluoPlanDesarrollo() throws Exception;
+    
+    public List<GluoPlanDesarrollo> findAllGluoPlanDesarrollo() throws Exception;
 
     public List<GluoPlanDesarrolloDTO> getDataGluoPlanDesarrollo()
         throws Exception;

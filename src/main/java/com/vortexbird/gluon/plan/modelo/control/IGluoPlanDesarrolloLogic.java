@@ -46,6 +46,8 @@ public interface IGluoPlanDesarrolloLogic {
          */
     public GluoPlanDesarrollo getGluoPlanDesarrollo(Integer planId)
         throws Exception;
+    
+    public List<GluoPlanDesarrollo> findAllGluoPlanDesarrollo() throws Exception;
 
     public List<GluoPlanDesarrollo> findByCriteria(Object[] variables,
         Object[] variablesBetween, Object[] variablesBetweenDates)

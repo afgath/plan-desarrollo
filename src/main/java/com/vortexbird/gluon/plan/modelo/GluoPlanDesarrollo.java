@@ -25,8 +25,8 @@ import javax.validation.constraints.*;
 @Table(name = "gluoPlanDesarrollo", schema = "public")
 public class GluoPlanDesarrollo implements java.io.Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @NotNull
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "plan_id", unique = true, nullable = false)
     private Integer planId;
     @NotNull
     @NotEmpty

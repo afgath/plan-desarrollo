@@ -72,11 +72,8 @@
 									binding="#{gluoSectorEjeDimensionView.txtDescripcion}" />
 								<h:outputText id="msgPlanId_GluoPlanDesarrollo"
 									value=" Plan al que pertenece esta dimensión" />
-								<p:selectOneMenu>
-									<f:selectItem itemLabel="Select One" itemValue="" />
-									<f:selectItem itemLabel="Plan 1" itemValue="Plan 1" />
-									<f:selectItem itemLabel="Plan 2" itemValue="Plan 2" />
-									<f:selectItem itemLabel="Plan 3" itemValue="Plan 3" />
+								<p:selectOneMenu id="somPlan" binding="#{gluoSectorEjeDimensionView.somPlan}">
+									<f:selectItems value="#{gluoSectorEjeDimensionView.losPlanesItem}" />
 								</p:selectOneMenu>
 
 							</h:panelGrid>
@@ -86,7 +83,7 @@
 								<p:commandButton id="btnSave"
 									binding="#{gluoSectorEjeDimensionView.btnSave}" disabled="false"
 									value="Save"
-									action="#{gluoSectorEjeDimensionView.action_save()}"
+									action="#{gluoSectorEjeDimensionView.action_create()}"
 									update="panelGluoSectorEjeDimension, msg, panelBotones, men" />
 								
 								<p:commandButton id="btnClear" value="Clear"
@@ -94,7 +91,9 @@
 									update="panelGluoSectorEjeDimension, msg, panelBotones, men" />
 							</div>
 						</p:panel>
+						
 					</h:form>
+					
 				</p:tab>
 
 				<p:tab id="contact" title="Objetivo">
