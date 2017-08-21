@@ -20,7 +20,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -57,6 +58,8 @@ public class GluoPlanDesarrolloLogic implements IGluoPlanDesarrolloLogic {
     */
     @Autowired
     private IGluoSectorEjeDimensionDAO gluoSectorEjeDimensionDAO;
+    
+    
 
     public void validateGluoPlanDesarrollo(
         GluoPlanDesarrollo gluoPlanDesarrollo) throws Exception {
@@ -114,11 +117,8 @@ public class GluoPlanDesarrolloLogic implements IGluoPlanDesarrolloLogic {
             if(entity.getAnoFin().compareTo(entity.getAnoInicio())==-1){
             	throw new ZMessManager("El plan no puede terminar antes de empezar");
             }
-            
-            if(entity.getActivo()!="s" || entity.getActivo()!="S" || entity.getActivo()!="n" || entity.getActivo()!="N"){
-            	throw new ZMessManager("Los caracteres válidos para la activación o inactivación del plan son 's' para sí y 'n' para no");
-            }
 
+            
             validateGluoPlanDesarrollo(entity);
 
             if (getGluoPlanDesarrollo(entity.getPlanId()) != null) {

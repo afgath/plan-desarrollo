@@ -1,0 +1,250 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="content">
+		<h:form>
+
+			<p:growl id="growl" sticky="true" showDetail="true" />
+
+			<p:wizard flowListener="#{userWizard.onFlowProcess}">
+				<p:tab id="personal" title="Plan">
+					<p:messages />
+					<h:form id="formDialogPlan">
+						<p:messages id="msg" />
+						<p:growl id="men" />
+						<p:panel id="panelGluoPlanDesarrollo" header="Detalles del plan">
+							<h:panelGrid columns="2" id="panelGrid">
+
+								<h:outputText id="msgDescripcion" value=" Descripción del plan" />
+								<p:inputText id="txtDescripcion" disabled="false"
+									binding="#{gluoPlanDesarrolloView.txtDescripcion}" />
+								<h:outputText id="msgEslogan" value=" Eslogan del plan" />
+								<p:inputText id="txtEslogan" disabled="false"
+									binding="#{gluoPlanDesarrolloView.txtEslogan}" />
+								<h:outputText id="msgNombreAlcalde" value=" Nombre del Alcalde" />
+								<p:inputText id="txtNombreAlcalde" disabled="false"
+									binding="#{gluoPlanDesarrolloView.txtNombreAlcalde}" />
+
+								<h:outputText id="msgAnoInicio" value=" Año de inicio del plan" />
+								<p:calendar showOn="button" navigator="true" locale="en"
+									binding="#{gluoPlanDesarrolloView.txtAnoInicio}">
+									<p:ajax event="dateSelect"
+										listener="#{gluoPlanDesarrolloView.listener_txtAnoInicio}" />
+								</p:calendar>
+								<h:outputText id="msgAnoFin"
+									value=" Año de finalización del plan" />
+								<p:calendar showOn="button" navigator="true" locale="en"
+									binding="#{gluoPlanDesarrolloView.txtAnoFin}">
+									<p:ajax event="dateSelect"
+										listener="#{gluoPlanDesarrolloView.listener_txtAnoFin}" />
+								</p:calendar>
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave"
+									binding="#{gluoPlanDesarrolloView.btnSave}" disabled="false"
+									value="Save" action="#{gluoPlanDesarrolloView.action_save()}"
+									update="panelGluoPlanDesarrollo, msg, panelBotones, men" />
+								<p:commandButton id="btnClear" value="Clear"
+									action="#{gluoPlanDesarrolloView.action_clear()}"
+									update="panelGluoPlanDesarrollo, msg, panelBotones, men" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:tab>
+
+				<p:tab id="dimension" title="Dimensión">
+					<p:messages />
+					<h:form id="formDialogDimension">
+						<p:messages id="msg" />
+						<p:growl id="men" />
+						<p:panel id="panelGluoSectorEjeDimension"
+							header="Detallles de la dimensión">
+							<h:panelGrid columns="2" id="panelGrid">
+
+								<h:outputText id="msgDescripcion"
+									value=" Descripcion de la Dimensión" />
+								<p:inputText id="txtDescripcion" disabled="false"
+									binding="#{gluoSectorEjeDimensionView.txtDescripcion}" />
+								<h:outputText id="msgPlanId_GluoPlanDesarrollo"
+									value=" Plan al que pertenece esta dimensión" />
+								<p:selectOneMenu>
+									<f:selectItem itemLabel="Select One" itemValue="" />
+									<f:selectItem itemLabel="Plan 1" itemValue="Plan 1" />
+									<f:selectItem itemLabel="Plan 2" itemValue="Plan 2" />
+									<f:selectItem itemLabel="Plan 3" itemValue="Plan 3" />
+								</p:selectOneMenu>
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave"
+									binding="#{gluoSectorEjeDimensionView.btnSave}" disabled="false"
+									value="Save"
+									action="#{gluoSectorEjeDimensionView.action_save()}"
+									update="panelGluoSectorEjeDimension, msg, panelBotones, men" />
+								
+								<p:commandButton id="btnClear" value="Clear"
+									action="#{gluoSectorEjeDimensionView.action_clear()}"
+									update="panelGluoSectorEjeDimension, msg, panelBotones, men" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:tab>
+
+				<p:tab id="contact" title="Objetivo">
+					<p:messages />
+					<h:form id="formDialogObjetivo">
+						<p:messages id="msg" />
+						<p:growl id="men" />
+						<p:panel id="panelGluoObjetivo" header="Detalles del Objetivo">
+							<h:panelGrid columns="2" id="panelGrid">
+
+								<h:outputText id="msgDescripcion" value=" Descripcion" />
+								<p:inputText id="txtDescripcion" disabled="false"
+									binding="#{gluoObjetivoView.txtDescripcion}" />
+								<h:outputText id="msgSediId_GluoSectorEjeDimension"
+									value=" Dimensión a la que pertenece el Objetivo" />
+								<p:selectOneMenu>
+									<f:selectItem itemLabel="Select One" itemValue="" />
+									<f:selectItem itemLabel="Dimensión 1" itemValue="Dimensión 1" />
+									<f:selectItem itemLabel="Dimensión 2" itemValue="Dimensión 2" />
+									<f:selectItem itemLabel="Dimensión 3" itemValue="Dimensión 3" />
+								</p:selectOneMenu>
+
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave"
+									binding="#{gluoObjetivoView.btnSave}" disabled="false"
+									value="Save" action="#{gluoObjetivoView.action_save()}"
+									update="panelGluoObjetivo, msg, panelBotones, men" />
+							
+								<p:commandButton id="btnClear" value="Clear"
+									action="#{gluoObjetivoView.action_clear()}"
+									update="panelGluoObjetivo, msg, panelBotones, men" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:tab>
+
+				<p:tab id="confirm" title="Confirmación">
+					<p:panel header="Confirmación">
+						<h:panelGrid id="confirmation">
+
+							<h:form id="form">
+
+								<style>
+.ui-organigram .ui-organigram-node.division {
+	background: #93e7ff;
+	background: -moz-linear-gradient(top, #93e7ff 0%, #008efc 100%);
+	background: -webkit-linear-gradient(top, #93e7ff 0%, #008efc 100%);
+	background: linear-gradient(to bottom, #93e7ff 0%, #008efc 100%);
+}
+
+.ui-organigram .ui-organigram-node.subrograma {
+	background: #89c048;
+	background: -moz-linear-gradient(top, #88c048 0%, #69a038 100%);
+	background: -webkit-linear-gradient(top, #88c048 0%, #69a038 100%);
+	background: linear-gradient(to bottom, #88c048 0%, #69a038 100%);
+}
+
+.ui-organigram .ui-organigram-node.project {
+	background: #88c048;
+	background: -moz-linear-gradient(top, #88c048 0%, #69a038 100%);
+	background: -webkit-linear-gradient(top, #88c048 0%, #69a038 100%);
+	background: linear-gradient(to bottom, #88c048 0%, #69a038 100%);
+}
+</style>
+
+								<p:growl id="growl" />
+
+								<p:organigram id="organigram" widgetVar="organigram"
+									value="#{organigramView.rootNode}" var="node"
+									leafNodeConnectorHeight="#{organigramView.leafNodeConnectorHeight}"
+									autoScrollToSelection="#{organigramView.autoScrollToSelection}"
+									zoom="#{organigramView.zoom}"
+									selection="#{organigramView.selection}"
+									style="#{organigramView.style}; padding-left : 50%">
+
+									<p:ajax event="dragdrop" process="@this" update="@form:growl"
+										listener="#{organigramView.nodeDragDropListener}" />
+									<p:ajax event="select" process="@this" update="@form:growl"
+										listener="#{organigramView.nodeSelectListener}" />
+									<p:ajax event="contextmenu" process="@this" />
+									<p:ajax event="collapse" process="@this" update="@form:growl"
+										listener="#{organigramView.nodeCollapseListener}" />
+									<p:ajax event="expand" process="@this" update="@form:growl"
+										listener="#{organigramView.nodeExpandListener}" />
+
+									<p:organigramNode>
+										<h:outputText value="#{node.data}" />
+									</p:organigramNode>
+
+									<p:organigramNode type="root" style="border-radius: 10px;">
+										<h:outputText value="#{node.data}" />
+									</p:organigramNode>
+
+									<p:organigramNode type="division" styleClass="division"
+										icon="ui-icon-suitcase" iconPos="left">
+										<h:outputText value="#{node.data}" />
+									</p:organigramNode>
+
+									<p:organigramNode type="subprogram" styleClass="subprogram"
+										icon="ui-icon-suitcase" iconPos="left">
+										<h:outputText value="#{node.data}" />
+									</p:organigramNode>
+
+									<p:organigramNode type="project" styleClass="project"
+										icon="ui-icon-person">
+										<h:outputText value="#{node.data}" />
+									</p:organigramNode>
+								</p:organigram>
+
+								<p:contextMenu for="organigram" nodeType="project">
+									<p:menuitem value="fire employee" update="organigram"
+										icon="ui-icon-close"
+										actionListener="#{organigramView.removeEmployee()}" />
+								</p:contextMenu>
+
+								<p:contextMenu for="organigram" nodeType="division">
+									<p:menuitem value="Add employee" ajax="false"
+										icon="ui-icon-plus"
+										onclick="PF('addEmployeeDialog').show(); return false;" />
+									<p:menuitem value="Remove division"
+										update="organigram @form:growl" icon="ui-icon-close"
+										actionListener="#{organigramView.removeDivision()}" />
+								</p:contextMenu>
+
+								<p:dialog id="addEmployeeDialog" widgetVar="addEmployeeDialog"
+									header="Add employee">
+
+									<p:inputText value="#{organigramView.employeeName}" />
+
+									<p:commandButton process="@parent" update=":form:organigram"
+										value="Add" actionListener="#{organigramView.addEmployee()}"
+										oncomplete="PF('addEmployeeDialog').hide();" />
+
+								</p:dialog>
+							</h:form>
+
+
+						</h:panelGrid>
+
+						<p:commandButton value="Submit"
+							actionListener="#{userWizard.save}" update="growl"
+							process="@this" />
+					</p:panel>
+				</p:tab>
+			</p:wizard>
+
+		</h:form>
+	</ui:define>
+</ui:composition>

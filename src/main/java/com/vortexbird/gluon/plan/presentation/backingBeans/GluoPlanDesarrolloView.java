@@ -21,7 +21,8 @@ import java.sql.*;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -65,6 +66,8 @@ public class GluoPlanDesarrolloView implements Serializable {
     private GluoPlanDesarrolloDTO selectedGluoPlanDesarrollo;
     private GluoPlanDesarrollo entity;
     private boolean showDialog;
+    DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    Date date = new Date();
     @ManagedProperty(value = "#{BusinessDelegatorView}")
     private IBusinessDelegatorView businessDelegatorView;
 
@@ -91,17 +94,17 @@ public class GluoPlanDesarrolloView implements Serializable {
 
         if (txtDescripcion != null) {
             txtDescripcion.setValue(null);
-            txtDescripcion.setDisabled(true);
+            txtDescripcion.setDisabled(false);
         }
 
         if (txtEslogan != null) {
             txtEslogan.setValue(null);
-            txtEslogan.setDisabled(true);
+            txtEslogan.setDisabled(false);
         }
 
         if (txtNombreAlcalde != null) {
             txtNombreAlcalde.setValue(null);
-            txtNombreAlcalde.setDisabled(true);
+            txtNombreAlcalde.setDisabled(false);
         }
 
         if (txtUsuCreador != null) {
@@ -116,12 +119,12 @@ public class GluoPlanDesarrolloView implements Serializable {
 
         if (txtAnoFin != null) {
             txtAnoFin.setValue(null);
-            txtAnoFin.setDisabled(true);
+            txtAnoFin.setDisabled(false);
         }
 
         if (txtAnoInicio != null) {
             txtAnoInicio.setValue(null);
-            txtAnoInicio.setDisabled(true);
+            txtAnoInicio.setDisabled(false);
         }
 
         if (txtFechaCreacion != null) {
@@ -140,7 +143,7 @@ public class GluoPlanDesarrolloView implements Serializable {
         }
 
         if (btnSave != null) {
-            btnSave.setDisabled(true);
+            btnSave.setDisabled(false);
         }
 
         if (btnDelete != null) {
@@ -160,22 +163,6 @@ public class GluoPlanDesarrolloView implements Serializable {
 
     public void listener_txtAnoInicio() {
         Date inputDate = (Date) txtAnoInicio.getValue();
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        FacesContext.getCurrentInstance()
-                    .addMessage("",
-            new FacesMessage("Selected Date " + dateFormat.format(inputDate)));
-    }
-
-    public void listener_txtFechaCreacion() {
-        Date inputDate = (Date) txtFechaCreacion.getValue();
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        FacesContext.getCurrentInstance()
-                    .addMessage("",
-            new FacesMessage("Selected Date " + dateFormat.format(inputDate)));
-    }
-
-    public void listener_txtFechaModificacion() {
-        Date inputDate = (Date) txtFechaModificacion.getValue();
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         FacesContext.getCurrentInstance()
                     .addMessage("",
@@ -287,20 +274,15 @@ public class GluoPlanDesarrolloView implements Serializable {
         try {
             entity = new GluoPlanDesarrollo();
 
-            Integer planId = FacesUtils.checkInteger(txtPlanId);
-
-            entity.setActivo(FacesUtils.checkString(txtActivo));
+            entity.setPlanId((int)1);
+            entity.setActivo("s");
             entity.setAnoFin(FacesUtils.checkDate(txtAnoFin));
             entity.setAnoInicio(FacesUtils.checkDate(txtAnoInicio));
             entity.setDescripcion(FacesUtils.checkString(txtDescripcion));
             entity.setEslogan(FacesUtils.checkString(txtEslogan));
-            entity.setFechaCreacion(FacesUtils.checkDate(txtFechaCreacion));
-            entity.setFechaModificacion(FacesUtils.checkDate(
-                    txtFechaModificacion));
+            entity.setFechaCreacion(date);
             entity.setNombreAlcalde(FacesUtils.checkString(txtNombreAlcalde));
-            entity.setPlanId(planId);
-            entity.setUsuCreador(FacesUtils.checkInteger(txtUsuCreador));
-            entity.setUsuModificador(FacesUtils.checkInteger(txtUsuModificador));
+            entity.setUsuCreador((int) 0);
             businessDelegatorView.saveGluoPlanDesarrollo(entity);
             FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYSAVED);
             action_clear();
