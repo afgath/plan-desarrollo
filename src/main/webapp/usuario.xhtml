@@ -5,6 +5,7 @@
 	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
 
 	<ui:define name="content">
+
 		<h:form>
 
 			<p:growl id="growl" sticky="true" showDetail="true" />
@@ -54,7 +55,122 @@
 									update="panelGluoPlanDesarrollo, msg, panelBotones, men" />
 							</div>
 						</p:panel>
+
+						<h:form id="frmDataTablePlanDesarrollo">
+
+							<p:panel id="panelDataTableGluoPlanDesarrollo"
+								header="GluoPlanDesarrolloData">
+								<p:growl id="men" />
+								<p:dataTable value="#{gluoPlanDesarrolloView.data}"
+									var="gluoPlanDesarrollo" paginator="true" rows="5" editable="true" editMode="cell">
+									<p:column filterBy="#{gluoPlanDesarrollo.planId}"
+										sortBy="#{gluoPlanDesarrollo.planId}">
+										<f:facet name="header">
+											<h:outputText value="planId" />
+										</f:facet>
+										<h:outputText value="#{gluoPlanDesarrollo.planId}" />
+									</p:column>
+
+									<p:column filterBy="#{gluoPlanDesarrollo.activo}"
+										sortBy="#{gluoPlanDesarrollo.activo}">
+										<f:facet name="header">
+											<h:outputText value="Activo" />
+										</f:facet>
+										<h:outputText value="#{gluoPlanDesarrollo.activo}" />
+									</p:column>
+
+									<p:column filterBy="#{gluoPlanDesarrollo.anoFin}"
+										sortBy="#{gluoPlanDesarrollo.anoFin}">
+										<f:facet name="header">
+											<h:outputText value="AnoFin" />
+										</f:facet>
+										<h:outputText value="#{gluoPlanDesarrollo.anoFin}" />
+									</p:column>
+
+									<p:column filterBy="#{gluoPlanDesarrollo.anoInicio}"
+										sortBy="#{gluoPlanDesarrollo.anoInicio}">
+										<f:facet name="header">
+											<h:outputText value="AnoInicio" />
+										</f:facet>
+										<h:outputText value="#{gluoPlanDesarrollo.anoInicio}" />
+									</p:column>
+
+									<p:column headerText="Descripcion del plan" filterBy="#{gluoPlanDesarrollo.descripcion}" sortBy="#{gluoPlanDesarrollo.descripcion}">
+						              <p:cellEditor>
+						                  <f:facet name="output"><h:outputText value="#{gluoPlanDesarrollo.descripcion}" /></f:facet>
+						                  <f:facet name="input"><p:inputText id="modelInput" value="#{gluoPlanDesarrollo.descripcion}" style="width:96%"/></f:facet>
+						              </p:cellEditor>
+						          	</p:column>
+
+									<p:column filterBy="#{gluoPlanDesarrollo.eslogan}"
+										sortBy="#{gluoPlanDesarrollo.eslogan}">
+										<f:facet name="header">
+											<h:outputText value="Eslogan" />
+										</f:facet>
+										<h:outputText value="#{gluoPlanDesarrollo.eslogan}" />
+									</p:column>
+
+									<p:column filterBy="#{gluoPlanDesarrollo.fechaCreacion}"
+										sortBy="#{gluoPlanDesarrollo.fechaCreacion}">
+										<f:facet name="header">
+											<h:outputText value="FechaCreacion" />
+										</f:facet>
+										<h:outputText value="#{gluoPlanDesarrollo.fechaCreacion}" />
+									</p:column>
+
+									<p:column filterBy="#{gluoPlanDesarrollo.fechaModificacion}"
+										sortBy="#{gluoPlanDesarrollo.fechaModificacion}">
+										<f:facet name="header">
+											<h:outputText value="FechaModificacion" />
+										</f:facet>
+										<h:outputText value="#{gluoPlanDesarrollo.fechaModificacion}" />
+									</p:column>
+
+									<p:column filterBy="#{gluoPlanDesarrollo.nombreAlcalde}"
+										sortBy="#{gluoPlanDesarrollo.nombreAlcalde}">
+										<f:facet name="header">
+											<h:outputText value="NombreAlcalde" />
+										</f:facet>
+										<h:outputText value="#{gluoPlanDesarrollo.nombreAlcalde}" />
+									</p:column>
+
+									<p:column filterBy="#{gluoPlanDesarrollo.usuCreador}"
+										sortBy="#{gluoPlanDesarrollo.usuCreador}">
+										<f:facet name="header">
+											<h:outputText value="UsuCreador" />
+										</f:facet>
+										<h:outputText value="#{gluoPlanDesarrollo.usuCreador}" />
+									</p:column>
+
+									<p:column filterBy="#{gluoPlanDesarrollo.usuModificador}"
+										sortBy="#{gluoPlanDesarrollo.usuModificador}">
+										<f:facet name="header">
+											<h:outputText value="UsuModificador" />
+										</f:facet>
+										<h:outputText value="#{gluoPlanDesarrollo.usuModificador}" />
+									</p:column>
+
+									<p:column headerText="Options">
+
+										<p:commandButton id="btnDelete" title="Desactivar"
+											actionListener="#{gluoPlanDesarrolloView.action_delete_datatable}"
+											onclick="if(!confirm('Esta seguro que desea desactivar este plan?')){return false;}"
+											icon="ui-icon-trash" update="@form">
+											<f:attribute name="selectedGluoPlanDesarrollo"
+												value="#{gluoPlanDesarrollo}" />
+										</p:commandButton>
+									</p:column>
+								</p:dataTable>
+							</p:panel>
+
+
+
+						</h:form>
+
 					</h:form>
+
+
+
 				</p:tab>
 
 				<p:tab id="dimension" title="Dimensión">
@@ -65,6 +181,8 @@
 						<p:panel id="panelGluoSectorEjeDimension"
 							header="Detallles de la dimensión">
 							<h:panelGrid columns="2" id="panelGrid">
+							<h:outputText id="msgSediId" value="ID de la dimension"/>
+						 	<p:inputText id="txtSediId" binding="#{gluoSectorEjeDimensionView.txtSediId}"/>
 
 								<h:outputText id="msgDescripcion"
 									value=" Descripcion de la Dimensión" />
@@ -72,28 +190,27 @@
 									binding="#{gluoSectorEjeDimensionView.txtDescripcion}" />
 								<h:outputText id="msgPlanId_GluoPlanDesarrollo"
 									value=" Plan al que pertenece esta dimensión" />
-								<p:selectOneMenu id="somPlan" binding="#{gluoSectorEjeDimensionView.somPlan}">
-									<f:selectItems value="#{gluoSectorEjeDimensionView.losPlanesItem}" />
+								<p:selectOneMenu id="somPlan"
+									binding="#{gluoSectorEjeDimensionView.somPlan}">
+									<f:selectItems
+										value="#{gluoSectorEjeDimensionView.losPlanesItem}" />
 								</p:selectOneMenu>
 
 							</h:panelGrid>
 						</p:panel>
 						<p:panel id="panelBotones">
 							<div align="center">
-								<p:commandButton id="btnSave"
-									binding="#{gluoSectorEjeDimensionView.btnSave}" disabled="false"
-									value="Save"
-									action="#{gluoSectorEjeDimensionView.action_create()}"
-									update="panelGluoSectorEjeDimension, msg, panelBotones, men" />
-								
+								<p:commandButton id="btnSave" binding="#{gluoSectorEjeDimensionView.btnSave}" disabled="false" value="Save" action="#{gluoSectorEjeDimensionView.action_save()}" update="panelGluoSectorEjeDimension, msg, panelBotones, men" />
+
 								<p:commandButton id="btnClear" value="Clear"
 									action="#{gluoSectorEjeDimensionView.action_clear()}"
 									update="panelGluoSectorEjeDimension, msg, panelBotones, men" />
 							</div>
+
 						</p:panel>
-						
+
 					</h:form>
-					
+
 				</p:tab>
 
 				<p:tab id="contact" title="Objetivo">
@@ -125,7 +242,7 @@
 									binding="#{gluoObjetivoView.btnSave}" disabled="false"
 									value="Save" action="#{gluoObjetivoView.action_save()}"
 									update="panelGluoObjetivo, msg, panelBotones, men" />
-							
+
 								<p:commandButton id="btnClear" value="Clear"
 									action="#{gluoObjetivoView.action_clear()}"
 									update="panelGluoObjetivo, msg, panelBotones, men" />

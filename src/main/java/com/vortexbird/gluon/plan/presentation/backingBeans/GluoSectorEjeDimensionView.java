@@ -56,6 +56,9 @@ public class GluoSectorEjeDimensionView implements Serializable {
     private SelectOneMenu somPlan;
     private List<SelectItem> losPlanesItem;
     
+    DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    Date date = new Date();
+    
 
 	private List<GluoSectorEjeDimensionDTO> data;
     private GluoSectorEjeDimensionDTO selectedGluoSectorEjeDimension;
@@ -239,22 +242,14 @@ public class GluoSectorEjeDimensionView implements Serializable {
             entity = new GluoSectorEjeDimension();
 
             Integer sediId = FacesUtils.checkInteger(txtSediId);
-
-            entity.setActivo(FacesUtils.checkString(txtActivo));
+            entity.setActivo("s");
             entity.setDescripcion(FacesUtils.checkString(txtDescripcion));
-            entity.setFechaCreacion(FacesUtils.checkDate(txtFechaCreacion));
-            entity.setFechaModificacion(FacesUtils.checkDate(
-                    txtFechaModificacion));
+            entity.setFechaCreacion(date);
             entity.setSediId(sediId);
-            entity.setUsuCreador(FacesUtils.checkInteger(txtUsuCreador));
-            entity.setUsuModificador(FacesUtils.checkInteger(txtUsuModificador));
-            entity.setGluoPlanDesarrollo((FacesUtils.checkInteger(
-                    txtPlanId_GluoPlanDesarrollo) != null)
-                ? businessDelegatorView.getGluoPlanDesarrollo(
-                    FacesUtils.checkInteger(txtPlanId_GluoPlanDesarrollo)) : null);
+            entity.setUsuCreador(0);
+            entity.setGluoPlanDesarrollo(businessDelegatorView.getGluoPlanDesarrollo(FacesUtils.checkInteger(somPlan)));
             businessDelegatorView.saveGluoSectorEjeDimension(entity);
             FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYSAVED);
-            action_clear();
         } catch (Exception e) {
             entity = null;
             FacesUtils.addErrorMessage(e.getMessage());

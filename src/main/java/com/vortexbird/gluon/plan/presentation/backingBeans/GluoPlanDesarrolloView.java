@@ -1,32 +1,10 @@
 package com.vortexbird.gluon.plan.presentation.backingBeans;
 
-import com.vortexbird.gluon.plan.exceptions.*;
-import com.vortexbird.gluon.plan.modelo.*;
-import com.vortexbird.gluon.plan.modelo.dto.GluoPlanDesarrolloDTO;
-import com.vortexbird.gluon.plan.presentation.businessDelegate.*;
-import com.vortexbird.gluon.plan.utilities.*;
-
-import org.primefaces.component.calendar.*;
-import org.primefaces.component.commandbutton.CommandButton;
-import org.primefaces.component.inputtext.InputText;
-
-import org.primefaces.event.RowEditEvent;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.Serializable;
-
-import java.sql.*;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.TimeZone;
 
 import javax.faces.application.FacesMessage;
@@ -35,6 +13,19 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+
+import org.primefaces.component.calendar.Calendar;
+import org.primefaces.component.commandbutton.CommandButton;
+import org.primefaces.component.inputtext.InputText;
+import org.primefaces.event.CellEditEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.vortexbird.gluon.plan.exceptions.ZMessManager;
+import com.vortexbird.gluon.plan.modelo.GluoPlanDesarrollo;
+import com.vortexbird.gluon.plan.modelo.dto.GluoPlanDesarrolloDTO;
+import com.vortexbird.gluon.plan.presentation.businessDelegate.IBusinessDelegatorView;
+import com.vortexbird.gluon.plan.utilities.FacesUtils;
 
 
 /**
@@ -73,6 +64,18 @@ public class GluoPlanDesarrolloView implements Serializable {
 
     public GluoPlanDesarrolloView() {
         super();
+    }
+    
+    public void onCellEdit(CellEditEvent event) throws Exception {
+        Object oldValue = event.getOldValue();
+        Object newValue = event.getNewValue();
+         
+        if(newValue != null && !newValue.equals(oldValue)) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Cell Changed", "Old: " + oldValue + ", New:" + newValue);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            
+            
+        }
     }
 
     public String action_new() {
@@ -352,8 +355,8 @@ public class GluoPlanDesarrolloView implements Serializable {
 
     public void action_delete() throws Exception {
         try {
-            businessDelegatorView.deleteGluoPlanDesarrollo(entity);
-            FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYDELETED);
+           entity.setActivo("n");
+           businessDelegatorView.updateGluoPlanDesarrollo(entity);
             action_clear();
             data = null;
         } catch (Exception e) {
