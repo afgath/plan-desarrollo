@@ -277,13 +277,13 @@ public class GluoPlanDesarrolloView implements Serializable {
         try {
             entity = new GluoPlanDesarrollo();
 
-            entity.setPlanId(entity.getPlanId());
+            entity.setPlanId(1);
             entity.setActivo("s");
             entity.setAnoFin(FacesUtils.checkDate(txtAnoFin));
             entity.setAnoInicio(FacesUtils.checkDate(txtAnoInicio));
             entity.setDescripcion(FacesUtils.checkString(txtDescripcion));
             entity.setEslogan(FacesUtils.checkString(txtEslogan));
-            entity.setFechaCreacion(date);
+            entity.setFechaCreacion(new Date());
             entity.setNombreAlcalde(FacesUtils.checkString(txtNombreAlcalde));
             entity.setUsuCreador((int) 0);
             businessDelegatorView.saveGluoPlanDesarrollo(entity);
@@ -355,7 +355,11 @@ public class GluoPlanDesarrolloView implements Serializable {
 
     public void action_delete() throws Exception {
         try {
-           entity.setActivo("n");
+        	if(entity.getActivo().trim().equals("s")) {
+        		entity.setActivo("n");
+        	}else {
+        		entity.setActivo("s");
+        	}
            businessDelegatorView.updateGluoPlanDesarrollo(entity);
             action_clear();
             data = null;

@@ -6,7 +6,7 @@
 
 	<ui:define name="content">
 
-		<h:form>
+		<h:form id="formCreacionPlan">
 
 			<p:growl id="growl" sticky="true" showDetail="true" />
 
@@ -49,7 +49,7 @@
 								<p:commandButton id="btnSave"
 									binding="#{gluoPlanDesarrolloView.btnSave}" disabled="false"
 									value="Save" action="#{gluoPlanDesarrolloView.action_save()}"
-									update="panelGluoPlanDesarrollo, msg, panelBotones, men" />
+									update="panelGluoPlanDesarrollo, msg, panelBotones, men, :formCreacionPlan:formDialogPlan:frmDataTablePlanDesarrollo:panelDataTableGluoPlanDesarrollo" />
 								<p:commandButton id="btnClear" value="Clear"
 									action="#{gluoPlanDesarrolloView.action_clear()}"
 									update="panelGluoPlanDesarrollo, msg, panelBotones, men" />
@@ -155,7 +155,7 @@
 										<p:commandButton id="btnDelete" title="Desactivar"
 											actionListener="#{gluoPlanDesarrolloView.action_delete_datatable}"
 											onclick="if(!confirm('Esta seguro que desea desactivar este plan?')){return false;}"
-											icon="ui-icon-trash" update="@form">
+											icon="icon-sun" update=":formCreacionPlan:formDialogPlan:frmDataTablePlanDesarrollo:panelDataTableGluoPlanDesarrollo">
 											<f:attribute name="selectedGluoPlanDesarrollo"
 												value="#{gluoPlanDesarrollo}" />
 										</p:commandButton>

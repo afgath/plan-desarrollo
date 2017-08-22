@@ -23,6 +23,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -118,7 +119,9 @@ public class GluoPlanDesarrolloLogic implements IGluoPlanDesarrolloLogic {
             	throw new ZMessManager("El plan no puede terminar antes de empezar");
             }
 
-            
+            if(calcularMesesEntreFecha(entity.getAnoInicio(), entity.getAnoFin())!=48) {
+            	throw new Exception("La difrencia entre la fecha de inicio y la fecha final debe ser de 4 años");
+            }
             validateGluoPlanDesarrollo(entity);
 
             if (getGluoPlanDesarrollo(entity.getPlanId()) != null) {
@@ -444,5 +447,20 @@ public class GluoPlanDesarrolloLogic implements IGluoPlanDesarrolloLogic {
         }
 
         return list;
+    }
+    
+    private int calcularMesesEntreFecha(Date fechaInicio, Date fechaFin) throws Exception {
+    	try {
+			Calendar startCalendar = Calendar.getInstance();
+			startCalendar.setTime(fechaInicio);
+			Calendar endCalendar = Calendar.getInstance();
+			endCalendar.setTime(fechaFin);
+			int startMes = (startCalendar.get(Calendar.YEAR)*12)+startCalendar.get(Calendar.MONTH);
+			int endMes = (endCalendar.get(Calendar.YEAR)*12)+endCalendar.get(Calendar.MONTH);
+			int difMes = endMes - startMes;
+			return difMes;
+		} catch (Exception e) {
+			throw new Exception("Error calculando las fechas");
+		}
     }
 }
