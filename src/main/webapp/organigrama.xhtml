@@ -2,7 +2,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui" 
+	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions"
 	template="/WEB-INF/template.xhtml">
 
@@ -40,12 +40,12 @@
 			<p:organigram id="organigram" widgetVar="organigram"
 				value="#{organigramView.rootNode}" var="node"
 				autoScrollToSelection="#{organigramView.autoScrollToSelection}"
-				zoom="#{organigramView.zoom}" selection="#{organigramView.rootNode}"
+				zoom="#{organigramView.zoom}" selection="#{organigramView.selection}"
 				style="#{organigramView.style}">
 
 				<p:ajax event="select" process="@this" update="@form:growl"
 					listener="#{organigramView.nodeSelectListener}" />
-				<p:ajax event="contextmenu" process="@this" />
+				<p:ajax event="contextmenu" process="@this"/>
 				<p:ajax event="collapse" process="@this" update="@form:growl"
 					listener="#{organigramView.nodeCollapseListener}" />
 				<p:ajax event="expand" process="@this" update="@form:growl"
@@ -75,47 +75,35 @@
 				</p:organigramNode>
 			</p:organigram>
 			<!-- FIN ORGNIGRAMA -->
-			
-			<!-- OPCIONES NODO ORGANIGRAMA -->
-			<p:contextMenu for="organigram" nodeType="employee">
-				<p:menuitem value="fire employee" update="organigram"
-					icon="ui-icon-close"
-					actionListener="#{organigramView.removeEmployee()}" />
-			</p:contextMenu>
 
+			<!-- OPCIONES NODO ORGANIGRAMA -->
 			<p:contextMenu for="organigram" nodeType="root">
-				<p:menuitem value="Add employee" ajax="false" icon="ui-icon-plus"
-					onclick="PF('addEmployeeDialog').show(); return false;" />
-				<p:menuitem value="Remove division" update="organigram @form:growl"
-					icon="ui-icon-close"
+				<p:menuitem value="Añadir Dimensión" ajax="false"
+					icon="ui-icon-plus"
+					onclick="PF('dlgAnadirDimension').show(); return false;" />
+				<p:menuitem value="Detalles" update="organigram @form:growl"
+					icon="ui-icon-info"
 					actionListener="#{organigramView.removeDivision()}" />
 			</p:contextMenu>
-			<!-- FIN OPCIONES NODO ORGANIGRAMA -->
 			
-			<p:dialog id="addEmployeeDialog" widgetVar="addEmployeeDialog"
-				header="Add employee">
-
-				<p:inputText value="#{organigramView.employeeName}" />
-
-				<p:commandButton process="@parent" update=":form:organigram"
-					value="Add" actionListener="#{organigramView.addEmployee()}"
-					oncomplete="PF('addEmployeeDialog').hide();" />
-
-			</p:dialog>
+			<p:contextMenu for="organigram" nodeType="dimension">
+				<p:menuitem value="Añadir Objetivo" ajax="false"
+					icon="ui-icon-plus"
+					onclick="PF('dlgAnadirObjetivo').show(); return false;" />
+			</p:contextMenu>
+			
+			<p:contextMenu for="organigram" nodeType="objetivo">
+				<p:menuitem value="Añadir Programa" ajax="false"
+					icon="ui-icon-plus"
+					onclick="PF('dlgAnadirPrograma').show(); return false;" />
+			</p:contextMenu>
+			<!-- FIN OPCIONES NODO ORGANIGRAMA -->
 		</h:form>
 
 		<h:form id="formOpciones">
 			<p:panel header="Opciones">
-				<h:panelGrid columns="3">
-					<p:commandButton value="Añadir Dimensión"
-						onclick="PF('dlgAnadirDimension').show();" />
-					<p:commandButton value="Añadir Objetivo"
-						onclick="PF('dlgAnadirObjetivo').show();" />
-					<p:commandButton value="Añadir Programa"
-						onclick="PF('dlgAnadirObjetivo').show();" />
-				</h:panelGrid>
 				<h:panelGrid columns="1">
-					<p:commandButton value="Guardar"/>
+					<p:commandButton value="Guardar" />
 				</h:panelGrid>
 			</p:panel>
 		</h:form>
@@ -171,9 +159,6 @@
 						action="#{organigramView.anadirPlanAction}"
 						update=":formModal:msgPlan" />
 
-					<p:commandButton value="Cancelar" icon="ui-icon-close"
-						update=":formModal" />
-
 				</div>
 
 			</p:dialog>
@@ -194,12 +179,8 @@
 					<h:panelGrid columns="2" style="width: 100% !important">
 
 						<p:outputLabel value="Dimensión:" />
-						<p:selectCheckboxMenu id="multiple"
-							value="#{organigramView.selectedDimension}" label="Dimensiones"
-							multiple="true" filter="true" filterMatchMode="startsWith"
-							panelStyle="width:250px">
-							<f:selectItems var="dimension" value="dimension.descripcion" />
-						</p:selectCheckboxMenu>
+						<p:inputText id="txtDimension" placeholder="Escriba la dimension"
+							binding="#{organigramView.txtDimension}" />
 
 					</h:panelGrid>
 
@@ -210,10 +191,11 @@
 				<div align="center">
 
 					<p:commandButton value="Añadir"
-						binding="#{organigramView.btnAnadirDimension}" />
+						actionListener="#{organigramView.anadirDimensionAction}" 
+						update=":form:organigram" oncomplete="PF('dlgAnadirDimension').hide();"/>
 
 					<p:commandButton value="Cancelar" icon="ui-icon-close"
-						update=":form"
+						update=":formModal"
 						action="#{organigramView.actionCerrarDialogAnadirDimension}" />
 
 				</div>
@@ -221,7 +203,7 @@
 			</p:dialog>
 			<!-- FIN DIÁLOGO AÑADIR DIMENSIÓN -->
 
-			<!-- ************************************************** -->
+			<!-- ************************************************** -->ge
 			<!-- **			 DIÁLOGO AÑADIR OBJETIVO			 ** -->
 			<!-- ************************************************** -->
 			<p:dialog id="dlgAnadirObjetivo" header="Objetivo"
@@ -234,9 +216,15 @@
 				<p:panel header="Añadir Objetivo">
 					<h:panelGrid columns="2">
 
+						<p:outputLabel value="Dimensión:" />
+						<p:selectOneMenu id="somTipoUsuario"
+							binding="#{organigramView.somDimensionObjetivo}">
+							<f:selectItems value="#{organigramView.dataDimensiones}" />
+						</p:selectOneMenu>
+
 						<p:outputLabel value="Objetivo:" />
 						<p:inputTextarea id="txtDescripcionObjetivo" rows="6" cols="33"
-							binding="#{organigramView.txtDescripcionObjetivo}" />
+							binding="#{organigramView.txtAreaDescObjetivo}" />
 
 					</h:panelGrid>
 				</p:panel>
@@ -246,9 +234,9 @@
 				<div align="center">
 
 					<p:commandButton value="Añadir"
-						binding="#{organigramView.btnAnadirObjetivo}"
-						action="#{organigramView.anadirObjetivoAction}"
-						update=":form, :formModal" />
+						actionListener="#{organigramView.anadirObjetivoAction}"
+						update=":form:organigram" 
+						oncomplete="PF('dlgAnadirPrograma').hide();"/>
 
 					<p:commandButton value="Cancelar" icon="ui-icon-close"
 						update=":formModal" />
@@ -273,9 +261,9 @@
 					<h:panelGrid columns="2" style="width: 100% !important">
 
 						<p:outputLabel value="Programa:" />
-						<p:inputTextarea
-							binding="#{organigramView.txtDescripcionObjetivo}"
-							placeholder="Descripción de objetivo" />
+						<p:inputTextarea id="txtAreaDescPrograma" rows="6" cols="33"
+							binding="#{organigramView.txtAreaDescPrograma}" />
+						
 
 					</h:panelGrid>
 
@@ -286,9 +274,8 @@
 				<div align="center">
 
 					<p:commandButton value="Añadir"
-						binding="#{organigramView.btnAnadirPrograma}"
-						action="#{organigramView.anadirProgramaAction}"
-						update=":form, :formModal" />
+						actionListener="#{organigramView.anadirProgramaAction}"
+						update=":form:organigram" oncomplete="PF('dlgAnadirPrograma').hide();" />
 
 					<p:commandButton value="Cancelar" icon="ui-icon-close"
 						update=":formModal" />
@@ -297,24 +284,6 @@
 
 			</p:dialog>
 			<!-- FIN DIÁLOGO AÑADIR PROGRAMA -->
-
-
-
-
-			<p:dialog header="Selected Items" modal="true" showEffect="fade"
-				hideEffect="fade" widgetVar="itemDialog" width="250">
-				<p:outputPanel id="displayItems">
-
-					<p:dataList value="#{checkboxView.selectedCities2}" var="city"
-						emptyMessage="No cities selected">
-						<f:facet name="header">
-                    Multiple
-                </f:facet>
-                #{city}
-            </p:dataList>
-
-				</p:outputPanel>
-			</p:dialog>
 
 
 		</h:form>

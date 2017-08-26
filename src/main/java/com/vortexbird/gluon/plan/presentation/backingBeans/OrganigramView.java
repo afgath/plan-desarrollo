@@ -5,6 +5,7 @@ import org.primefaces.component.commandbutton.CommandButton;
 import org.primefaces.component.inputtext.InputText;
 import org.primefaces.component.inputtextarea.InputTextarea;
 import org.primefaces.component.organigram.OrganigramHelper;
+import org.primefaces.component.selectonemenu.SelectOneMenu;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.organigram.OrganigramNodeCollapseEvent;
 import org.primefaces.event.organigram.OrganigramNodeExpandEvent;
@@ -16,6 +17,8 @@ import org.slf4j.LoggerFactory;
 
 import com.vortexbird.gluon.plan.modelo.GluoObjetivo;
 import com.vortexbird.gluon.plan.modelo.GluoPlanDesarrollo;
+import com.vortexbird.gluon.plan.modelo.GluoPrograma;
+import com.vortexbird.gluon.plan.modelo.GluoSectorEjeDimension;
 import com.vortexbird.gluon.plan.modelo.dto.GluoSectorEjeDimensionDTO;
 import com.vortexbird.gluon.plan.presentation.businessDelegate.IBusinessDelegatorView;
 import com.vortexbird.gluon.plan.utilities.FacesUtils;
@@ -23,6 +26,7 @@ import com.vortexbird.gluon.plan.utilities.FacesUtils;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -46,18 +50,21 @@ public class OrganigramView implements Serializable {
 	private OrganigramNode selection;
 
 	private GluoPlanDesarrollo plan;
+	private GluoSectorEjeDimension eje;
+	private GluoObjetivo objetivo;
 	
 	private boolean zoom = true;
 	private String style = "width: 100%";
 	private int leafNodeConnectorHeight = 0;
 	private boolean autoScrollToSelection = false;
-
-	private String employeeName;
 	
 	private List<OrganigramNode> nodosObjetivos;
 	
 	private List<Object[]> objetivosAnadidos;
-	private List<Object[]> dimensionessAnadidos;
+	private List<OrganigramNode> nodosDimension;
+	private List<GluoSectorEjeDimension> entitysDimension;
+	private List<Object[]> dimensionesAnadidos = new ArrayList<Object[]>();
+	private List<String> dataDimensiones;
 	private List<Object[]> programasAnadidos;
 
 	// Variables de dialogos
@@ -66,9 +73,12 @@ public class OrganigramView implements Serializable {
     private InputText txtNombreAlcaldePlan;
     private Calendar txtAnoFinPlan;
     private Calendar txtAnoInicioPlan;
+    private InputText txtDimension;
+    private SelectOneMenu somDimensionObjetivo;
+    private InputTextarea txtAreaDescObjetivo;
+    private InputTextarea txtAreaDescPrograma;
 	private List<GluoSectorEjeDimensionDTO> dimensiones;
 	private String[] selectedDimension;
-	private InputTextarea txtDescripcionObjetivo;
 	private CommandButton btnAnadirPlan;
 	private CommandButton btnAnadirDimension;
 	private CommandButton btnAnadirObjetivo;
@@ -77,7 +87,7 @@ public class OrganigramView implements Serializable {
 
 	@PostConstruct
 	public void init() {
-		selection = new DefaultOrganigramNode(null, "Ridvan Agar", null);
+		selection = new DefaultOrganigramNode(null, "plan", null);
 		
 		RequestContext.getCurrentInstance().execute("PF('dlgAnadirPlan').show()");
 //		rootNode.setCollapsible(false);
@@ -101,23 +111,6 @@ public class OrganigramView implements Serializable {
 //
 //		addDivision(rootNode, "Management", "Hassan El Manfalouty");
 		
-	}
-
-	protected OrganigramNode addNode(String type, OrganigramNode parent, String name) throws Exception {
-		if(name.isEmpty()) {
-			throw new Exception("El nombre del nodo no puede estar vacio");
-		}
-		if(parent==null) {
-			throw new Exception("El nodo padre no puede ser nulo o el tipo de nodo es incorrecto");
-		}
-		if(type=="dimension" || type=="objetivo" || type=="programa") {
-			OrganigramNode node = new DefaultOrganigramNode(type, name, parent);
-			node.setDroppable(true);
-			node.setSelectable(true);
-			return node;
-		}else {
-			throw new Exception("El tipo de nodo es incorrecto");
-		}
 	}
 
 //	public void nodeDragDropListener(OrganigramNodeDragDropEvent event) {
@@ -184,15 +177,15 @@ public class OrganigramView implements Serializable {
 		currentSelection.getParent().getChildren().remove(currentSelection);
 	}
 
-	public void addEmployee() {
-		// re-evaluate selection - might be a differenct object instance if viewstate
-		// serialization is enabled
-		OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
-
-		OrganigramNode employee = new DefaultOrganigramNode("employee", employeeName, currentSelection);
-		employee.setDraggable(true);
-		employee.setSelectable(true);
-	}
+//	public void addEmployee() {
+//		// re-evaluate selection - might be a differenct object instance if viewstate
+//		// serialization is enabled
+//		OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
+//
+//		OrganigramNode employee = new DefaultOrganigramNode("employee", employeeName, currentSelection);
+//		employee.setDraggable(true);
+//		employee.setSelectable(true);
+//	}
 
 	private void setMessage(String msg, FacesMessage.Severity severity) {
 		FacesMessage message = new FacesMessage();
@@ -240,39 +233,69 @@ public class OrganigramView implements Serializable {
         return "";
     }
 	
-	public String anadirDimensionAction() {
+	public void anadirDimensionAction() {
 		log.info("anadirDimensionAction");
 		try {
+			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
+			eje = new GluoSectorEjeDimension();
+			eje.setActivo("S");
+			eje.setDescripcion(txtDimension.getValue().toString().trim());
+			eje.setFechaCreacion(new Date());
+			eje.setUsuCreador((int)0);
+			eje.setGluoPlanDesarrollo(plan);
+			
+			
+			
+			log.info(""+selection.getData());
+			OrganigramNode sector = new DefaultOrganigramNode("dimension", eje.getDescripcion(), currentSelection);
+			sector.setSelectable(true);
+			
 			
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
-		return "";
 	}
 	
-	public String anadirObjetivoAction() {
+	public void anadirObjetivoAction() {
 		log.info("anadirObjetivoAction");
 		try {
+			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
 			GluoObjetivo objetivo = new GluoObjetivo();
 			objetivo.setActivo("S");
 			objetivo.setFechaCreacion(new Date());
-			String descripcion = txtDescripcionObjetivo.getValue().toString().trim();
+			String descripcion = txtAreaDescObjetivo.getValue().toString().trim();
 			objetivo.setDescripcion(descripcion);
 			objetivo.setUsuCreador(1);
-			OrganigramNode softwareDevelopment = addNode("objetivo", rootNode, txtDescripcionObjetivo.getValue().toString().trim());
+			
+			Object[] qwe = new Object[2];
+			qwe[0]=objetivo;
+			
+			log.info(""+selection.getData());
+			OrganigramNode nodoObjetivo = new DefaultOrganigramNode("objetivo", descripcion, currentSelection);
+			qwe[1]=nodoObjetivo;
+			nodoObjetivo.setSelectable(true);
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
-		return "";
+		
 	}
 	
-	public String anadirProgramaAction() {
+	public void anadirProgramaAction() {
 		log.info("anadirProgramaAction");
 		try {
+			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
+			log.info(""+selection.getData());
+			GluoPrograma programa = new GluoPrograma();
+			programa.setActivo("S");
+			programa.setDescripcion(txtAreaDescPrograma.getValue().toString().trim());
+			programa.setFechaCreacion(new Date());
+			programa.setUsuCreador((int)0);
+			
+			OrganigramNode nodoPrograma = new DefaultOrganigramNode("programa", txtAreaDescPrograma.getValue().toString().trim(), currentSelection);
+			
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
-		return "";
 	}
 	
 	public OrganigramNode getRootNode() {
@@ -299,13 +322,13 @@ public class OrganigramView implements Serializable {
 		this.zoom = zoom;
 	}
 
-	public String getEmployeeName() {
-		return employeeName;
-	}
-
-	public void setEmployeeName(String employeeName) {
-		this.employeeName = employeeName;
-	}
+//	public String getEmployeeName() {
+//		return employeeName;
+//	}
+//
+//	public void setEmployeeName(String employeeName) {
+//		this.employeeName = employeeName;
+//	}
 
 	public String getStyle() {
 		return style;
@@ -347,7 +370,17 @@ public class OrganigramView implements Serializable {
 		this.businessDelegatorView = businessDelegatorView;
 	}
 	
+	public List<String> getDataDimensiones() {
+		return dataDimensiones;
+	}
+
+	public void setDataDimensiones(List<String> dataDimensiones) {
+		this.dataDimensiones = dataDimensiones;
+	}
+
+	// -----------------------------------------
 	// Setters and Getters variables de dialogos
+	// -----------------------------------------
 	public InputText getTxtDescripcionPlan() {
 		return txtDescripcionPlan;
 	}
@@ -388,6 +421,38 @@ public class OrganigramView implements Serializable {
 		this.txtAnoInicioPlan = txtAnoInicioPlan;
 	}
 	
+	public InputText getTxtDimension() {
+		return txtDimension;
+	}
+
+	public void setTxtDimension(InputText txtDimension) {
+		this.txtDimension = txtDimension;
+	}
+	
+	public SelectOneMenu getSomDimensionObjetivo() {
+		return somDimensionObjetivo;
+	}
+
+	public void setSomDimensionObjetivo(SelectOneMenu somDimensionObjetivo) {
+		this.somDimensionObjetivo = somDimensionObjetivo;
+	}
+
+	public InputTextarea getTxtAreaDescObjetivo() {
+		return txtAreaDescObjetivo;
+	}
+	
+	public void setTxtAreaDescObjetivo(InputTextarea txtAreaDescObjetivo) {
+		this.txtAreaDescObjetivo = txtAreaDescObjetivo;
+	}
+	
+	public InputTextarea getTxtAreaDescPrograma() {
+		return txtAreaDescPrograma;
+	}
+
+	public void setTxtAreaDescPrograma(InputTextarea txtAreaDescPrograma) {
+		this.txtAreaDescPrograma = txtAreaDescPrograma;
+	}
+
 	public List<GluoSectorEjeDimensionDTO> getDimensiones() throws Exception {
 		if (dimensiones == null) {
 			dimensiones = businessDelegatorView.getDataGluoSectorEjeDimension();
@@ -407,14 +472,6 @@ public class OrganigramView implements Serializable {
 
 	public void setSelectedDimension(String[] selectedDimension) {
 		this.selectedDimension = selectedDimension;
-	}
-	
-	public InputTextarea getTxtDescripcionObjetivo() {
-		return txtDescripcionObjetivo;
-	}
-
-	public void setTxtDescripcionObjetivo(InputTextarea txtDescripcionObjetivo) {
-		this.txtDescripcionObjetivo = txtDescripcionObjetivo;
 	}
 	
 	public CommandButton getBtnAnadirPlan() {
