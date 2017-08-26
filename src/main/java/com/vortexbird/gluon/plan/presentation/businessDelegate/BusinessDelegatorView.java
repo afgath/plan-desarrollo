@@ -614,6 +614,11 @@ public class BusinessDelegatorView implements IBusinessDelegatorView {
         return gluoPlanDesarrolloLogic.getGluoPlanDesarrollo();
     }
 
+    public void evaluarGluoPlanDesarrollo(GluoPlanDesarrollo entity) 
+    		throws Exception {
+    	gluoPlanDesarrolloLogic.evaluarGluoPlanDesarrollo(entity);
+    }
+    
     public void saveGluoPlanDesarrollo(GluoPlanDesarrollo entity)
         throws Exception {
         gluoPlanDesarrolloLogic.saveGluoPlanDesarrollo(entity);

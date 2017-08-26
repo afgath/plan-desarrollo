@@ -103,18 +103,17 @@ public class GluoPlanDesarrolloLogic implements IGluoPlanDesarrolloLogic {
 
         return list;
     }
-
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public void saveGluoPlanDesarrollo(GluoPlanDesarrollo entity)
-        throws Exception {
-        log.debug("saving GluoPlanDesarrollo instance");
-
-        try {
-            if (entity == null) {
+    
+    public void evaluarGluoPlanDesarrollo(GluoPlanDesarrollo entity) throws Exception {
+    	log.debug("Validando GluoPlanDesarrollo instace");
+    	try {
+    		if (entity == null) {
                 throw new ZMessManager().new NullEntityExcepcion(
                     "GluoPlanDesarrollo");
             }
             
+    		validateGluoPlanDesarrollo(entity);
+    		
             if(entity.getAnoFin().compareTo(entity.getAnoInicio())==-1){
             	throw new ZMessManager("El plan no puede terminar antes de empezar");
             }
@@ -122,12 +121,20 @@ public class GluoPlanDesarrolloLogic implements IGluoPlanDesarrolloLogic {
             if(calcularMesesEntreFecha(entity.getAnoInicio(), entity.getAnoFin())!=48) {
             	throw new Exception("La difrencia entre la fecha de inicio y la fecha final debe ser de 4 años");
             }
-            validateGluoPlanDesarrollo(entity);
-
-            if (getGluoPlanDesarrollo(entity.getPlanId()) != null) {
-                throw new ZMessManager(ZMessManager.ENTITY_WITHSAMEKEY);
-            }
             
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+    }
+
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    public void saveGluoPlanDesarrollo(GluoPlanDesarrollo entity)
+        throws Exception {
+        log.debug("saving GluoPlanDesarrollo instance");
+
+        try {
+            
+        	evaluarGluoPlanDesarrollo(entity);           
 
             gluoPlanDesarrolloDAO.save(entity);
 

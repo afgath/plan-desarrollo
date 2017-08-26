@@ -277,7 +277,7 @@ public class GluoPlanDesarrolloView implements Serializable {
         try {
             entity = new GluoPlanDesarrollo();
 
-            entity.setPlanId(1);
+            //entity.setPlanId(1);
             entity.setActivo("s");
             entity.setAnoFin(FacesUtils.checkDate(txtAnoFin));
             entity.setAnoInicio(FacesUtils.checkDate(txtAnoInicio));

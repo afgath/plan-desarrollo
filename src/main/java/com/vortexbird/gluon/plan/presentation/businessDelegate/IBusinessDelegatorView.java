@@ -318,6 +318,9 @@ public interface IBusinessDelegatorView {
     public List<GluoPlanDesarrollo> getGluoPlanDesarrollo()
         throws Exception;
 
+    public void evaluarGluoPlanDesarrollo(GluoPlanDesarrollo entity) 
+    	throws Exception;
+    
     public void saveGluoPlanDesarrollo(GluoPlanDesarrollo entity)
         throws Exception;
 

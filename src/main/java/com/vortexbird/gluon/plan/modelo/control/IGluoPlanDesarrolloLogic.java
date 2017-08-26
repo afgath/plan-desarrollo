@@ -10,58 +10,52 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-
 /**
-* @author Zathura Code Generator http://zathuracode.org/
-* www.zathuracode.org
-*
-*/
+ * @author Zathura Code Generator http://zathuracode.org/ www.zathuracode.org
+ *
+ */
 public interface IGluoPlanDesarrolloLogic {
-    public List<GluoPlanDesarrollo> getGluoPlanDesarrollo()
-        throws Exception;
+	public List<GluoPlanDesarrollo> getGluoPlanDesarrollo() throws Exception;
 
-    /**
-         * Save an new GluoPlanDesarrollo entity
-         */
-    public void saveGluoPlanDesarrollo(GluoPlanDesarrollo entity)
-        throws Exception;
+	/**
+	 * Valida que la entidad de GluoPlanDesarrollo cumpla con todas las restricciones
+	 */
+	public void evaluarGluoPlanDesarrollo(GluoPlanDesarrollo entity) throws Exception;
 
-    /**
-         * Delete an existing GluoPlanDesarrollo entity
-         *
-         */
-    public void deleteGluoPlanDesarrollo(GluoPlanDesarrollo entity)
-        throws Exception;
+	/**
+	 * Save an new GluoPlanDesarrollo entity
+	 */
+	public void saveGluoPlanDesarrollo(GluoPlanDesarrollo entity) throws Exception;
 
-    /**
-        * Update an existing GluoPlanDesarrollo entity
-        *
-        */
-    public void updateGluoPlanDesarrollo(GluoPlanDesarrollo entity)
-        throws Exception;
+	/**
+	 * Delete an existing GluoPlanDesarrollo entity
+	 *
+	 */
+	public void deleteGluoPlanDesarrollo(GluoPlanDesarrollo entity) throws Exception;
 
-    /**
-         * Load an existing GluoPlanDesarrollo entity
-         *
-         */
-    public GluoPlanDesarrollo getGluoPlanDesarrollo(Integer planId)
-        throws Exception;
-    
-    public List<GluoPlanDesarrollo> findAllGluoPlanDesarrollo() throws Exception;
+	/**
+	 * Update an existing GluoPlanDesarrollo entity
+	 *
+	 */
+	public void updateGluoPlanDesarrollo(GluoPlanDesarrollo entity) throws Exception;
 
-    public List<GluoPlanDesarrollo> findByCriteria(Object[] variables,
-        Object[] variablesBetween, Object[] variablesBetweenDates)
-        throws Exception;
+	/**
+	 * Load an existing GluoPlanDesarrollo entity
+	 *
+	 */
+	public GluoPlanDesarrollo getGluoPlanDesarrollo(Integer planId) throws Exception;
 
-    public List<GluoPlanDesarrollo> findPageGluoPlanDesarrollo(
-        String sortColumnName, boolean sortAscending, int startRow,
-        int maxResults) throws Exception;
+	public List<GluoPlanDesarrollo> findAllGluoPlanDesarrollo() throws Exception;
 
-    public Long findTotalNumberGluoPlanDesarrollo() throws Exception;
+	public List<GluoPlanDesarrollo> findByCriteria(Object[] variables, Object[] variablesBetween,
+			Object[] variablesBetweenDates) throws Exception;
 
-    public List<GluoPlanDesarrolloDTO> getDataGluoPlanDesarrollo()
-        throws Exception;
+	public List<GluoPlanDesarrollo> findPageGluoPlanDesarrollo(String sortColumnName, boolean sortAscending,
+			int startRow, int maxResults) throws Exception;
 
-    public void validateGluoPlanDesarrollo(
-        GluoPlanDesarrollo gluoPlanDesarrollo) throws Exception;
+	public Long findTotalNumberGluoPlanDesarrollo() throws Exception;
+
+	public List<GluoPlanDesarrolloDTO> getDataGluoPlanDesarrollo() throws Exception;
+
+	public void validateGluoPlanDesarrollo(GluoPlanDesarrollo gluoPlanDesarrollo) throws Exception;
 }

@@ -1,0 +1,324 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" 
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/WEB-INF/template.xhtml">
+
+	<ui:define name="content">
+
+		<h:form id="form">
+
+			<style>
+.ui-organigram .ui-organigram-node.dimension {
+	background: #88c048;
+	background: -moz-linear-gradient(top, #88c048 0%, #9cdc53 100%);
+	background: -webkit-linear-gradient(top, #88c048 0%, #9cdc53 100%);
+	background: linear-gradient(to bottom, #88c048 0%, #9cdc53 100%);
+}
+
+.ui-organigram .ui-organigram-node.objetivo {
+	background: #fca752;
+	background: -moz-linear-gradient(top, #fca752 0%, #f7b36f 100%);
+	background: -webkit-linear-gradient(top, #fca752 0%, #f7b36f 100%);
+	background: linear-gradient(to bottom, #fca752 0%, #f7b36f 100%);
+	background: -moz-linear-gradient(top, #fca752 0%, #f7b36f 100%);
+}
+
+.ui-organigram .ui-organigram-node.programa {
+	background: #60a7ff;
+	background: -moz-linear-gradient(top, #60a7ff 0%, #74b0fb 100%);
+	background: -webkit-linear-gradient(top, #60a7ff 0%, #74b0fb 100%);
+	background: linear-gradient(to bottom, #60a7ff 0%, #74b0fb 100%);
+}
+</style>
+
+			<p:growl id="growl" />
+
+			<!-- INICIO ORGNIGRAMA -->
+			<p:organigram id="organigram" widgetVar="organigram"
+				value="#{organigramView.rootNode}" var="node"
+				autoScrollToSelection="#{organigramView.autoScrollToSelection}"
+				zoom="#{organigramView.zoom}" selection="#{organigramView.rootNode}"
+				style="#{organigramView.style}">
+
+				<p:ajax event="select" process="@this" update="@form:growl"
+					listener="#{organigramView.nodeSelectListener}" />
+				<p:ajax event="contextmenu" process="@this" />
+				<p:ajax event="collapse" process="@this" update="@form:growl"
+					listener="#{organigramView.nodeCollapseListener}" />
+				<p:ajax event="expand" process="@this" update="@form:growl"
+					listener="#{organigramView.nodeExpandListener}" />
+
+				<p:organigramNode>
+					<h:outputText value="#{node.data}" />
+				</p:organigramNode>
+
+				<p:organigramNode type="root" style="border-radius: 10px;">
+					<h:outputText value="#{node.data}" />
+				</p:organigramNode>
+
+				<p:organigramNode type="dimension" styleClass="dimension"
+					icon="ui-icon-suitcase" iconPos="left">
+					<h:outputText value="#{node.data}" />
+				</p:organigramNode>
+
+				<p:organigramNode type="objetivo" styleClass="objetivo"
+					icon="ui-icon-suitcase" iconPos="left">
+					<h:outputText value="#{node.data}" />
+				</p:organigramNode>
+
+				<p:organigramNode type="programa" styleClass="programa"
+					icon="ui-icon-suitcase" iconPos="left">
+					<h:outputText value="#{node.data}" />
+				</p:organigramNode>
+			</p:organigram>
+			<!-- FIN ORGNIGRAMA -->
+			
+			<!-- OPCIONES NODO ORGANIGRAMA -->
+			<p:contextMenu for="organigram" nodeType="employee">
+				<p:menuitem value="fire employee" update="organigram"
+					icon="ui-icon-close"
+					actionListener="#{organigramView.removeEmployee()}" />
+			</p:contextMenu>
+
+			<p:contextMenu for="organigram" nodeType="root">
+				<p:menuitem value="Add employee" ajax="false" icon="ui-icon-plus"
+					onclick="PF('addEmployeeDialog').show(); return false;" />
+				<p:menuitem value="Remove division" update="organigram @form:growl"
+					icon="ui-icon-close"
+					actionListener="#{organigramView.removeDivision()}" />
+			</p:contextMenu>
+			<!-- FIN OPCIONES NODO ORGANIGRAMA -->
+			
+			<p:dialog id="addEmployeeDialog" widgetVar="addEmployeeDialog"
+				header="Add employee">
+
+				<p:inputText value="#{organigramView.employeeName}" />
+
+				<p:commandButton process="@parent" update=":form:organigram"
+					value="Add" actionListener="#{organigramView.addEmployee()}"
+					oncomplete="PF('addEmployeeDialog').hide();" />
+
+			</p:dialog>
+		</h:form>
+
+		<h:form id="formOpciones">
+			<p:panel header="Opciones">
+				<h:panelGrid columns="3">
+					<p:commandButton value="Añadir Dimensión"
+						onclick="PF('dlgAnadirDimension').show();" />
+					<p:commandButton value="Añadir Objetivo"
+						onclick="PF('dlgAnadirObjetivo').show();" />
+					<p:commandButton value="Añadir Programa"
+						onclick="PF('dlgAnadirObjetivo').show();" />
+				</h:panelGrid>
+				<h:panelGrid columns="1">
+					<p:commandButton value="Guardar"/>
+				</h:panelGrid>
+			</p:panel>
+		</h:form>
+		<h:form id="formModal">
+
+			<!-- ************************************************** -->
+			<!-- **			 DIÁLOGO AÑADIR PLAN			 ** -->
+			<!-- ************************************************** -->
+			<p:dialog id="dlgAnadirPlan" header="Crear Plan"
+				widgetVar="dlgAnadirPlan" modal="true" draggable="true"
+				closable="false" resizable="true" responsive="true"
+				style="width: 100% !important;">
+
+				<p:messages id="msgPlan" autoUpdate="true" closable="true"
+					style="width: 100%;" />
+
+				<p:panel header="Añadir Plan">
+					<h:panelGrid columns="2" style="width: 100% !important">
+
+						<h:outputText id="msgDescripcion" value=" Descripción del plan" />
+						<p:inputText id="txtDescripcion" disabled="false"
+							binding="#{organigramView.txtDescripcionPlan}" />
+						<h:outputText id="msgEslogan" value=" Eslogan del plan" />
+						<p:inputText id="txtEslogan" disabled="false"
+							binding="#{organigramView.txtEsloganPlan}" />
+						<h:outputText id="msgNombreAlcalde" value=" Nombre del Alcalde" />
+						<p:inputText id="txtNombreAlcalde" disabled="false"
+							binding="#{organigramView.txtNombreAlcaldePlan}" />
+
+						<h:outputText id="msgAnoInicio" value=" Año de inicio del plan" />
+						<p:calendar showOn="button" navigator="true" locale="en"
+							binding="#{organigramView.txtAnoInicioPlan}">
+							<p:ajax event="dateSelect"
+								listener="#{organigramView.listener_txtAnoInicio}" />
+						</p:calendar>
+						<h:outputText id="msgAnoFin" value=" Año de finalización del plan" />
+						<p:calendar showOn="button" navigator="true" locale="en"
+							binding="#{organigramView.txtAnoFinPlan}">
+							<p:ajax event="dateSelect"
+								listener="#{organigramView.listener_txtAnoFin}" />
+						</p:calendar>
+
+					</h:panelGrid>
+
+				</p:panel>
+
+				<br />
+
+				<div align="center">
+
+					<p:commandButton value="Añadir"
+						binding="#{organigramView.btnAnadirPlan}"
+						action="#{organigramView.anadirPlanAction}"
+						update=":formModal:msgPlan" />
+
+					<p:commandButton value="Cancelar" icon="ui-icon-close"
+						update=":formModal" />
+
+				</div>
+
+			</p:dialog>
+			<!-- FIN DIÁLOGO AÑADIR PLAN -->
+
+			<!-- ************************************************** -->
+			<!-- **			 DIÁLOGO AÑADIR DIMENSIÓN			 ** -->
+			<!-- ************************************************** -->
+			<p:dialog id="dlgAnadirDimension" header="Dimensión"
+				widgetVar="dlgAnadirDimension" modal="true" draggable="true"
+				closable="false" resizable="true" responsive="true"
+				style="width: 100% !important;">
+
+				<p:messages id="msgDimension" autoUpdate="true" closable="true"
+					style="width: 100%;" />
+
+				<p:panel header="Añadir dimensión">
+					<h:panelGrid columns="2" style="width: 100% !important">
+
+						<p:outputLabel value="Dimensión:" />
+						<p:selectCheckboxMenu id="multiple"
+							value="#{organigramView.selectedDimension}" label="Dimensiones"
+							multiple="true" filter="true" filterMatchMode="startsWith"
+							panelStyle="width:250px">
+							<f:selectItems var="dimension" value="dimension.descripcion" />
+						</p:selectCheckboxMenu>
+
+					</h:panelGrid>
+
+				</p:panel>
+
+				<br />
+
+				<div align="center">
+
+					<p:commandButton value="Añadir"
+						binding="#{organigramView.btnAnadirDimension}" />
+
+					<p:commandButton value="Cancelar" icon="ui-icon-close"
+						update=":form"
+						action="#{organigramView.actionCerrarDialogAnadirDimension}" />
+
+				</div>
+
+			</p:dialog>
+			<!-- FIN DIÁLOGO AÑADIR DIMENSIÓN -->
+
+			<!-- ************************************************** -->
+			<!-- **			 DIÁLOGO AÑADIR OBJETIVO			 ** -->
+			<!-- ************************************************** -->
+			<p:dialog id="dlgAnadirObjetivo" header="Objetivo"
+				widgetVar="dlgAnadirObjetivo" modal="true" draggable="true"
+				closable="false" resizable="true" responsive="true">
+
+				<p:messages id="msgObjetivo" autoUpdate="true" closable="true"
+					style="width: 100%;" />
+
+				<p:panel header="Añadir Objetivo">
+					<h:panelGrid columns="2">
+
+						<p:outputLabel value="Objetivo:" />
+						<p:inputTextarea id="txtDescripcionObjetivo" rows="6" cols="33"
+							binding="#{organigramView.txtDescripcionObjetivo}" />
+
+					</h:panelGrid>
+				</p:panel>
+
+				<br />
+
+				<div align="center">
+
+					<p:commandButton value="Añadir"
+						binding="#{organigramView.btnAnadirObjetivo}"
+						action="#{organigramView.anadirObjetivoAction}"
+						update=":form, :formModal" />
+
+					<p:commandButton value="Cancelar" icon="ui-icon-close"
+						update=":formModal" />
+
+				</div>
+
+			</p:dialog>
+			<!-- FIN DIÁLOGO AÑADIR OBJETIVO -->
+
+			<!-- ************************************************** -->
+			<!-- **			 DIÁLOGO AÑADIR PROGRAMA			 ** -->
+			<!-- ************************************************** -->
+			<p:dialog id="dlgAnadirPrograma" header="Programa"
+				widgetVar="dlgAnadirPrograma" modal="true" draggable="true"
+				closable="false" resizable="true" responsive="true"
+				style="width: 100% !important;">
+
+				<p:messages id="msgPrograma" autoUpdate="true" closable="true"
+					style="width: 100%;" />
+
+				<p:panel header="Añadir Programa">
+					<h:panelGrid columns="2" style="width: 100% !important">
+
+						<p:outputLabel value="Programa:" />
+						<p:inputTextarea
+							binding="#{organigramView.txtDescripcionObjetivo}"
+							placeholder="Descripción de objetivo" />
+
+					</h:panelGrid>
+
+				</p:panel>
+
+				<br />
+
+				<div align="center">
+
+					<p:commandButton value="Añadir"
+						binding="#{organigramView.btnAnadirPrograma}"
+						action="#{organigramView.anadirProgramaAction}"
+						update=":form, :formModal" />
+
+					<p:commandButton value="Cancelar" icon="ui-icon-close"
+						update=":formModal" />
+
+				</div>
+
+			</p:dialog>
+			<!-- FIN DIÁLOGO AÑADIR PROGRAMA -->
+
+
+
+
+			<p:dialog header="Selected Items" modal="true" showEffect="fade"
+				hideEffect="fade" widgetVar="itemDialog" width="250">
+				<p:outputPanel id="displayItems">
+
+					<p:dataList value="#{checkboxView.selectedCities2}" var="city"
+						emptyMessage="No cities selected">
+						<f:facet name="header">
+                    Multiple
+                </f:facet>
+                #{city}
+            </p:dataList>
+
+				</p:outputPanel>
+			</p:dialog>
+
+
+		</h:form>
+
+
+	</ui:define>
+</ui:composition>
