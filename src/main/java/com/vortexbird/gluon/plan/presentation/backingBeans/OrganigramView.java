@@ -90,38 +90,8 @@ public class OrganigramView implements Serializable {
 		selection = new DefaultOrganigramNode(null, "plan", null);
 		
 		RequestContext.getCurrentInstance().execute("PF('dlgAnadirPlan').show()");
-//		rootNode.setCollapsible(false);
-//		rootNode.setDroppable(true);
-
-//		OrganigramNode softwareDevelopment = addDivision(rootNode, "Software Development", "Ridvan Agar");
-//
-//		OrganigramNode teamJavaEE = addDivision(softwareDevelopment, "Team JavaEE");
-//		addDivision(teamJavaEE, "JSF", "Thomas Andraschko");
-//		addDivision(teamJavaEE, "Backend", "Marie Louise");
-//
-//		OrganigramNode teamMobile = addDivision(softwareDevelopment, "Team Mobile");
-//		addDivision(teamMobile, "Android", "Andy Ruby");
-//		addDivision(teamMobile, "iOS", "Stevan Jobs");
-//
-//		addDivision(rootNode, "Managed Services", "Thorsten Schultze", "Sandra Becker");
-//
-//		OrganigramNode marketing = addDivision(rootNode, "Marketing");
-//		addDivision(marketing, "Social Media", "Ali Mente", "Susanne Muster");
-//		addDivision(marketing, "Press", "Manfred Mustermann", "Hans Peter");
-//
-//		addDivision(rootNode, "Management", "Hassan El Manfalouty");
 		
 	}
-
-//	public void nodeDragDropListener(OrganigramNodeDragDropEvent event) {
-//		FacesMessage message = new FacesMessage();
-//		message.setSummary("Node '" + event.getOrganigramNode().getData() + "' moved from "
-//				+ event.getSourceOrganigramNode().getData() + " to '" + event.getTargetOrganigramNode().getData()
-//				+ "'");
-//		message.setSeverity(FacesMessage.SEVERITY_INFO);
-//
-//		FacesContext.getCurrentInstance().addMessage(null, message);
-//	}
 
 	public void nodeSelectListener(OrganigramNodeSelectEvent event) {
 		FacesMessage message = new FacesMessage();
@@ -163,29 +133,12 @@ public class OrganigramView implements Serializable {
 	            new FacesMessage("Selected Date " + dateFormat.format(inputDate)));
 	    }
 
-	public void removeDivision() {
-		// re-evaluate selection - might be a differenct object instance if viewstate
-		// serialization is enabled
-		OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
-		setMessage(currentSelection.getData() + " will entfernt werden.", FacesMessage.SEVERITY_INFO);
-	}
-
 	public void removeEmployee() {
 		// re-evaluate selection - might be a differenct object instance if viewstate
 		// serialization is enabled
 		OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
 		currentSelection.getParent().getChildren().remove(currentSelection);
 	}
-
-//	public void addEmployee() {
-//		// re-evaluate selection - might be a differenct object instance if viewstate
-//		// serialization is enabled
-//		OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
-//
-//		OrganigramNode employee = new DefaultOrganigramNode("employee", employeeName, currentSelection);
-//		employee.setDraggable(true);
-//		employee.setSelectable(true);
-//	}
 
 	private void setMessage(String msg, FacesMessage.Severity severity) {
 		FacesMessage message = new FacesMessage();
@@ -321,15 +274,7 @@ public class OrganigramView implements Serializable {
 	public void setZoom(boolean zoom) {
 		this.zoom = zoom;
 	}
-
-//	public String getEmployeeName() {
-//		return employeeName;
-//	}
-//
-//	public void setEmployeeName(String employeeName) {
-//		this.employeeName = employeeName;
-//	}
-
+	
 	public String getStyle() {
 		return style;
 	}

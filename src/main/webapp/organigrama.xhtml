@@ -103,7 +103,9 @@
 		<h:form id="formOpciones">
 			<p:panel header="Opciones">
 				<h:panelGrid columns="1">
+				<div align="center">
 					<p:commandButton value="Guardar" />
+				</div>
 				</h:panelGrid>
 			</p:panel>
 		</h:form>
@@ -232,15 +234,13 @@
 				<br />
 
 				<div align="center">
-
 					<p:commandButton value="Añadir"
 						actionListener="#{organigramView.anadirObjetivoAction}"
 						update=":form:organigram" 
-						oncomplete="PF('dlgAnadirPrograma').hide();"/>
+						oncomplete="PF('dlgAnadirObjetivo').hide();"/>
 
 					<p:commandButton value="Cancelar" icon="ui-icon-close"
 						update=":formModal" />
-
 				</div>
 
 			</p:dialog>
