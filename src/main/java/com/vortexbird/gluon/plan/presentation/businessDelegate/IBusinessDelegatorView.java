@@ -287,6 +287,9 @@ public interface IBusinessDelegatorView {
         throws Exception;
 
     public List<GluoObjetivo> getGluoObjetivo() throws Exception;
+    
+    public void evaluarGluoObjetivo(GluoObjetivo entity)
+            throws Exception;
 
     public void saveGluoObjetivo(GluoObjetivo entity) throws Exception;
 
@@ -382,6 +385,8 @@ public interface IBusinessDelegatorView {
         throws Exception;
 
     public List<GluoPrograma> getGluoPrograma() throws Exception;
+    
+    public void evaluarGluoPrograma(GluoPrograma entity) throws Exception; 
 
     public void saveGluoPrograma(GluoPrograma entity) throws Exception;
 
@@ -441,6 +446,9 @@ public interface IBusinessDelegatorView {
 
     public List<GluoSectorEjeDimension> getGluoSectorEjeDimension()
         throws Exception;
+    
+    public void evaluarGluoSectorEjeDimension(GluoSectorEjeDimension entity)
+        	throws Exception;
 
     public void saveGluoSectorEjeDimension(GluoSectorEjeDimension entity)
         throws Exception;
@@ -473,6 +481,8 @@ public interface IBusinessDelegatorView {
         throws Exception;
 
     public List<GluoSubprograma> getGluoSubprograma() throws Exception;
+    
+    public void evaluarGluoSubprograma(GluoSubprograma entity) throws Exception;
 
     public void saveGluoSubprograma(GluoSubprograma entity)
         throws Exception;

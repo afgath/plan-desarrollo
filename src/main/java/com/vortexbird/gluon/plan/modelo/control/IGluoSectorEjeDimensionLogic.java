@@ -19,6 +19,10 @@ import java.util.Set;
 public interface IGluoSectorEjeDimensionLogic {
     public List<GluoSectorEjeDimension> getGluoSectorEjeDimension()
         throws Exception;
+    
+    public void evaluarGluoSectorEjeDimension(GluoSectorEjeDimension entity)
+        	throws Exception;
+        
 
     /**
          * Save an new GluoSectorEjeDimension entity

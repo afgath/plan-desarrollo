@@ -3,6 +3,7 @@ package com.vortexbird.gluon.plan.modelo.control;
 import com.vortexbird.gluon.plan.dataaccess.dao.*;
 import com.vortexbird.gluon.plan.dto.mapper.IGluoObjetivoMapper;
 import com.vortexbird.gluon.plan.exceptions.*;
+import com.vortexbird.gluon.plan.exceptions.ZMessManager.NullEntityExcepcion;
 import com.vortexbird.gluon.plan.modelo.*;
 import com.vortexbird.gluon.plan.modelo.dto.GluoObjetivoDTO;
 import com.vortexbird.gluon.plan.utilities.Utilities;
@@ -87,6 +88,22 @@ public class GluoObjetivoLogic implements IGluoObjetivoLogic {
             throw e;
         }
     }
+    
+    public void evaluarGluoObjetivo(GluoObjetivo entity) throws Exception {
+    	log.debug("Validando GluoObjetivo instace");
+    	try {
+    		if (entity == null) {
+                throw new ZMessManager().new NullEntityExcepcion(
+                    "GluoObjetivo");
+            }
+            
+    		validateGluoObjetivo(entity);
+    		
+            
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+    }
 
     @Transactional(readOnly = true)
     public List<GluoObjetivo> getGluoObjetivo() throws Exception {
@@ -115,7 +132,7 @@ public class GluoObjetivoLogic implements IGluoObjetivoLogic {
                 throw new ZMessManager().new NullEntityExcepcion("GluoObjetivo");
             }
 
-            validateGluoObjetivo(entity);
+            evaluarGluoObjetivo(entity);
 
             if (getGluoObjetivo(entity.getObjeId()) != null) {
                 throw new ZMessManager(ZMessManager.ENTITY_WITHSAMEKEY);

@@ -6,7 +6,10 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -22,7 +25,8 @@ import javax.validation.constraints.*;
 @Table(name = "gluoPrograma", schema = "public")
 public class GluoPrograma implements java.io.Serializable {
     @Id
-    @NotNull
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(name = "objetivo_id", unique = true, nullable = false)
     private Integer progId;
     @NotNull
     private GluoObjetivo gluoObjetivo;

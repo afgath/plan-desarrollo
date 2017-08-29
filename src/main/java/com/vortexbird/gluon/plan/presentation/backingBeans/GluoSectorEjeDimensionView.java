@@ -366,7 +366,7 @@ public class GluoSectorEjeDimensionView implements Serializable {
     public List<SelectItem> getLosPlanesItem() throws Exception {
     	if(losPlanesItem==null){
     		losPlanesItem=new ArrayList<SelectItem>();
-			List<GluoPlanDesarrollo> losPlanesDesarrollo=businessDelegatorView.findAllGluoPlanDesarrollo();
+			List<GluoPlanDesarrollo> losPlanesDesarrollo=businessDelegatorView.getGluoPlanDesarrollo();
 			for (GluoPlanDesarrollo planesDesarrollo : losPlanesDesarrollo) {
 				losPlanesItem.add(new SelectItem(planesDesarrollo.getPlanId(), planesDesarrollo.getDescripcion()));
 			}

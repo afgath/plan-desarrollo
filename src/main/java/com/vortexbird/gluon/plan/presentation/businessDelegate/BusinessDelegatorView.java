@@ -553,6 +553,11 @@ public class BusinessDelegatorView implements IBusinessDelegatorView {
     public List<GluoObjetivo> getGluoObjetivo() throws Exception {
         return gluoObjetivoLogic.getGluoObjetivo();
     }
+    
+	public void evaluarGluoObjetivo(GluoObjetivo entity) throws Exception {
+		gluoObjetivoLogic.evaluarGluoObjetivo(entity);
+		
+	}
 
     public void saveGluoObjetivo(GluoObjetivo entity) throws Exception {
         gluoObjetivoLogic.saveGluoObjetivo(entity);
@@ -747,6 +752,10 @@ public class BusinessDelegatorView implements IBusinessDelegatorView {
     public void saveGluoPrograma(GluoPrograma entity) throws Exception {
         gluoProgramaLogic.saveGluoPrograma(entity);
     }
+    
+    public void evaluarGluoPrograma(GluoPrograma entity) throws Exception{
+    	gluoProgramaLogic.evaluarGluoPrograma(entity);
+    }
 
     public void deleteGluoPrograma(GluoPrograma entity)
         throws Exception {
@@ -863,6 +872,11 @@ public class BusinessDelegatorView implements IBusinessDelegatorView {
         return gluoSectorEjeDimensionLogic.getGluoSectorEjeDimension();
     }
 
+    public void evaluarGluoSectorEjeDimension(GluoSectorEjeDimension entity)
+    	throws Exception{
+    	gluoSectorEjeDimensionLogic.evaluarGluoSectorEjeDimension(entity);
+    }
+    
     public void saveGluoSectorEjeDimension(GluoSectorEjeDimension entity)
         throws Exception {
         gluoSectorEjeDimensionLogic.saveGluoSectorEjeDimension(entity);
@@ -890,6 +904,8 @@ public class BusinessDelegatorView implements IBusinessDelegatorView {
 
         return gluoSectorEjeDimension;
     }
+    
+    
 
     public List<GluoSectorEjeDimension> findByCriteriaInGluoSectorEjeDimension(
         Object[] variables, Object[] variablesBetween,
@@ -923,6 +939,10 @@ public class BusinessDelegatorView implements IBusinessDelegatorView {
 
     public List<GluoSubprograma> getGluoSubprograma() throws Exception {
         return gluoSubprogramaLogic.getGluoSubprograma();
+    }
+    
+    public void evaluarGluoSubprograma(GluoSubprograma entity) throws Exception{
+    	gluoSubprogramaLogic.evaluarGluoSubprograma(entity);
     }
 
     public void saveGluoSubprograma(GluoSubprograma entity)
@@ -1319,4 +1339,6 @@ public class BusinessDelegatorView implements IBusinessDelegatorView {
         throws Exception {
         segUsuarioLogic.validateSegUsuario(segUsuario);
     }
+
+
 }

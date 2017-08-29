@@ -3,6 +3,7 @@ package com.vortexbird.gluon.plan.modelo.control;
 import com.vortexbird.gluon.plan.dataaccess.dao.*;
 import com.vortexbird.gluon.plan.dto.mapper.IGluoSectorEjeDimensionMapper;
 import com.vortexbird.gluon.plan.exceptions.*;
+import com.vortexbird.gluon.plan.exceptions.ZMessManager.NullEntityExcepcion;
 import com.vortexbird.gluon.plan.modelo.*;
 import com.vortexbird.gluon.plan.modelo.dto.GluoSectorEjeDimensionDTO;
 import com.vortexbird.gluon.plan.utilities.Utilities;
@@ -89,6 +90,22 @@ public class GluoSectorEjeDimensionLogic implements IGluoSectorEjeDimensionLogic
             throw e;
         }
     }
+    
+    public void evaluarGluoSectorEjeDimension(GluoSectorEjeDimension entity) throws Exception {
+    	log.debug("Validando GluoSectorEjeDimension instace");
+    	try {
+    		if (entity == null) {
+                throw new ZMessManager().new NullEntityExcepcion(
+                    "GluoSectorEjeDimension");
+            }
+            
+    		validateGluoSectorEjeDimension(entity);
+
+            
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+    }
 
     @Transactional(readOnly = true)
     public List<GluoSectorEjeDimension> getGluoSectorEjeDimension()
@@ -120,7 +137,7 @@ public class GluoSectorEjeDimensionLogic implements IGluoSectorEjeDimensionLogic
                     "GluoSectorEjeDimension");
             }
 
-            validateGluoSectorEjeDimension(entity);
+            evaluarGluoSectorEjeDimension(entity);
 
             if (getGluoSectorEjeDimension(entity.getSediId()) != null) {
                 throw new ZMessManager(ZMessManager.ENTITY_WITHSAMEKEY);

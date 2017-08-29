@@ -3,6 +3,7 @@ package com.vortexbird.gluon.plan.modelo.control;
 import com.vortexbird.gluon.plan.dataaccess.dao.*;
 import com.vortexbird.gluon.plan.dto.mapper.IGluoProgramaMapper;
 import com.vortexbird.gluon.plan.exceptions.*;
+import com.vortexbird.gluon.plan.exceptions.ZMessManager.NullEntityExcepcion;
 import com.vortexbird.gluon.plan.modelo.*;
 import com.vortexbird.gluon.plan.modelo.dto.GluoProgramaDTO;
 import com.vortexbird.gluon.plan.utilities.Utilities;
@@ -87,6 +88,22 @@ public class GluoProgramaLogic implements IGluoProgramaLogic {
             throw e;
         }
     }
+    
+    public void evaluarGluoPrograma(GluoPrograma entity) throws Exception {
+    	log.debug("Validando GluoPrograma instace");
+    	try {
+    		if (entity == null) {
+                throw new ZMessManager().new NullEntityExcepcion(
+                    "GluoPrograma");
+            }
+            
+    		validateGluoPrograma(entity);
+
+            
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+    }
 
     @Transactional(readOnly = true)
     public List<GluoPrograma> getGluoPrograma() throws Exception {
@@ -115,7 +132,7 @@ public class GluoProgramaLogic implements IGluoProgramaLogic {
                 throw new ZMessManager().new NullEntityExcepcion("GluoPrograma");
             }
 
-            validateGluoPrograma(entity);
+            evaluarGluoPrograma(entity);
 
             if (getGluoPrograma(entity.getProgId()) != null) {
                 throw new ZMessManager(ZMessManager.ENTITY_WITHSAMEKEY);

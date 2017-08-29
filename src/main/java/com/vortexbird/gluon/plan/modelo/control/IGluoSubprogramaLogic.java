@@ -19,6 +19,8 @@ import java.util.Set;
 public interface IGluoSubprogramaLogic {
     public List<GluoSubprograma> getGluoSubprograma() throws Exception;
 
+    public void evaluarGluoSubprograma(GluoSubprograma entity) throws Exception;
+    
     /**
          * Save an new GluoSubprograma entity
          */
