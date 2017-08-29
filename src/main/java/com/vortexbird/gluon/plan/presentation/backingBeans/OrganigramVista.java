@@ -101,7 +101,7 @@ public class OrganigramVista implements Serializable {
         FacesContext.getCurrentInstance().addMessage(null, message);
     }
     
-    public void listener_txtAnoFin() {
+ /*   public void listener_txtAnoFin() {
         Date inputDate = (Date) txtAnoFin.getValue();
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         FacesContext.getCurrentInstance()
@@ -115,7 +115,7 @@ public class OrganigramVista implements Serializable {
         FacesContext.getCurrentInstance()
                     .addMessage("",
             new FacesMessage("Selected Date " + dateFormat.format(inputDate)));
-    }
+    }*/
 
     public void removeDivision() {
         // re-evaluate selection - might be a differenct object instance if viewstate serialization is enabled

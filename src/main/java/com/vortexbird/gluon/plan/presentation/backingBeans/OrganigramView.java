@@ -72,9 +72,9 @@ public class OrganigramView implements Serializable {
 	private List<String> dataDimensiones;
 	private List<Object[]> programasAnadidos;
 	
-	private HashMap<OrganigramNode, GluoSectorEjeDimension> dimensionHash;
-	private HashMap<OrganigramNode, GluoObjetivo> objetivoHash;
-	private HashMap<OrganigramNode, GluoPrograma> programaHash;
+	private HashMap<OrganigramNode, GluoSectorEjeDimension> dimensionHash = new HashMap<OrganigramNode, GluoSectorEjeDimension>();
+	private HashMap<OrganigramNode, GluoObjetivo> objetivoHash = new HashMap<OrganigramNode, GluoObjetivo>();
+	private HashMap<OrganigramNode, GluoPrograma> programaHash = new HashMap<OrganigramNode, GluoPrograma>();
 
 	// Variables de dialogos
 	private InputText txtDescripcionPlan;
@@ -168,28 +168,31 @@ public class OrganigramView implements Serializable {
 	}
 	
 	public String actionGuardar(){
-		Iterator<Entry<OrganigramNode, GluoSectorEjeDimension>> iDimension = getDimensionHash().entrySet().iterator();
-		Iterator<Entry<OrganigramNode, GluoObjetivo>> iObjetivo = getObjetivoHash().entrySet().iterator();
-		Iterator<Entry<OrganigramNode, GluoPrograma>> iPrograma = getProgramaHash().entrySet().iterator();
 		
 		try {
+			GluoSectorEjeDimension gsed = new GluoSectorEjeDimension();
+			GluoObjetivo gob = new GluoObjetivo();
+			GluoPrograma gpr = new GluoPrograma();
+			
 			businessDelegatorView.saveGluoPlanDesarrollo(plan);
 			
-			while(iDimension.hasNext()){
-				Map.Entry<OrganigramNode, GluoSectorEjeDimension> e = (Entry<OrganigramNode, GluoSectorEjeDimension>)iDimension.next();
-				businessDelegatorView.saveGluoSectorEjeDimension(e.getValue());
+			for(Entry<OrganigramNode, GluoSectorEjeDimension> entry: dimensionHash.entrySet()) {
+				gsed = entry.getValue();
+				log.info("WOW------------ "+gsed.getDescripcion());
+			    businessDelegatorView.saveGluoSectorEjeDimension(gsed);
 			}
 			
-			while(iDimension.hasNext()){
-				Map.Entry<OrganigramNode, GluoObjetivo> e = (Entry<OrganigramNode, GluoObjetivo>)iObjetivo.next();
-				businessDelegatorView.saveGluoObjetivo(e.getValue());
+			for(Entry<OrganigramNode, GluoObjetivo> entry: objetivoHash.entrySet()) {
+				gob = entry.getValue();
+				log.info("WOW------------ "+gob.getDescripcion());
+			    businessDelegatorView.saveGluoObjetivo(gob);
 			}
 			
-			while(iPrograma.hasNext()){
-				Map.Entry<OrganigramNode, GluoPrograma> e = (Entry<OrganigramNode, GluoPrograma>)iPrograma.next();
-				businessDelegatorView.saveGluoPrograma(e.getValue());
+			for(Entry<OrganigramNode, GluoPrograma> entry: programaHash.entrySet()) {
+				gpr = entry.getValue();
+				log.info("WOW------------ "+gpr.getDescripcion());
+			    businessDelegatorView.saveGluoPrograma(gpr);
 			}
-			
 
 			
 		} catch (Exception e) {
@@ -252,7 +255,6 @@ public class OrganigramView implements Serializable {
 		log.info("anadirDimensionAction");
 		try {
 			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
-			HashMap<OrganigramNode, GluoSectorEjeDimension> dataHash = new HashMap<OrganigramNode, GluoSectorEjeDimension>();
 			eje = new GluoSectorEjeDimension();
 			eje.setActivo("S");
 			eje.setDescripcion(txtDimension.getValue().toString().trim());
@@ -265,8 +267,7 @@ public class OrganigramView implements Serializable {
 			log.info(""+selection.getData());
 			OrganigramNode sector = new DefaultOrganigramNode("dimension", eje.getDescripcion(), currentSelection);
 			sector.setSelectable(true);
-			dataHash.put(sector, eje);
-			setDimensionHash(dataHash);
+			dimensionHash.put(sector, eje);
 			
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
@@ -277,22 +278,20 @@ public class OrganigramView implements Serializable {
 		log.info("anadirObjetivoAction");
 		try {
 			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
-			HashMap<OrganigramNode, GluoObjetivo> dataHash = new HashMap<OrganigramNode, GluoObjetivo>();
 			GluoObjetivo objetivo = new GluoObjetivo();
 			objetivo.setActivo("S");
 			objetivo.setFechaCreacion(new Date());
 			String descripcion = txtAreaDescObjetivo.getValue().toString().trim();
 			objetivo.setDescripcion(descripcion);
 			objetivo.setUsuCreador(1);
-			objetivo.setGluoSectorEjeDimension(getDimensionHash().get(currentSelection));
+			objetivo.setGluoSectorEjeDimension(dimensionHash.get(currentSelection));
 			
 			businessDelegatorView.evaluarGluoObjetivo(objetivo);
 			
 			log.info(""+selection.getData());
 			OrganigramNode nodoObjetivo = new DefaultOrganigramNode("objetivo", descripcion, currentSelection);
 			nodoObjetivo.setSelectable(true);
-			dataHash.put(nodoObjetivo, objetivo);
-			setObjetivoHash(dataHash);
+			objetivoHash.put(nodoObjetivo, objetivo);
 			
 			
 		} catch (Exception e) {
@@ -305,7 +304,6 @@ public class OrganigramView implements Serializable {
 		log.info("anadirProgramaAction");
 		try {
 			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
-			HashMap<OrganigramNode, GluoPrograma> dataHash = new HashMap<OrganigramNode, GluoPrograma>();
 			log.info(""+selection.getData());
 			GluoPrograma programa = new GluoPrograma();
 			programa.setActivo("S");
@@ -317,8 +315,7 @@ public class OrganigramView implements Serializable {
 			businessDelegatorView.evaluarGluoPrograma(programa);
 			
 			OrganigramNode nodoPrograma = new DefaultOrganigramNode("programa", txtAreaDescPrograma.getValue().toString().trim(), currentSelection);
-			dataHash.put(nodoPrograma, programa);
-			setProgramaHash(dataHash);
+			programaHash.put(nodoPrograma, programa);
 			
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());

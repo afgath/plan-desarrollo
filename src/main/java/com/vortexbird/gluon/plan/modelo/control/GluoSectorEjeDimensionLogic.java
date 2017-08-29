@@ -139,10 +139,6 @@ public class GluoSectorEjeDimensionLogic implements IGluoSectorEjeDimensionLogic
 
             evaluarGluoSectorEjeDimension(entity);
 
-            if (getGluoSectorEjeDimension(entity.getSediId()) != null) {
-                throw new ZMessManager(ZMessManager.ENTITY_WITHSAMEKEY);
-            }
-
             gluoSectorEjeDimensionDAO.save(entity);
 
             log.debug("save GluoSectorEjeDimension successful");

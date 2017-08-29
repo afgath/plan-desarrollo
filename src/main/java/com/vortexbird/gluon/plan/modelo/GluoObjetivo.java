@@ -26,7 +26,7 @@ import javax.validation.constraints.*;
 public class GluoObjetivo implements java.io.Serializable {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name = "objetivo_id", unique = true, nullable = false)
+    @Column(name = "obje_id", unique = true, nullable = false)
     private Integer objeId;
     @NotNull
     private GluoSectorEjeDimension gluoSectorEjeDimension;
