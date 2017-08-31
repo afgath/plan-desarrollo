@@ -6,7 +6,7 @@
     <class name="com.vortexbird.gluon.plan.modelo.GluoSectorEjeDimension" table="gluo_sector_eje_dimension" schema="public" optimistic-lock="version">
         <id name="sediId" type="java.lang.Integer">
             <column name="sedi_id" />
-            <generator class="assigned" />
+            <generator class="identity" />
         </id>
         <many-to-one name="gluoPlanDesarrollo" class="com.vortexbird.gluon.plan.modelo.GluoPlanDesarrollo" fetch="select">
             <column name="plan_id" not-null="true" />

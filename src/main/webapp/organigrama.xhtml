@@ -32,6 +32,27 @@
 	background: -webkit-linear-gradient(top, #60a7ff 0%, #74b0fb 100%);
 	background: linear-gradient(to bottom, #60a7ff 0%, #74b0fb 100%);
 }
+
+.ui-organigram .ui-organigram-node.subprograma {
+	background: #ff0049
+	background: -moz-linear-gradient(top, #ff0049 0%, #d42c5c 100%);
+	background: -webkit-linear-gradient(top, #ff0049 0%, #d42c5c 100%);
+	background: linear-gradient(to bottom, #ff0049 0%, #d42c5c 100%);
+}
+
+.ui-organigram .ui-organigram-node.proyecto {
+	background: #60a7ff;
+	background: -moz-linear-gradient(top, #60a7ff 0%, #74b0fb 100%);
+	background: -webkit-linear-gradient(top, #60a7ff 0%, #74b0fb 100%);
+	background: linear-gradient(to bottom, #60a7ff 0%, #74b0fb 100%);
+}
+
+.ui-organigram .ui-organigram-node.detalleProyecto {
+	background: #60a7ff;
+	background: -moz-linear-gradient(top, #60a7ff 0%, #74b0fb 100%);
+	background: -webkit-linear-gradient(top, #60a7ff 0%, #74b0fb 100%);
+	background: linear-gradient(to bottom, #60a7ff 0%, #74b0fb 100%);
+}
 </style>
 
 			<p:growl id="growl" />
@@ -39,7 +60,6 @@
 			<!-- INICIO ORGNIGRAMA -->
 			<p:organigram id="organigram" widgetVar="organigram"
 				value="#{organigramView.rootNode}" var="node"
-				autoScrollToSelection="#{organigramView.autoScrollToSelection}"
 				zoom="#{organigramView.zoom}" selection="#{organigramView.selection}"
 				style="#{organigramView.style}">
 
@@ -65,11 +85,26 @@
 				</p:organigramNode>
 
 				<p:organigramNode type="objetivo" styleClass="objetivo"
-					icon="ui-icon-suitcase" iconPos="left">
+					icon="fa fa-fw fa-bullseye" iconPos="left">
 					<h:outputText value="#{node.data}" />
 				</p:organigramNode>
 
 				<p:organigramNode type="programa" styleClass="programa"
+					icon="ui-icon-suitcase" iconPos="left">
+					<h:outputText value="#{node.data}" />
+				</p:organigramNode>
+				
+				<p:organigramNode type="subprograma" styleClass="subprograma"
+					icon="ui-icon-suitcase" iconPos="left">
+					<h:outputText value="#{node.data}" />
+				</p:organigramNode>
+				
+				<p:organigramNode type="proyecto" styleClass="proyecto"
+					icon="ui-icon-suitcase" iconPos="left">
+					<h:outputText value="#{node.data}" />
+				</p:organigramNode>
+				
+				<p:organigramNode type="detalleProyecto" styleClass="detalleProyecto"
 					icon="ui-icon-suitcase" iconPos="left">
 					<h:outputText value="#{node.data}" />
 				</p:organigramNode>
@@ -82,8 +117,7 @@
 					icon="ui-icon-plus"
 					onclick="PF('dlgAnadirDimension').show(); return false;" />
 				<p:menuitem value="Detalles" update="organigram @form:growl"
-					icon="ui-icon-info"
-					actionListener="#{organigramView.removeDivision()}" />
+					icon="ui-icon-info"/>
 			</p:contextMenu>
 			
 			<p:contextMenu for="organigram" nodeType="dimension">
@@ -96,6 +130,26 @@
 				<p:menuitem value="Añadir Programa" ajax="false"
 					icon="ui-icon-plus"
 					onclick="PF('dlgAnadirPrograma').show(); return false;" />
+			</p:contextMenu>
+			
+			<p:contextMenu for="organigram" nodeType="programa">
+				<p:menuitem value="Añadir Subprograma" ajax="false"
+					icon="ui-icon-plus"
+					onclick="PF('dlgAnadirSubprograma').show(); return false;" />
+				<p:menuitem value="Detalles" update="organigram @form:growl"
+					icon="ui-icon-info"/>
+			</p:contextMenu>
+			
+			<p:contextMenu for="organigram" nodeType="subprograma">
+				<p:menuitem value="Añadir Proyecto" ajax="false"
+					icon="ui-icon-plus"
+					onclick="PF('dlgAnadirProyecto').show(); return false;" />
+			</p:contextMenu>
+			
+			<p:contextMenu for="organigram" nodeType="proyecto">
+				<p:menuitem value="Añadir Objetivo" ajax="false"
+					icon="ui-icon-plus"
+					onclick="PF('dlgAnadirObjetivo').show(); return false;" />
 			</p:contextMenu>
 			<!-- FIN OPCIONES NODO ORGANIGRAMA -->
 		</h:form>
@@ -126,11 +180,11 @@
 					<h:panelGrid columns="2" style="width: 100% !important">
 
 						<h:outputText id="msgDescripcion" value=" Descripción del plan" />
-						<p:inputText id="txtDescripcion" disabled="false"
-							binding="#{organigramView.txtDescripcionPlan}" />
+						<p:inputTextarea id="txtDescripcion" disabled="false"
+							binding="#{organigramView.txtAreaDescripcionPlan}" rows="6" cols="33"/>
 						<h:outputText id="msgEslogan" value=" Eslogan del plan" />
-						<p:inputText id="txtEslogan" disabled="false"
-							binding="#{organigramView.txtEsloganPlan}" />
+						<p:inputTextarea id="txtEslogan" disabled="false"
+							binding="#{organigramView.txtAreaEsloganPlan}" rows="6" cols="33"/>
 						<h:outputText id="msgNombreAlcalde" value=" Nombre del Alcalde" />
 						<p:inputText id="txtNombreAlcalde" disabled="false"
 							binding="#{organigramView.txtNombreAlcaldePlan}" />
@@ -218,15 +272,9 @@
 				<p:panel header="Añadir Objetivo">
 					<h:panelGrid columns="2">
 
-						<p:outputLabel value="Dimensión:" />
-						<p:selectOneMenu id="somTipoUsuario"
-							binding="#{organigramView.somDimensionObjetivo}">
-							<f:selectItems value="#{organigramView.dataDimensiones}" />
-						</p:selectOneMenu>
-
 						<p:outputLabel value="Objetivo:" />
 						<p:inputTextarea id="txtDescripcionObjetivo" rows="6" cols="33"
-							binding="#{organigramView.txtAreaDescObjetivo}" />
+							binding="#{organigramView.txtAreaDescObjetivo}" placeholder="Ingrese una descripción para el objetivo"/>
 
 					</h:panelGrid>
 				</p:panel>
@@ -262,7 +310,7 @@
 
 						<p:outputLabel value="Programa:" />
 						<p:inputTextarea id="txtAreaDescPrograma" rows="6" cols="33"
-							binding="#{organigramView.txtAreaDescPrograma}" />
+							binding="#{organigramView.txtAreaDescPrograma}" placeholder="Ingrese una descripción para el programa"/>
 						
 
 					</h:panelGrid>
@@ -284,8 +332,84 @@
 
 			</p:dialog>
 			<!-- FIN DIÁLOGO AÑADIR PROGRAMA -->
+			
+			<!-- ************************************************** -->
+			<!-- **			 DIÁLOGO AÑADIR SUBPROGRAMA			 ** -->
+			<!-- ************************************************** -->
+			<p:dialog id="dlgAnadirSubprograma" header="SubPrograma"
+				widgetVar="dlgAnadirSubprograma" modal="true" draggable="true"
+				closable="false" resizable="true" responsive="true"
+				style="width: 100% !important;">
 
+				<p:messages id="msgSubPrograma" autoUpdate="true" closable="true"
+					style="width: 100%;" />
 
+				<p:panel header="Añadir SubPrograma">
+					<h:panelGrid columns="2" style="width: 100% !important">
+
+						<p:outputLabel value="SubPrograma:" />
+						<p:inputTextarea id="txtAreaDescSubPrograma" rows="6" cols="33"
+							binding="#{organigramView.txtAreaDescSubPrograma}" placeholder="Ingrese una descripción para el subprograma"/>
+						
+
+					</h:panelGrid>
+
+				</p:panel>
+
+				<br />
+
+				<div align="center">
+
+					<p:commandButton value="Añadir"
+						actionListener="#{organigramView.anadirSubProgramaAction}"
+						update=":form:organigram" oncomplete="PF('dlgAnadirSubprograma').hide();" />
+
+					<p:commandButton value="Cancelar" icon="ui-icon-close"
+						update=":formModal" />
+
+				</div>
+
+			</p:dialog>
+			<!-- FIN DIÁLOGO AÑADIR SUBPROGRAMA -->
+			
+			<!-- ************************************************** -->
+			<!-- **			 DIÁLOGO AÑADIR PROYECTO			 ** -->
+			<!-- ************************************************** -->
+			<p:dialog id="dlgAnadirProyecto" header="proyecto"
+				widgetVar="dlgAnadirProyecto" modal="true" draggable="true"
+				closable="false" resizable="true" responsive="true"
+				style="width: 100% !important;">
+
+				<p:messages id="msgProyecto" autoUpdate="true" closable="true"
+					style="width: 100%;" />
+
+				<p:panel header="Añadir Proyecto">
+					<h:panelGrid columns="2" style="width: 100% !important">
+
+						<p:outputLabel value="Proyecto" />
+						<p:inputTextarea id="txtAreaDescProyecto" rows="6" cols="33"
+							binding="#{organigramView.txtAreaDescProyecto}" placeholder="Ingrese una descripción para el proyecto"/>
+						
+
+					</h:panelGrid>
+
+				</p:panel>
+
+				<br />
+
+				<div align="center">
+
+					<p:commandButton value="Añadir"
+						actionListener="#{organigramView.anadirProyectoAction}"
+						update=":form:organigram" oncomplete="PF('dlgAnadirProyecto').hide();" />
+
+					<p:commandButton value="Cancelar" icon="ui-icon-close"
+						update=":formModal" />
+
+				</div>
+
+			</p:dialog>
+			<!-- FIN DIÁLOGO AÑADIR PROYECTO -->
 		</h:form>
 
 

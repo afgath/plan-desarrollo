@@ -118,10 +118,6 @@ public class GluoPlanDesarrolloLogic implements IGluoPlanDesarrolloLogic {
             	throw new ZMessManager("El plan no puede terminar antes de empezar");
             }
 
-            if(calcularMesesEntreFecha(entity.getAnoInicio(), entity.getAnoFin())!=48) {
-            	throw new Exception("La difrencia entre la fecha de inicio y la fecha final debe ser de 4 años");
-            }
-            
 		} catch (Exception e) {
 			throw new Exception(e.getMessage());
 		}

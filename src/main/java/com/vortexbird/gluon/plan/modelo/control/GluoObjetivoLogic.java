@@ -134,9 +134,6 @@ public class GluoObjetivoLogic implements IGluoObjetivoLogic {
 
             evaluarGluoObjetivo(entity);
 
-            if (getGluoObjetivo(entity.getObjeId()) != null) {
-                throw new ZMessManager(ZMessManager.ENTITY_WITHSAMEKEY);
-            }
 
             gluoObjetivoDAO.save(entity);
 

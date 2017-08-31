@@ -134,10 +134,6 @@ public class GluoProgramaLogic implements IGluoProgramaLogic {
 
             evaluarGluoPrograma(entity);
 
-            if (getGluoPrograma(entity.getProgId()) != null) {
-                throw new ZMessManager(ZMessManager.ENTITY_WITHSAMEKEY);
-            }
-
             gluoProgramaDAO.save(entity);
 
             log.debug("save GluoPrograma successful");
