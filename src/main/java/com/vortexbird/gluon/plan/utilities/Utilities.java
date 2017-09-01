@@ -368,5 +368,15 @@ public class Utilities {
 
 		return where;
 	}
+	
+	public static Double convertirStringADouble(String dato) throws Exception{
+		try {
+			Double valor = 0.0;
+			valor = Double.parseDouble(dato);
+			return valor;
+		} catch (Exception e) {
+			throw new Exception("El valor ingresado no es numerico");
+		}
+	}
 
 }

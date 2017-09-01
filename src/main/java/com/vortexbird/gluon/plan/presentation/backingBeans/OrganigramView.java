@@ -2,6 +2,8 @@ package com.vortexbird.gluon.plan.presentation.backingBeans;
 
 import org.primefaces.component.calendar.Calendar;
 import org.primefaces.component.commandbutton.CommandButton;
+import org.primefaces.component.inputmask.InputMask;
+import org.primefaces.component.inputnumber.InputNumber;
 import org.primefaces.component.inputtext.InputText;
 import org.primefaces.component.inputtextarea.InputTextarea;
 import org.primefaces.component.organigram.OrganigramHelper;
@@ -15,15 +17,19 @@ import org.primefaces.model.OrganigramNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.vortexbird.gluon.plan.modelo.GluoAnoFiscal;
+import com.vortexbird.gluon.plan.modelo.GluoDetalleProyecto;
 import com.vortexbird.gluon.plan.modelo.GluoObjetivo;
 import com.vortexbird.gluon.plan.modelo.GluoPlanDesarrollo;
 import com.vortexbird.gluon.plan.modelo.GluoPrograma;
 import com.vortexbird.gluon.plan.modelo.GluoProyecto;
 import com.vortexbird.gluon.plan.modelo.GluoSectorEjeDimension;
 import com.vortexbird.gluon.plan.modelo.GluoSubprograma;
+import com.vortexbird.gluon.plan.modelo.dto.GluoAnoFiscalDTO;
 import com.vortexbird.gluon.plan.modelo.dto.GluoSectorEjeDimensionDTO;
 import com.vortexbird.gluon.plan.presentation.businessDelegate.IBusinessDelegatorView;
 import com.vortexbird.gluon.plan.utilities.FacesUtils;
+import com.vortexbird.gluon.plan.utilities.Utilities;
 
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -43,6 +49,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 
 @ManagedBean
 @ViewScoped
@@ -53,18 +60,27 @@ public class OrganigramView implements Serializable {
 
 	private static final Logger log = LoggerFactory.getLogger(OrganigramView.class);
 	
+	//Nodo raiz (rootNode) y nodo que guarda el nodo seleccionado (selection)
 	private OrganigramNode rootNode;
 	private OrganigramNode selection;
 
+	//Variables para la creación de los entity
 	private GluoPlanDesarrollo plan;
 	private GluoSectorEjeDimension eje;
 	private GluoObjetivo objetivo;
+	private GluoPrograma programa;
+	private GluoSubprograma subprograma;
+	private GluoProyecto proyecto;
+	private GluoDetalleProyecto detalleProyecto;
+	//Fin Variables para la creación de los entity
 	
+	//Variables de configuración para el organigrama
 	private boolean zoom = true;
 	private String style = "width: 100%";
 	private int leafNodeConnectorHeight = 0;
+	//Fin Variables de configuración para el organigrama
 	
-	private List<OrganigramNode> nodosObjetivos;
+	private List<SelectItem> losAnosFiscalItem;
 	
 	private HashMap<OrganigramNode, GluoSectorEjeDimension> dimensionHash = new HashMap<OrganigramNode, GluoSectorEjeDimension>();
 	private HashMap<OrganigramNode, GluoObjetivo> objetivoHash = new HashMap<OrganigramNode, GluoObjetivo>();
@@ -79,10 +95,11 @@ public class OrganigramView implements Serializable {
     private InputText txtDimension;
     private SelectOneMenu somDimensionObjetivo;
     private InputTextarea txtAreaDescObjetivo;
-    private InputTextarea txtAreaDescPrograma;
+    private InputTextarea txtAreaDesPrograma;
     private InputTextarea txtAreaDescSubPrograma;
     private InputTextarea txtAreaDescProyecto;
-	private List<GluoSectorEjeDimensionDTO> dimensiones;
+    private SelectOneMenu somAnoFiscal;
+    private InputNumber numValorPresupuesto;
 	private String[] selectedDimension;
 	private CommandButton btnAnadirPlan;
 	private CommandButton btnAnadirDimension;
@@ -189,7 +206,8 @@ public class OrganigramView implements Serializable {
 				log.info("WOW------------ "+gpr.getDescripcion());
 			    businessDelegatorView.saveGluoPrograma(gpr);
 			}
-
+			
+			FacesUtils.addInfoMessage("Se ha guardado el plan");
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -223,7 +241,7 @@ public class OrganigramView implements Serializable {
         try {
         	plan = new GluoPlanDesarrollo();
 
-            //plan.setPlanId(1);
+            //plan.setPlanId(1);valorTotalPresupuesto
             plan.setActivo("S");
             plan.setAnoFin(FacesUtils.checkDate(txtAnoFinPlan));
             plan.setAnoInicio(FacesUtils.checkDate(txtAnoInicioPlan));
@@ -276,7 +294,7 @@ public class OrganigramView implements Serializable {
 		log.info("anadirObjetivoAction");
 		try {
 			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
-			GluoObjetivo objetivo = new GluoObjetivo();
+			objetivo = new GluoObjetivo();
 			objetivo.setActivo("S");
 			objetivo.setFechaCreacion(new Date());
 			String descripcion = txtAreaDescObjetivo.getValue().toString().trim();
@@ -302,17 +320,16 @@ public class OrganigramView implements Serializable {
 		log.info("anadirProgramaAction");
 		try {
 			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
-			log.info(""+selection.getData());
-			GluoPrograma programa = new GluoPrograma();
+			programa = new GluoPrograma();
 			programa.setActivo("S");
-			programa.setDescripcion(txtAreaDescPrograma.getValue().toString().trim());
+			programa.setDescripcion(txtAreaDesPrograma.getValue().toString().trim());
 			programa.setFechaCreacion(new Date());
 			programa.setUsuCreador((int)0);
 			programa.setGluoObjetivo(objetivoHash.get(currentSelection));
 			
 			businessDelegatorView.evaluarGluoPrograma(programa);
 			
-			OrganigramNode nodoPrograma = new DefaultOrganigramNode("programa", txtAreaDescPrograma.getValue().toString().trim(), currentSelection);
+			OrganigramNode nodoPrograma = new DefaultOrganigramNode("programa", txtAreaDesPrograma.getValue().toString().trim(), currentSelection);
 			nodoPrograma.setSelectable(true);
 			programaHash.put(nodoPrograma, programa);
 			
@@ -325,8 +342,7 @@ public class OrganigramView implements Serializable {
 		log.info("anadirSubProgramaAction");
 		try {
 			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
-			log.info(""+selection.getData());
-			GluoSubprograma subprograma = new GluoSubprograma();
+			subprograma = new GluoSubprograma();
 			subprograma.setActivo("S");
 			subprograma.setDescripcion(txtAreaDescSubPrograma.getValue().toString().trim());
 			subprograma.setFechaCreacion(new Date());
@@ -348,8 +364,7 @@ public class OrganigramView implements Serializable {
 		log.info("anadirProyectoAction");
 		try {
 			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
-			log.info(""+selection.getData());
-			GluoProyecto proyecto = new GluoProyecto();
+			proyecto = new GluoProyecto();
 			proyecto.setActivo("S");
 			proyecto.setDescripcion(txtAreaDescProyecto.getValue().toString().trim());
 			proyecto.setFechaCreacion(new Date());
@@ -359,10 +374,35 @@ public class OrganigramView implements Serializable {
 			//Añadir la evaluación del subprograma
 			
 			OrganigramNode nodoProyecto = new DefaultOrganigramNode("proyecto", txtAreaDescProyecto.getValue().toString().trim(), currentSelection);
+			nodoProyecto.setSelectable(true);
 			//programaHash.put(nodoProyecto, proyecto);
 			
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
+		}
+	}
+	
+	public void anadirDetalleProyectoAction() {
+		log.info("anadirDetalleProyectoAction");
+		try {
+			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
+			detalleProyecto = new GluoDetalleProyecto();
+			if(numValorPresupuesto.getValue()==null) {
+				throw new Exception("Ingrese un valor para el presupuesto");
+			}
+			detalleProyecto.setValorTotalPresupuesto(Utilities.convertirStringADouble(numValorPresupuesto.getValue().toString()));
+			detalleProyecto.setActivo("S");
+			detalleProyecto.setFechaCreacion(new Date());
+			detalleProyecto.setUsuCreador(1);
+			
+			GluoAnoFiscal anoFiscal = businessDelegatorView.getGluoAnoFiscal(Integer.parseInt(somAnoFiscal.getValue().toString()));
+			detalleProyecto.setGluoAnoFiscal(anoFiscal);
+			
+			OrganigramNode nodoDetalleProyecto = new DefaultOrganigramNode("detalleProyecto", detalleProyecto.getGluoAnoFiscal(), currentSelection);
+
+			
+		} catch (Exception e) {
+			
 		}
 	}
 	
@@ -406,20 +446,27 @@ public class OrganigramView implements Serializable {
 		this.leafNodeConnectorHeight = leafNodeConnectorHeight;
 	}
 
-	public List<OrganigramNode> getNodosObjetivos() {
-		return nodosObjetivos;
-	}
-
-	public void setNodosObjetivos(List<OrganigramNode> nodosObjetivos) {
-		this.nodosObjetivos = nodosObjetivos;
-	}
-	
 	public IBusinessDelegatorView getBusinessDelegatorView() {
 		return businessDelegatorView;
 	}
 
 	public void setBusinessDelegatorView(IBusinessDelegatorView businessDelegatorView) {
 		this.businessDelegatorView = businessDelegatorView;
+	}
+
+	public List<SelectItem> getLosAnosFiscalItem() throws Exception {
+		if(losAnosFiscalItem==null){
+			losAnosFiscalItem=new ArrayList<SelectItem>();
+			List<GluoAnoFiscalDTO> losAnosFiscal = businessDelegatorView.getDataGluoAnoFiscal();
+			for (GluoAnoFiscalDTO anosFiscal : losAnosFiscal) {
+				losAnosFiscalItem.add(new SelectItem(anosFiscal.getAnofId(), String.valueOf(anosFiscal.getAnoFiscal())));
+			}
+		}
+		return losAnosFiscalItem;
+	}
+
+	public void setLosAnosFiscalItem(List<SelectItem> losAnosFiscalItem) {
+		this.losAnosFiscalItem = losAnosFiscalItem;
 	}
 
 	// -----------------------------------------
@@ -437,7 +484,7 @@ public class OrganigramView implements Serializable {
 		return txtAreaEsloganPlan;
 	}
 
-	public void setTxtAreaEsloganPlan(InputTextarea txtAreaEsloganPlan) {
+	public void setTxtAreaEsloganPlan(InputTextarea txbatAreaEsloganPlan) {
 		this.txtAreaEsloganPlan = txtAreaEsloganPlan;
 	}
 
@@ -489,12 +536,12 @@ public class OrganigramView implements Serializable {
 		this.txtAreaDescObjetivo = txtAreaDescObjetivo;
 	}
 	
-	public InputTextarea getTxtAreaDescPrograma() {
-		return txtAreaDescPrograma;
+	public InputTextarea getTxtAreaDesPrograma() {
+		return txtAreaDesPrograma;
 	}
 
-	public void setTxtAreaDescPrograma(InputTextarea txtAreaDescPrograma) {
-		this.txtAreaDescPrograma = txtAreaDescPrograma;
+	public void setTxtAreaDesPrograma(InputTextarea txtAreaDesPrograma) {
+		this.txtAreaDesPrograma = txtAreaDesPrograma;
 	}
 
 	public InputTextarea getTxtAreaDescSubPrograma() {
@@ -513,18 +560,21 @@ public class OrganigramView implements Serializable {
 		this.txtAreaDescProyecto = txtAreaDescProyecto;
 	}
 	
-	public List<GluoSectorEjeDimensionDTO> getDimensiones() throws Exception {
-		if (dimensiones == null) {
-			dimensiones = businessDelegatorView.getDataGluoSectorEjeDimension();
-			log.info("----"+dimensiones.get(0).getDescripcion());
-		}
-		return dimensiones;
+	public SelectOneMenu getSomAnoFiscal() {
+		return somAnoFiscal;
 	}
 
-	public void setDimensiones(List<GluoSectorEjeDimensionDTO> dimensiones) {
-		this.dimensiones = dimensiones;
+	public void setSomAnoFiscal(SelectOneMenu somAnoFiscal) {
+		this.somAnoFiscal = somAnoFiscal;
+	}
+	
+	public InputNumber getNumValorPresupuesto() {
+		return numValorPresupuesto;
 	}
 
+	public void setNumValorPresupuesto(InputNumber numValorPresupuesto) {
+		this.numValorPresupuesto = numValorPresupuesto;
+	}
 	
 	public String[] getSelectedDimension() {
 		return selectedDimension;
