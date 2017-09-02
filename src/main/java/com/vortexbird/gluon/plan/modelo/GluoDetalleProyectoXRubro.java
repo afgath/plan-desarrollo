@@ -4,7 +4,10 @@ import org.hibernate.validator.constraints.*;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -20,7 +23,8 @@ import javax.validation.constraints.*;
 @Table(name = "gluoDetalleProyectoXRubro", schema = "public")
 public class GluoDetalleProyectoXRubro implements java.io.Serializable {
     @Id
-    @NotNull
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(name = "dpru_id", unique = true, nullable = false)
     private Integer dpruId;
     @NotNull
     private GluoDetallePresupuesto gluoDetallePresupuesto;

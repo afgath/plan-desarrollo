@@ -18,6 +18,8 @@ import java.util.Set;
 */
 public interface IGluoAnoFiscalLogic {
     public List<GluoAnoFiscal> getGluoAnoFiscal() throws Exception;
+    
+    public void evaluarGluoAnoFiscal(GluoAnoFiscal entity) throws Exception;
 
     /**
          * Save an new GluoAnoFiscal entity

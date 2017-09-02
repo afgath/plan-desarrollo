@@ -3,6 +3,7 @@ package com.vortexbird.gluon.plan.modelo.control;
 import com.vortexbird.gluon.plan.dataaccess.dao.*;
 import com.vortexbird.gluon.plan.dto.mapper.IGluoDetalleProyectoMapper;
 import com.vortexbird.gluon.plan.exceptions.*;
+import com.vortexbird.gluon.plan.exceptions.ZMessManager.NullEntityExcepcion;
 import com.vortexbird.gluon.plan.modelo.*;
 import com.vortexbird.gluon.plan.modelo.dto.GluoDetalleProyectoDTO;
 import com.vortexbird.gluon.plan.utilities.Utilities;
@@ -94,6 +95,22 @@ public class GluoDetalleProyectoLogic implements IGluoDetalleProyectoLogic {
             throw e;
         }
     }
+    
+    public void evaluarGluoDetalleProyecto(GluoDetalleProyecto entity) throws Exception {
+    	log.debug("Validando GluoDetalleProyecto instace");
+    	try {
+    		if (entity == null) {
+                throw new ZMessManager().new NullEntityExcepcion(
+                    "GluoDetalleProyecto");
+            }
+            
+    		validateGluoDetalleProyecto(entity);
+    		
+
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+    }
 
     @Transactional(readOnly = true)
     public List<GluoDetalleProyecto> getGluoDetalleProyecto()
@@ -125,12 +142,9 @@ public class GluoDetalleProyectoLogic implements IGluoDetalleProyectoLogic {
                     "GluoDetalleProyecto");
             }
 
-            validateGluoDetalleProyecto(entity);
+            evaluarGluoDetalleProyecto(entity);
 
-            if (getGluoDetalleProyecto(entity.getDproId()) != null) {
-                throw new ZMessManager(ZMessManager.ENTITY_WITHSAMEKEY);
-            }
-
+          
             gluoDetalleProyectoDAO.save(entity);
 
             log.debug("save GluoDetalleProyecto successful");

@@ -136,9 +136,6 @@ public class GluoSubprogramaLogic implements IGluoSubprogramaLogic {
 
             evaluarGluoSubprograma(entity);
 
-            if (getGluoSubprograma(entity.getSubpId()) != null) {
-                throw new ZMessManager(ZMessManager.ENTITY_WITHSAMEKEY);
-            }
 
             gluoSubprogramaDAO.save(entity);
 

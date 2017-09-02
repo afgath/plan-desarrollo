@@ -19,6 +19,8 @@ import java.util.Set;
 public interface IGluoProyectoLogic {
     public List<GluoProyecto> getGluoProyecto() throws Exception;
 
+    public void evaluarGluoProyecto(GluoProyecto entity) throws Exception;
+    
     /**
          * Save an new GluoProyecto entity
          */

@@ -20,6 +20,9 @@ public interface IGluoDetalleProyectoLogic {
     public List<GluoDetalleProyecto> getGluoDetalleProyecto()
         throws Exception;
 
+    
+    public void evaluarGluoDetalleProyecto(GluoDetalleProyecto entity) throws Exception;
+    
     /**
          * Save an new GluoDetalleProyecto entity
          */

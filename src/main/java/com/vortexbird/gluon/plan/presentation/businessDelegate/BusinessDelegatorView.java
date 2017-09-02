@@ -1340,5 +1340,21 @@ public class BusinessDelegatorView implements IBusinessDelegatorView {
         segUsuarioLogic.validateSegUsuario(segUsuario);
     }
 
+	@Override
+	public void evaluarGluoAnoFiscal(GluoAnoFiscal entity) throws Exception {
+		gluoAnoFiscalLogic.evaluarGluoAnoFiscal(entity);
+		
+	}
+
+	@Override
+	public void evaluarGluoProyecto(GluoProyecto entity) throws Exception{
+		gluoProyectoLogic.evaluarGluoProyecto(entity);
+	}
+
+	@Override
+	public void evaluarGluoDetalleProyecto(GluoDetalleProyecto entity) throws Exception {
+		gluoDetalleProyectoLogic.evaluarGluoDetalleProyecto(entity);
+		
+	}
 
 }

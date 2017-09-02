@@ -109,6 +109,8 @@ public interface IBusinessDelegatorView {
 
     public GluoAnoFiscal getGluoAnoFiscal(Integer anofId)
         throws Exception;
+    
+    public void evaluarGluoAnoFiscal(GluoAnoFiscal entity) throws Exception;
 
     public List<GluoAnoFiscal> findByCriteriaInGluoAnoFiscal(
         Object[] variables, Object[] variablesBetween,
@@ -162,6 +164,8 @@ public interface IBusinessDelegatorView {
     public List<GluoDetalleProyecto> getGluoDetalleProyecto()
         throws Exception;
 
+    public void evaluarGluoDetalleProyecto(GluoDetalleProyecto entity) throws Exception;
+    
     public void saveGluoDetalleProyecto(GluoDetalleProyecto entity)
         throws Exception;
 
@@ -416,6 +420,8 @@ public interface IBusinessDelegatorView {
         throws Exception;
 
     public List<GluoProyecto> getGluoProyecto() throws Exception;
+    
+    public void evaluarGluoProyecto(GluoProyecto entity) throws Exception;
 
     public void saveGluoProyecto(GluoProyecto entity) throws Exception;
 

@@ -85,6 +85,9 @@ public class OrganigramView implements Serializable {
 	private HashMap<OrganigramNode, GluoSectorEjeDimension> dimensionHash = new HashMap<OrganigramNode, GluoSectorEjeDimension>();
 	private HashMap<OrganigramNode, GluoObjetivo> objetivoHash = new HashMap<OrganigramNode, GluoObjetivo>();
 	private HashMap<OrganigramNode, GluoPrograma> programaHash = new HashMap<OrganigramNode, GluoPrograma>();
+	private HashMap<OrganigramNode, GluoSubprograma> subprogramaHash = new HashMap<OrganigramNode, GluoSubprograma>();
+	private HashMap<OrganigramNode, GluoProyecto> proyectoHash = new HashMap<OrganigramNode, GluoProyecto>();
+	private HashMap<OrganigramNode, GluoDetalleProyecto> detalleProyectoHash = new HashMap<OrganigramNode, GluoDetalleProyecto>();
 
 	// Variables de dialogos
 	private InputTextarea txtAreaDescripcionPlan;
@@ -186,6 +189,9 @@ public class OrganigramView implements Serializable {
 			GluoSectorEjeDimension gsed = new GluoSectorEjeDimension();
 			GluoObjetivo gob = new GluoObjetivo();
 			GluoPrograma gpr = new GluoPrograma();
+			GluoSubprograma gsub = new GluoSubprograma();
+			GluoProyecto gproy = new GluoProyecto();
+			GluoDetalleProyecto gdpro = new GluoDetalleProyecto();
 			
 			businessDelegatorView.saveGluoPlanDesarrollo(plan);
 			
@@ -197,14 +203,32 @@ public class OrganigramView implements Serializable {
 			
 			for(Entry<OrganigramNode, GluoObjetivo> entry: objetivoHash.entrySet()) {
 				gob = entry.getValue();
-				log.info("WOW------------ "+gob.getDescripcion());
+				log.info("AGBC------------ "+gob.getDescripcion());
 			    businessDelegatorView.saveGluoObjetivo(gob);
 			}
 			
 			for(Entry<OrganigramNode, GluoPrograma> entry: programaHash.entrySet()) {
 				gpr = entry.getValue();
-				log.info("WOW------------ "+gpr.getDescripcion());
+				log.info("AGBC------------ "+gpr.getDescripcion());
 			    businessDelegatorView.saveGluoPrograma(gpr);
+			}
+			////////////////////
+			for(Entry<OrganigramNode, GluoSubprograma> entry: subprogramaHash.entrySet()) {
+				gsub = entry.getValue();
+				log.info("AGBC------------ "+gsub.getDescripcion());
+			    businessDelegatorView.saveGluoSubprograma(gsub);
+			}
+			
+			for(Entry<OrganigramNode, GluoProyecto> entry: proyectoHash.entrySet()) {
+				gproy = entry.getValue();
+				log.info("AGBC------------ "+gproy.getDescripcion());
+			    businessDelegatorView.saveGluoProyecto(gproy);
+			}
+			
+			for(Entry<OrganigramNode, GluoDetalleProyecto> entry: detalleProyectoHash.entrySet()) {
+				gdpro = entry.getValue();
+				log.info("AGBC------------ "+gdpro.getFechaModificacion());
+			    businessDelegatorView.saveGluoDetalleProyecto(gdpro);
 			}
 			
 			FacesUtils.addInfoMessage("Se ha guardado el plan");
@@ -216,26 +240,6 @@ public class OrganigramView implements Serializable {
 		
 		return "";
 	}
-	
-	/*Código transferido a los Seters de los HashMaps
-	 * 
-	 * public HashMap<OrganigramNode, GluoSectorEjeDimension> guardarDimension(OrganigramNode sector, GluoSectorEjeDimension gluoSector){
-		HashMap<OrganigramNode, GluoSectorEjeDimension> sectorEjeDimensionHash = new HashMap<OrganigramNode, GluoSectorEjeDimension>();
-		sectorEjeDimensionHash.put(sector, gluoSector);
-		return sectorEjeDimensionHash;
-	}
-	
-	public HashMap<OrganigramNode, GluoObjetivo> guardarObjetivo(OrganigramNode objetivo, GluoObjetivo gluoObjetivo){
-		HashMap<OrganigramNode, GluoObjetivo> objetivoHash = new HashMap<OrganigramNode, GluoObjetivo>();
-		objetivoHash.put(objetivo, gluoObjetivo);	
-		return objetivoHash;
-	}
-	
-	public HashMap<OrganigramNode, GluoPrograma> guardarPrograma(OrganigramNode programa, GluoPrograma gluoPrograma){
-		HashMap<OrganigramNode, GluoPrograma> programaHash = new HashMap<OrganigramNode, GluoPrograma>();
-		programaHash.put(programa, gluoPrograma);
-		return programaHash;
-	}*/
 	
 	public String anadirPlanAction() {
         try {
@@ -347,13 +351,13 @@ public class OrganigramView implements Serializable {
 			subprograma.setDescripcion(txtAreaDescSubPrograma.getValue().toString().trim());
 			subprograma.setFechaCreacion(new Date());
 			subprograma.setUsuCreador((int)0);
+			subprograma.setGluoPrograma(programaHash.get(currentSelection));
 			
-			// Anadir el seteo del programa Padre
-			//Añadir la evaluación del subprograma
+			businessDelegatorView.evaluarGluoSubprograma(subprograma);
 			
 			OrganigramNode nodoSubPrograma = new DefaultOrganigramNode("subprograma", txtAreaDescSubPrograma.getValue().toString().trim(), currentSelection);
 			nodoSubPrograma.setSelectable(true);
-			//programaHash.put(nodoSubPrograma, subprograma);
+			subprogramaHash.put(nodoSubPrograma, subprograma);
 			
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
@@ -369,13 +373,13 @@ public class OrganigramView implements Serializable {
 			proyecto.setDescripcion(txtAreaDescProyecto.getValue().toString().trim());
 			proyecto.setFechaCreacion(new Date());
 			proyecto.setUsuCreador((int)0);
+			proyecto.setGluoSubprograma(subprogramaHash.get(currentSelection));
 			
-			// Anadir el seteo del programa Padre
-			//Añadir la evaluación del subprograma
+			businessDelegatorView.evaluarGluoProyecto(proyecto);
 			
 			OrganigramNode nodoProyecto = new DefaultOrganigramNode("proyecto", txtAreaDescProyecto.getValue().toString().trim(), currentSelection);
 			nodoProyecto.setSelectable(true);
-			//programaHash.put(nodoProyecto, proyecto);
+			proyectoHash.put(nodoProyecto, proyecto);
 			
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
@@ -394,11 +398,15 @@ public class OrganigramView implements Serializable {
 			detalleProyecto.setActivo("S");
 			detalleProyecto.setFechaCreacion(new Date());
 			detalleProyecto.setUsuCreador(1);
+			detalleProyecto.setGluoProyecto(proyectoHash.get(currentSelection));
 			
 			GluoAnoFiscal anoFiscal = businessDelegatorView.getGluoAnoFiscal(Integer.parseInt(somAnoFiscal.getValue().toString()));
 			detalleProyecto.setGluoAnoFiscal(anoFiscal);
 			
+			businessDelegatorView.evaluarGluoDetalleProyecto(detalleProyecto);
+			
 			OrganigramNode nodoDetalleProyecto = new DefaultOrganigramNode("detalleProyecto", detalleProyecto.getGluoAnoFiscal(), currentSelection);
+			detalleProyectoHash.put(nodoDetalleProyecto, detalleProyecto);
 
 			
 		} catch (Exception e) {
@@ -638,6 +646,30 @@ public class OrganigramView implements Serializable {
 
 	public void setProgramaHash(HashMap<OrganigramNode, GluoPrograma> programaHash) {
 		this.programaHash = programaHash;
+	}
+
+	public HashMap<OrganigramNode, GluoSubprograma> getSubprogramaHash() {
+		return subprogramaHash;
+	}
+
+	public void setSubprogramaHash(HashMap<OrganigramNode, GluoSubprograma> subprogramaHash) {
+		this.subprogramaHash = subprogramaHash;
+	}
+
+	public HashMap<OrganigramNode, GluoProyecto> getProyectoHash() {
+		return proyectoHash;
+	}
+
+	public void setProyectoHash(HashMap<OrganigramNode, GluoProyecto> proyectoHash) {
+		this.proyectoHash = proyectoHash;
+	}
+
+	public HashMap<OrganigramNode, GluoDetalleProyecto> getDetalleProyectoHash() {
+		return detalleProyectoHash;
+	}
+
+	public void setDetalleProyectoHash(HashMap<OrganigramNode, GluoDetalleProyecto> detalleProyectoHash) {
+		this.detalleProyectoHash = detalleProyectoHash;
 	}
 	
 	

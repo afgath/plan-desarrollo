@@ -3,6 +3,7 @@ package com.vortexbird.gluon.plan.modelo.control;
 import com.vortexbird.gluon.plan.dataaccess.dao.*;
 import com.vortexbird.gluon.plan.dto.mapper.IGluoAnoFiscalMapper;
 import com.vortexbird.gluon.plan.exceptions.*;
+import com.vortexbird.gluon.plan.exceptions.ZMessManager.NullEntityExcepcion;
 import com.vortexbird.gluon.plan.modelo.*;
 import com.vortexbird.gluon.plan.modelo.dto.GluoAnoFiscalDTO;
 import com.vortexbird.gluon.plan.utilities.Utilities;
@@ -87,6 +88,22 @@ public class GluoAnoFiscalLogic implements IGluoAnoFiscalLogic {
             throw e;
         }
     }
+    
+    public void evaluarGluoAnoFiscal(GluoAnoFiscal entity) throws Exception {
+    	log.debug("Validando GluoAnoFiscal instace");
+    	try {
+    		if (entity == null) {
+                throw new ZMessManager().new NullEntityExcepcion(
+                    "GluoAnoFiscal");
+            }
+            
+    		validateGluoAnoFiscal(entity);
+    		
+
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+    }
 
     @Transactional(readOnly = true)
     public List<GluoAnoFiscal> getGluoAnoFiscal() throws Exception {
@@ -117,11 +134,8 @@ public class GluoAnoFiscalLogic implements IGluoAnoFiscalLogic {
                     "GluoAnoFiscal");
             }
 
-            validateGluoAnoFiscal(entity);
+            evaluarGluoAnoFiscal(entity);
 
-            if (getGluoAnoFiscal(entity.getAnofId()) != null) {
-                throw new ZMessManager(ZMessManager.ENTITY_WITHSAMEKEY);
-            }
 
             gluoAnoFiscalDAO.save(entity);
 
