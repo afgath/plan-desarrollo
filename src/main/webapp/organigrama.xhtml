@@ -116,17 +116,21 @@
 					icon="ui-icon-plus"
 					onclick="PF('dlgAnadirDimension').show(); return false;" />
 				<p:menuitem value="Detalles" update="organigram @form:growl"
-					icon="ui-icon-info" />
+					icon="ui-icon-info"/>
 			</p:contextMenu>
 
 			<p:contextMenu for="organigram" nodeType="dimension">
 				<p:menuitem value="Añadir Objetivo" ajax="false" icon="ui-icon-plus"
 					onclick="PF('dlgAnadirObjetivo').show(); return false;" />
+				<p:menuitem value="Detalles" update="organigram @form:growl"
+					icon="ui-icon-info"/>
 			</p:contextMenu>
 
 			<p:contextMenu for="organigram" nodeType="objetivo">
 				<p:menuitem value="Añadir Programa" ajax="false" icon="ui-icon-plus"
 					onclick="PF('dlgAnadirPrograma').show(); return false;" />
+				<p:menuitem value="Detalles" update="organigram @form:growl"
+					icon="ui-icon-info" onclick="PF('dlgModificarObjetivo').show(); return false;"/>
 			</p:contextMenu>
 
 			<p:contextMenu for="organigram" nodeType="programa">
@@ -134,17 +138,26 @@
 					icon="ui-icon-plus"
 					onclick="PF('dlgAnadirSubprograma').show(); return false;" />
 				<p:menuitem value="Detalles" update="organigram @form:growl"
-					icon="ui-icon-info" />
+					icon="ui-icon-info" onclick="PF('dlgModificarPrograma').show(); return false;"/>
 			</p:contextMenu>
 
 			<p:contextMenu for="organigram" nodeType="subprograma">
 				<p:menuitem value="Añadir Proyecto" ajax="false" icon="ui-icon-plus"
 					onclick="PF('dlgAnadirProyecto').show(); return false;" />
+				<p:menuitem value="Detalles" update="organigram @form:growl"
+					icon="ui-icon-info" onclick="PF('dlgModificarSubprograma').show(); return false;"/>
 			</p:contextMenu>
 
 			<p:contextMenu for="organigram" nodeType="proyecto">
 				<p:menuitem value="Añadir Detalle del proyecto" ajax="false" icon="ui-icon-plus"
 					onclick="PF('dlgAnadirDetalleProyecto').show(); return false;" />
+				<p:menuitem value="Detalles" update="organigram @form:growl"
+					icon="ui-icon-info" onclick="PF('dlgModificarProyecto').show(); return false;"/>
+			</p:contextMenu>
+			
+			<p:contextMenu for="organigram" nodeType="detalleProyecto">
+				<p:menuitem value="Detalles" update="organigram @form:growl"
+					icon="ui-icon-info" onclick="PF('dlgModificarDetalleProyecto').show(); return false;"/>
 			</p:contextMenu>
 			<!-- FIN OPCIONES NODO ORGANIGRAMA -->
 		</h:form>
@@ -213,6 +226,9 @@
 						binding="#{organigramView.btnAnadirPlan}"
 						action="#{organigramView.anadirPlanAction}"
 						update=":formModal:msgPlan" />
+						
+					<p:button value="Cancelar" 
+					href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/font-icons.xhtml"/>
 
 				</div>
 
@@ -392,7 +408,7 @@
 					<h:panelGrid columns="2" style="width: 100% !important">
 
 						<p:outputLabel value="Proyecto" />
-						<p:inputTextarea id="txtAreaDescProyecto" rows="6" cols="33"
+					es	<p:inputTextarea id="txtAreaDescProyecto" rows="6" cols="33"
 							binding="#{organigramView.txtAreaDescProyecto}"
 							placeholder="Ingrese una descripción para el proyecto" />
 
@@ -468,6 +484,48 @@
 
 
 			<!-- DIALOGOS DE MODIFICAR -->
+			
+			<!-- ************************************************** -->
+			<!-- **			 DIÁLOGO MODIFICAR OBJETIVO			 ** -->
+			<!-- ************************************************** -->
+			<p:dialog id="dlgModificarObjetivo" header="Objetivo"
+				widgetVar="dlgModificarObjetivo" modal="true" draggable="true"
+				closable="false" resizable="true" responsive="true"
+				style="width: 100% !important;">
+
+				<p:messages id="msgModificarObjetivo" autoUpdate="true"
+					closable="true" style="width: 100%;" />
+
+				<p:panel header="Modificar Objetivo">
+					<h:panelGrid columns="2" style="width: 100% !important">
+
+						<p:outputLabel value="Objetivo:" />
+						<p:inputTextarea rows="6" cols="33" id="txtAreaModObjDesc"
+							binding="#{organigramView.txtAreaModObjDesc}"/>
+							
+						<p:outputLabel value="¿Activo?:"/>
+						<p:selectBooleanCheckbox id="sbcModObjActivo" binding="#{organigramView.sbcModObjActivo}"/>
+
+
+					</h:panelGrid>
+
+				</p:panel>
+
+				<br />
+
+				<div align="center">
+
+					<p:commandButton value="Modificar"
+						update=":form:organigram"
+						oncomplete="PF('dlgModificarObjetivo').hide();" />
+
+					<p:commandButton value="Cancelar" icon="ui-icon-close"
+						update=":formModal" />
+
+				</div>
+
+			</p:dialog>
+			<!-- FIN DIÁLOGO MODIFICAR OBJETIVO -->
 
 			<!-- ************************************************** -->
 			<!-- **			 DIÁLOGO MODIFICAR PROGRAMA			 ** -->
@@ -484,10 +542,12 @@
 					<h:panelGrid columns="2" style="width: 100% !important">
 
 						<p:outputLabel value="Programa:" />
-						<p:inputTextarea rows="6" cols="33"
+						<p:inputTextarea rows="6" cols="33" id="txtAreaModProgDesc" binding="#{organigramView.txtAreaModProgDesc}"
 							placeholder="Ingrese una descripción para el programa" />
 
-
+						<p:outputLabel value="¿Activo?:"/>
+						<p:selectBooleanCheckbox id="sbcModProgActivo" binding="#{organigramView.sbcModProgActivo}"/>
+						
 					</h:panelGrid>
 
 				</p:panel>
@@ -499,7 +559,7 @@
 					<p:commandButton value="Añadir"
 						actionListener="#{organigramView.anadirProgramaAction}"
 						update=":form:organigram"
-						oncomplete="PF('dlgAnadirPrograma').hide();" />
+						oncomplete="PF('dlgModificarPrograma').hide();" />
 
 					<p:commandButton value="Cancelar" icon="ui-icon-close"
 						update=":formModal" />
@@ -508,6 +568,134 @@
 
 			</p:dialog>
 			<!-- FIN DIÁLOGO MODIFICAR PROGRAMA -->
+			
+			<!-- ************************************************** -->
+			<!-- **			 DIÁLOGO MODIFICAR SUBPROGRAMA		 ** -->
+			<!-- ************************************************** -->
+			<p:dialog id="dlgModificarSubprograma" header="SubPrograma"
+				widgetVar="dlgModificarSubprograma" modal="true" draggable="true"
+				closable="false" resizable="true" responsive="true"
+				style="width: 100% !important;">
+
+				<p:messages id="msgModificarSubprograma" autoUpdate="true"
+					closable="true" style="width: 100%;" />
+
+				<p:panel header="Modificar SubPrograma">
+					<h:panelGrid columns="2" style="width: 100% !important">
+
+						<p:outputLabel value="SubPrograma:" />
+						<p:inputTextarea rows="6" cols="33" id="txtAreaModSubProgDesc" binding="#{organigramView.txtAreaModSubProgDesc}"
+							placeholder="Ingrese una descripción para el programa" />
+
+						<p:outputLabel value="¿Activo?:"/>
+						<p:selectBooleanCheckbox id="sbcModSubProgActivo" binding="#{organigramView.sbcModSubProgActivo}"/>
+						
+					</h:panelGrid>
+
+				</p:panel>
+
+				<br />
+
+				<div align="center">
+
+					<p:commandButton value="Modificar"
+						update=":form:organigram"
+						oncomplete="PF('dlgModificarSubprograma').hide();" />
+
+					<p:commandButton value="Cancelar" icon="ui-icon-close"
+						update=":formModal" />
+
+				</div>
+
+			</p:dialog>
+			<!-- FIN DIÁLOGO MODIFICAR SUBPROGRAMA -->
+			
+			<!-- ************************************************** -->
+			<!-- **			 DIÁLOGO MODIFICAR PROYECTO		 ** -->
+			<!-- ************************************************** -->
+			<p:dialog id="dlgModificarProyecto" header="Proyecto"
+				widgetVar="dlgModificarProyecto" modal="true" draggable="true"
+				closable="false" resizable="true" responsive="true"
+				style="width: 100% !important;">
+
+				<p:messages id="msgModificarProyecto" autoUpdate="true"
+					closable="true" style="width: 100%;" />
+
+				<p:panel header="Modificar Proyecto">
+					<h:panelGrid columns="2" style="width: 100% !important">
+
+						<p:outputLabel value="Proyecto:" />
+						<p:inputTextarea rows="6" cols="33" id="txtAreaModProyDesc" binding="#{organigramView.txtAreaModProyDesc}"
+							placeholder="Ingrese una descripción para el programa" />
+
+						<p:outputLabel value="¿Activo?:"/>
+						<p:selectBooleanCheckbox id="sbcModProyActivo" binding="#{organigramView.sbcModProyActivo}"/>
+						
+					</h:panelGrid>
+
+				</p:panel>
+
+				<br />
+
+				<div align="center">
+
+					<p:commandButton value="Modificar"
+						update=":form:organigram"
+						oncomplete="PF('dlgModificarProyecto').hide();" />
+
+					<p:commandButton value="Cancelar" icon="ui-icon-close"
+						update=":formModal" />
+
+				</div>
+
+			</p:dialog>
+			<!-- FIN DIÁLOGO MODIFICAR PROYECTO -->
+			
+			<!-- ************************************************** -->
+			<!-- **		 DIÁLOGO MODIFICAR DETALLE PROYECTO		 ** -->
+			<!-- ************************************************** -->
+			<p:dialog id="dlgModificarDetalleProyecto" header="Detalle Proyecto"
+				widgetVar="dlgModificarDetalleProyecto" modal="true" draggable="true"
+				closable="false" resizable="true" responsive="true"
+				style="width: 100% !important;">
+
+				<p:messages id="msgModificarDetalleProyecto" autoUpdate="true"
+					closable="true" style="width: 100%;" />
+
+				<p:panel header="Modificar Detalle Proyecto">
+					<h:panelGrid columns="2" style="width: 100% !important">
+
+						<p:outputLabel value="Año fiscal:" />
+						<p:selectOneMenu id="somAnoFiscal"
+							binding="#{organigramView.somAnoFiscal}">
+							<f:selectItems value="#{organigramView.losAnosFiscalItem}" />
+						</p:selectOneMenu>
+						<p:outputLabel value="Presupuesto" />
+						<p:inputNumber id="numModDPValorPresupuesto"
+							binding="#{organigramView.numModDPValorPresupuesto}" minValue="0.0001"
+							decimalPlaces="2"/>
+						<p:outputLabel value="¿Activo?:"/>
+						<p:selectBooleanCheckbox id="sbcModDPActivo" binding="#{organigramView.sbcModDPActivo}"/>
+
+					</h:panelGrid>
+
+				</p:panel>
+
+				<br />
+
+				<div align="center">
+
+					<p:commandButton value="Modificar"
+						update=":form:organigram"
+						oncomplete="PF('dlgModificarDetalleProyecto').hide();" />
+
+					<p:commandButton value="Cancelar" icon="ui-icon-close"
+						update=":formModal" />
+
+				</div>
+
+			</p:dialog>
+			<!-- FIN DIÁLOGO MODIFICAR DETALLE PROYECTO -->
 
 			<!-- FIN DIALOGOS DE MODIFICAR -->
 		</h:form>

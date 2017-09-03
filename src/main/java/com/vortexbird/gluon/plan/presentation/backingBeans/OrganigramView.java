@@ -7,6 +7,7 @@ import org.primefaces.component.inputnumber.InputNumber;
 import org.primefaces.component.inputtext.InputText;
 import org.primefaces.component.inputtextarea.InputTextarea;
 import org.primefaces.component.organigram.OrganigramHelper;
+import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.component.selectonemenu.SelectOneMenu;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.organigram.OrganigramNodeCollapseEvent;
@@ -54,17 +55,17 @@ import javax.faces.model.SelectItem;
 @ManagedBean
 @ViewScoped
 public class OrganigramView implements Serializable {
-	
+
 	@ManagedProperty(value = "#{BusinessDelegatorView}")
 	private IBusinessDelegatorView businessDelegatorView;
 
 	private static final Logger log = LoggerFactory.getLogger(OrganigramView.class);
-	
-	//Nodo raiz (rootNode) y nodo que guarda el nodo seleccionado (selection)
+
+	// Nodo raiz (rootNode) y nodo que guarda el nodo seleccionado (selection)
 	private OrganigramNode rootNode;
 	private OrganigramNode selection;
 
-	//Variables para la creación de los entity
+	// Variables para la creación de los entity
 	private GluoPlanDesarrollo plan;
 	private GluoSectorEjeDimension eje;
 	private GluoObjetivo objetivo;
@@ -72,16 +73,16 @@ public class OrganigramView implements Serializable {
 	private GluoSubprograma subprograma;
 	private GluoProyecto proyecto;
 	private GluoDetalleProyecto detalleProyecto;
-	//Fin Variables para la creación de los entity
-	
-	//Variables de configuración para el organigrama
+	// Fin Variables para la creación de los entity
+
+	// Variables de configuración para el organigrama
 	private boolean zoom = true;
 	private String style = "width: 100%";
 	private int leafNodeConnectorHeight = 0;
-	//Fin Variables de configuración para el organigrama
-	
+	// Fin Variables de configuración para el organigrama
+
 	private List<SelectItem> losAnosFiscalItem;
-	
+
 	private HashMap<OrganigramNode, GluoSectorEjeDimension> dimensionHash = new HashMap<OrganigramNode, GluoSectorEjeDimension>();
 	private HashMap<OrganigramNode, GluoObjetivo> objetivoHash = new HashMap<OrganigramNode, GluoObjetivo>();
 	private HashMap<OrganigramNode, GluoPrograma> programaHash = new HashMap<OrganigramNode, GluoPrograma>();
@@ -91,36 +92,65 @@ public class OrganigramView implements Serializable {
 
 	// Variables de dialogos
 	private InputTextarea txtAreaDescripcionPlan;
-    private InputTextarea txtAreaEsloganPlan;
-    private InputText txtNombreAlcaldePlan;
-    private Calendar txtAnoFinPlan;
-    private Calendar txtAnoInicioPlan;
-    private InputText txtDimension;
-    private SelectOneMenu somDimensionObjetivo;
-    private InputTextarea txtAreaDescObjetivo;
-    private InputTextarea txtAreaDesPrograma;
-    private InputTextarea txtAreaDescSubPrograma;
-    private InputTextarea txtAreaDescProyecto;
-    private SelectOneMenu somAnoFiscal;
-    private InputNumber numValorPresupuesto;
+	private InputTextarea txtAreaEsloganPlan;
+	private InputText txtNombreAlcaldePlan;
+	private Calendar txtAnoFinPlan;
+	private Calendar txtAnoInicioPlan;
+	private InputText txtDimension;
+	private SelectOneMenu somDimensionObjetivo;
+	private InputTextarea txtAreaDescObjetivo;
+	private InputTextarea txtAreaDesPrograma;
+	private InputTextarea txtAreaDescSubPrograma;
+	private InputTextarea txtAreaDescProyecto;
+	private SelectOneMenu somAnoFiscal;
+	private InputNumber numValorPresupuesto;
 	private String[] selectedDimension;
 	private CommandButton btnAnadirPlan;
 	private CommandButton btnAnadirDimension;
 	private CommandButton btnAnadirObjetivo;
 	private CommandButton btnAnadirPrograma;
 	// Fin Variables de dialogos
+	
+	//Variables para los dialogos de modificar
+	private InputTextarea txtAreaModPlanDescripcion;
+	private InputTextarea txtAreaModPlanEslogan;
+	private InputText txtModPlanNombreAlcaldePlan;
+	private Calendar txtModPlanAnoFinPlan;
+	private Calendar txtModPlanAnoInicioPlan;
+	private SelectBooleanCheckbox sbcModPlanActivo;
+	
+	
+	private SelectBooleanCheckbox sbcModEjeActivo;
+	
+	private InputTextarea txtAreaModObjDesc;
+	private SelectBooleanCheckbox sbcModObjActivo;
+	
+	private InputTextarea txtAreaModProgDesc;
+	private SelectBooleanCheckbox sbcModProgActivo;
+	
+	private InputTextarea txtAreaModSubProgDesc;
+	private SelectBooleanCheckbox sbcModSubProgActivo;
+	
+	private InputTextarea txtAreaModProyDesc;
+	private SelectBooleanCheckbox sbcModProyActivo;
+	
+	private InputNumber numModDPValorPresupuesto;
+	private SelectBooleanCheckbox sbcModDPActivo;
+	private InputText txtDPValorTotalPresupuesto;
+	//Fin Variables para los dialogos de modificar
 
 	@PostConstruct
 	public void init() {
 		selection = new DefaultOrganigramNode(null, "plan", null);
-		
+
 		RequestContext.getCurrentInstance().execute("PF('dlgAnadirPlan').show()");
-		
+
 	}
 
 	public void nodeSelectListener(OrganigramNodeSelectEvent event) {
 		FacesMessage message = new FacesMessage();
-		message.setSummary(event.getOrganigramNode().getType() + " '" + event.getOrganigramNode().getData() + "' seleccionado");
+		message.setSummary(
+				event.getOrganigramNode().getType() + " '" + event.getOrganigramNode().getData() + "' seleccionado");
 		message.setSeverity(FacesMessage.SEVERITY_INFO);
 
 		FacesContext.getCurrentInstance().addMessage(null, message);
@@ -128,7 +158,8 @@ public class OrganigramView implements Serializable {
 
 	public void nodeCollapseListener(OrganigramNodeCollapseEvent event) {
 		FacesMessage message = new FacesMessage();
-		message.setSummary(event.getOrganigramNode().getType() + " '" + event.getOrganigramNode().getData() + "' colapsado.");
+		message.setSummary(
+				event.getOrganigramNode().getType() + " '" + event.getOrganigramNode().getData() + "' colapsado.");
 		message.setSeverity(FacesMessage.SEVERITY_INFO);
 
 		FacesContext.getCurrentInstance().addMessage(null, message);
@@ -136,27 +167,26 @@ public class OrganigramView implements Serializable {
 
 	public void nodeExpandListener(OrganigramNodeExpandEvent event) {
 		FacesMessage message = new FacesMessage();
-		message.setSummary(event.getOrganigramNode().getType() + " '" + event.getOrganigramNode().getData() + "' expandido.");
+		message.setSummary(
+				event.getOrganigramNode().getType() + " '" + event.getOrganigramNode().getData() + "' expandido.");
 		message.setSeverity(FacesMessage.SEVERITY_INFO);
 
 		FacesContext.getCurrentInstance().addMessage(null, message);
 	}
-	
-	 public void listener_txtAnoFin() {
-	        Date inputDate = (Date) txtAnoFinPlan.getValue();
-	        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-	        FacesContext.getCurrentInstance()
-	                    .addMessage("",
-	            new FacesMessage("Fecha seleccionada " + dateFormat.format(inputDate)));
-	    }
 
-	    public void listener_txtAnoInicio() {
-	        Date inputDate = (Date) txtAnoInicioPlan.getValue();
-	        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-	        FacesContext.getCurrentInstance()
-	                    .addMessage("",
-	            new FacesMessage("Fecha seleccionada " + dateFormat.format(inputDate)));
-	    }
+	public void listener_txtAnoFin() {
+		Date inputDate = (Date) txtAnoFinPlan.getValue();
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		FacesContext.getCurrentInstance().addMessage("",
+				new FacesMessage("Fecha seleccionada " + dateFormat.format(inputDate)));
+	}
+
+	public void listener_txtAnoInicio() {
+		Date inputDate = (Date) txtAnoInicioPlan.getValue();
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		FacesContext.getCurrentInstance().addMessage("",
+				new FacesMessage("Fecha seleccionada " + dateFormat.format(inputDate)));
+	}
 
 	public void removeEmployee() {
 		// re-evaluate selection - might be a differenct object instance if viewstate
@@ -165,26 +195,37 @@ public class OrganigramView implements Serializable {
 		currentSelection.getParent().getChildren().remove(currentSelection);
 	}
 
-	private void setMessage(String msg, FacesMessage.Severity severity) {
-		FacesMessage message = new FacesMessage();
-		message.setSummary(msg);
-		message.setSeverity(severity);
-		FacesContext.getCurrentInstance().addMessage(null, message);
+	public void eliminarDimension() {
+
 	}
-	
+
+	public void eliminarObjetivo() {
+
+	}
+
+	public void eliminarPrograma() {
+
+	}
+
+	public void eliminarSubPrograma() {
+
+	}
+
+	public void eliminarProyecto() {
+
+	}
+
+	public void eliminarDetalleProyecto() {
+
+	}
+
 	public String actionLimpiarAnadirDimension() {
 
 		return "";
 	}
-	
-	public String actionCerrarDialogAnadirDimension() {
 
-		actionLimpiarAnadirDimension();
-		return "";
-	}
-	
-	public String actionGuardar(){
-		
+	public String actionGuardar() {
+
 		try {
 			GluoSectorEjeDimension gsed = new GluoSectorEjeDimension();
 			GluoObjetivo gob = new GluoObjetivo();
@@ -192,84 +233,84 @@ public class OrganigramView implements Serializable {
 			GluoSubprograma gsub = new GluoSubprograma();
 			GluoProyecto gproy = new GluoProyecto();
 			GluoDetalleProyecto gdpro = new GluoDetalleProyecto();
-			
+
 			businessDelegatorView.saveGluoPlanDesarrollo(plan);
-			
-			for(Entry<OrganigramNode, GluoSectorEjeDimension> entry: dimensionHash.entrySet()) {
+
+			for (Entry<OrganigramNode, GluoSectorEjeDimension> entry : dimensionHash.entrySet()) {
 				gsed = entry.getValue();
-				log.info("WOW------------ "+gsed.getDescripcion());
-			    businessDelegatorView.saveGluoSectorEjeDimension(gsed);
+				log.info("WOW------------ " + gsed.getDescripcion());
+				businessDelegatorView.saveGluoSectorEjeDimension(gsed);
 			}
-			
-			for(Entry<OrganigramNode, GluoObjetivo> entry: objetivoHash.entrySet()) {
+
+			for (Entry<OrganigramNode, GluoObjetivo> entry : objetivoHash.entrySet()) {
 				gob = entry.getValue();
-				log.info("AGBC------------ "+gob.getDescripcion());
-			    businessDelegatorView.saveGluoObjetivo(gob);
+				log.info("AGBC------------ " + gob.getDescripcion());
+				businessDelegatorView.saveGluoObjetivo(gob);
 			}
-			
-			for(Entry<OrganigramNode, GluoPrograma> entry: programaHash.entrySet()) {
+
+			for (Entry<OrganigramNode, GluoPrograma> entry : programaHash.entrySet()) {
 				gpr = entry.getValue();
-				log.info("AGBC------------ "+gpr.getDescripcion());
-			    businessDelegatorView.saveGluoPrograma(gpr);
+				log.info("AGBC------------ " + gpr.getDescripcion());
+				businessDelegatorView.saveGluoPrograma(gpr);
 			}
 			////////////////////
-			for(Entry<OrganigramNode, GluoSubprograma> entry: subprogramaHash.entrySet()) {
+			for (Entry<OrganigramNode, GluoSubprograma> entry : subprogramaHash.entrySet()) {
 				gsub = entry.getValue();
-				log.info("AGBC------------ "+gsub.getDescripcion());
-			    businessDelegatorView.saveGluoSubprograma(gsub);
+				log.info("AGBC------------ " + gsub.getDescripcion());
+				businessDelegatorView.saveGluoSubprograma(gsub);
 			}
-			
-			for(Entry<OrganigramNode, GluoProyecto> entry: proyectoHash.entrySet()) {
+
+			for (Entry<OrganigramNode, GluoProyecto> entry : proyectoHash.entrySet()) {
 				gproy = entry.getValue();
-				log.info("AGBC------------ "+gproy.getDescripcion());
-			    businessDelegatorView.saveGluoProyecto(gproy);
+				log.info("AGBC------------ " + gproy.getDescripcion());
+				businessDelegatorView.saveGluoProyecto(gproy);
 			}
-			
-			for(Entry<OrganigramNode, GluoDetalleProyecto> entry: detalleProyectoHash.entrySet()) {
+
+			for (Entry<OrganigramNode, GluoDetalleProyecto> entry : detalleProyectoHash.entrySet()) {
 				gdpro = entry.getValue();
-				log.info("AGBC------------ "+gdpro.getFechaModificacion());
-			    businessDelegatorView.saveGluoDetalleProyecto(gdpro);
+				log.info("AGBC------------ " + gdpro.getFechaModificacion());
+				businessDelegatorView.saveGluoDetalleProyecto(gdpro);
 			}
-			
+
 			FacesUtils.addInfoMessage("Se ha guardado el plan");
-			
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
-		
+
 		return "";
 	}
-	
+
 	public String anadirPlanAction() {
-        try {
-        	plan = new GluoPlanDesarrollo();
+		try {
+			plan = new GluoPlanDesarrollo();
 
-            //plan.setPlanId(1);valorTotalPresupuesto
-            plan.setActivo("S");
-            plan.setAnoFin(FacesUtils.checkDate(txtAnoFinPlan));
-            plan.setAnoInicio(FacesUtils.checkDate(txtAnoInicioPlan));
-            plan.setDescripcion(FacesUtils.checkString(txtAreaDescripcionPlan));
-            plan.setEslogan(FacesUtils.checkString(txtAreaEsloganPlan));
-            plan.setFechaCreacion(new Date());
-            plan.setNombreAlcalde(FacesUtils.checkString(txtNombreAlcaldePlan));
-            plan.setUsuCreador((int) 0);
-            
-            businessDelegatorView.evaluarGluoPlanDesarrollo(plan);
-            
-            rootNode = new DefaultOrganigramNode("root", plan.getDescripcion(), null);
-    		rootNode.setSelectable(true);
-    		RequestContext.getCurrentInstance().update("formModal");
-    		RequestContext.getCurrentInstance().update("form");
-    		FacesUtils.addInfoMessage("Plan añadido correctamente");
-    		
-        } catch (Exception e) {
-            FacesUtils.addErrorMessage(e.getMessage());
-        }
+			// plan.setPlanId(1);valorTotalPresupuesto
+			plan.setActivo("S");
+			plan.setAnoFin(FacesUtils.checkDate(txtAnoFinPlan));
+			plan.setAnoInicio(FacesUtils.checkDate(txtAnoInicioPlan));
+			plan.setDescripcion(FacesUtils.checkString(txtAreaDescripcionPlan));
+			plan.setEslogan(FacesUtils.checkString(txtAreaEsloganPlan));
+			plan.setFechaCreacion(new Date());
+			plan.setNombreAlcalde(FacesUtils.checkString(txtNombreAlcaldePlan));
+			plan.setUsuCreador((int) 0);
 
-        return "";
-    }
-	
+			businessDelegatorView.evaluarGluoPlanDesarrollo(plan);
+
+			rootNode = new DefaultOrganigramNode("root", plan.getDescripcion(), null);
+			rootNode.setSelectable(true);
+			RequestContext.getCurrentInstance().update("formModal");
+			RequestContext.getCurrentInstance().update("form");
+			FacesUtils.addInfoMessage("Plan añadido correctamente");
+
+		} catch (Exception e) {
+			FacesUtils.addErrorMessage(e.getMessage());
+		}
+
+		return "";
+	}
+
 	public void anadirDimensionAction() {
 		log.info("anadirDimensionAction");
 		try {
@@ -278,14 +319,14 @@ public class OrganigramView implements Serializable {
 			eje.setActivo("S");
 			eje.setDescripcion(txtDimension.getValue().toString().trim());
 			eje.setFechaCreacion(new Date());
-			eje.setUsuCreador((int)0);
+			eje.setUsuCreador((int) 0);
 			eje.setGluoPlanDesarrollo(plan);
-			
+
 			businessDelegatorView.evaluarGluoSectorEjeDimension(eje);
-			
-			log.info(""+selection.getData());
+
+			log.info("" + selection.getData());
 			OrganigramNode sector = new DefaultOrganigramNode("dimension", eje.getDescripcion(), currentSelection);
-		
+
 			sector.setSelectable(true);
 			dimensionHash.put(sector, eje);
 			txtDimension.resetValue();
@@ -293,7 +334,7 @@ public class OrganigramView implements Serializable {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
 	}
-	
+
 	public void anadirObjetivoAction() {
 		log.info("anadirObjetivoAction");
 		try {
@@ -305,21 +346,21 @@ public class OrganigramView implements Serializable {
 			objetivo.setDescripcion(descripcion);
 			objetivo.setUsuCreador(1);
 			objetivo.setGluoSectorEjeDimension(dimensionHash.get(currentSelection));
-			
+
 			businessDelegatorView.evaluarGluoObjetivo(objetivo);
-			
-			log.info(""+selection.getData());
+
+			log.info("" + selection.getData());
 			OrganigramNode nodoObjetivo = new DefaultOrganigramNode("objetivo", descripcion, currentSelection);
 			nodoObjetivo.setSelectable(true);
 			objetivoHash.put(nodoObjetivo, objetivo);
-			
+
 			txtAreaDescObjetivo.resetValue();
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
-		
+
 	}
-	
+
 	public void anadirProgramaAction() {
 		log.info("anadirProgramaAction");
 		try {
@@ -328,20 +369,21 @@ public class OrganigramView implements Serializable {
 			programa.setActivo("S");
 			programa.setDescripcion(txtAreaDesPrograma.getValue().toString().trim());
 			programa.setFechaCreacion(new Date());
-			programa.setUsuCreador((int)0);
+			programa.setUsuCreador((int) 0);
 			programa.setGluoObjetivo(objetivoHash.get(currentSelection));
-			
+
 			businessDelegatorView.evaluarGluoPrograma(programa);
-			
-			OrganigramNode nodoPrograma = new DefaultOrganigramNode("programa", txtAreaDesPrograma.getValue().toString().trim(), currentSelection);
+
+			OrganigramNode nodoPrograma = new DefaultOrganigramNode("programa",
+					txtAreaDesPrograma.getValue().toString().trim(), currentSelection);
 			nodoPrograma.setSelectable(true);
 			programaHash.put(nodoPrograma, programa);
-			
+
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
 	}
-	
+
 	public void anadirSubProgramaAction() {
 		log.info("anadirSubProgramaAction");
 		try {
@@ -350,20 +392,21 @@ public class OrganigramView implements Serializable {
 			subprograma.setActivo("S");
 			subprograma.setDescripcion(txtAreaDescSubPrograma.getValue().toString().trim());
 			subprograma.setFechaCreacion(new Date());
-			subprograma.setUsuCreador((int)0);
+			subprograma.setUsuCreador((int) 0);
 			subprograma.setGluoPrograma(programaHash.get(currentSelection));
-			
+
 			businessDelegatorView.evaluarGluoSubprograma(subprograma);
-			
-			OrganigramNode nodoSubPrograma = new DefaultOrganigramNode("subprograma", txtAreaDescSubPrograma.getValue().toString().trim(), currentSelection);
+
+			OrganigramNode nodoSubPrograma = new DefaultOrganigramNode("subprograma",
+					txtAreaDescSubPrograma.getValue().toString().trim(), currentSelection);
 			nodoSubPrograma.setSelectable(true);
 			subprogramaHash.put(nodoSubPrograma, subprograma);
-			
+
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
 	}
-	
+
 	public void anadirProyectoAction() {
 		log.info("anadirProyectoAction");
 		try {
@@ -372,48 +415,51 @@ public class OrganigramView implements Serializable {
 			proyecto.setActivo("S");
 			proyecto.setDescripcion(txtAreaDescProyecto.getValue().toString().trim());
 			proyecto.setFechaCreacion(new Date());
-			proyecto.setUsuCreador((int)0);
+			proyecto.setUsuCreador((int) 0);
 			proyecto.setGluoSubprograma(subprogramaHash.get(currentSelection));
-			
+
 			businessDelegatorView.evaluarGluoProyecto(proyecto);
-			
-			OrganigramNode nodoProyecto = new DefaultOrganigramNode("proyecto", txtAreaDescProyecto.getValue().toString().trim(), currentSelection);
+
+			OrganigramNode nodoProyecto = new DefaultOrganigramNode("proyecto",
+					txtAreaDescProyecto.getValue().toString().trim(), currentSelection);
 			nodoProyecto.setSelectable(true);
 			proyectoHash.put(nodoProyecto, proyecto);
-			
+
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
 	}
-	
+
 	public void anadirDetalleProyectoAction() {
 		log.info("anadirDetalleProyectoAction");
 		try {
 			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
 			detalleProyecto = new GluoDetalleProyecto();
-			if(numValorPresupuesto.getValue()==null) {
+			if (numValorPresupuesto.getValue() == null) {
 				throw new Exception("Ingrese un valor para el presupuesto");
 			}
-			detalleProyecto.setValorTotalPresupuesto(Utilities.convertirStringADouble(numValorPresupuesto.getValue().toString()));
+			detalleProyecto.setValorTotalPresupuesto(
+					Utilities.convertirStringADouble(numValorPresupuesto.getValue().toString()));
 			detalleProyecto.setActivo("S");
 			detalleProyecto.setFechaCreacion(new Date());
 			detalleProyecto.setUsuCreador(1);
 			detalleProyecto.setGluoProyecto(proyectoHash.get(currentSelection));
-			
-			GluoAnoFiscal anoFiscal = businessDelegatorView.getGluoAnoFiscal(Integer.parseInt(somAnoFiscal.getValue().toString()));
+
+			GluoAnoFiscal anoFiscal = businessDelegatorView
+					.getGluoAnoFiscal(Integer.parseInt(somAnoFiscal.getValue().toString()));
 			detalleProyecto.setGluoAnoFiscal(anoFiscal);
-			
+
 			businessDelegatorView.evaluarGluoDetalleProyecto(detalleProyecto);
-			
-			OrganigramNode nodoDetalleProyecto = new DefaultOrganigramNode("detalleProyecto", detalleProyecto.getGluoAnoFiscal(), currentSelection);
+
+			OrganigramNode nodoDetalleProyecto = new DefaultOrganigramNode("detalleProyecto",
+					detalleProyecto.getGluoAnoFiscal().getAnoFiscal(), currentSelection);
 			detalleProyectoHash.put(nodoDetalleProyecto, detalleProyecto);
 
-			
 		} catch (Exception e) {
-			
+
 		}
 	}
-	
+
 	public OrganigramNode getRootNode() {
 		return rootNode;
 	}
@@ -429,7 +475,7 @@ public class OrganigramView implements Serializable {
 	public void setSelection(OrganigramNode selection) {
 		this.selection = selection;
 	}
-	
+
 	public boolean isZoom() {
 		return zoom;
 	}
@@ -437,7 +483,7 @@ public class OrganigramView implements Serializable {
 	public void setZoom(boolean zoom) {
 		this.zoom = zoom;
 	}
-	
+
 	public String getStyle() {
 		return style;
 	}
@@ -463,11 +509,12 @@ public class OrganigramView implements Serializable {
 	}
 
 	public List<SelectItem> getLosAnosFiscalItem() throws Exception {
-		if(losAnosFiscalItem==null){
-			losAnosFiscalItem=new ArrayList<SelectItem>();
+		if (losAnosFiscalItem == null) {
+			losAnosFiscalItem = new ArrayList<SelectItem>();
 			List<GluoAnoFiscalDTO> losAnosFiscal = businessDelegatorView.getDataGluoAnoFiscal();
 			for (GluoAnoFiscalDTO anosFiscal : losAnosFiscal) {
-				losAnosFiscalItem.add(new SelectItem(anosFiscal.getAnofId(), String.valueOf(anosFiscal.getAnoFiscal())));
+				losAnosFiscalItem
+						.add(new SelectItem(anosFiscal.getAnofId(), String.valueOf(anosFiscal.getAnoFiscal())));
 			}
 		}
 		return losAnosFiscalItem;
@@ -519,7 +566,7 @@ public class OrganigramView implements Serializable {
 	public void setTxtAnoInicioPlan(Calendar txtAnoInicioPlan) {
 		this.txtAnoInicioPlan = txtAnoInicioPlan;
 	}
-	
+
 	public InputText getTxtDimension() {
 		return txtDimension;
 	}
@@ -527,7 +574,7 @@ public class OrganigramView implements Serializable {
 	public void setTxtDimension(InputText txtDimension) {
 		this.txtDimension = txtDimension;
 	}
-	
+
 	public SelectOneMenu getSomDimensionObjetivo() {
 		return somDimensionObjetivo;
 	}
@@ -539,11 +586,11 @@ public class OrganigramView implements Serializable {
 	public InputTextarea getTxtAreaDescObjetivo() {
 		return txtAreaDescObjetivo;
 	}
-	
+
 	public void setTxtAreaDescObjetivo(InputTextarea txtAreaDescObjetivo) {
 		this.txtAreaDescObjetivo = txtAreaDescObjetivo;
 	}
-	
+
 	public InputTextarea getTxtAreaDesPrograma() {
 		return txtAreaDesPrograma;
 	}
@@ -559,7 +606,7 @@ public class OrganigramView implements Serializable {
 	public void setTxtAreaDescSubPrograma(InputTextarea txtAreaDescSubPrograma) {
 		this.txtAreaDescSubPrograma = txtAreaDescSubPrograma;
 	}
-	
+
 	public InputTextarea getTxtAreaDescProyecto() {
 		return txtAreaDescProyecto;
 	}
@@ -567,7 +614,7 @@ public class OrganigramView implements Serializable {
 	public void setTxtAreaDescProyecto(InputTextarea txtAreaDescProyecto) {
 		this.txtAreaDescProyecto = txtAreaDescProyecto;
 	}
-	
+
 	public SelectOneMenu getSomAnoFiscal() {
 		return somAnoFiscal;
 	}
@@ -575,7 +622,7 @@ public class OrganigramView implements Serializable {
 	public void setSomAnoFiscal(SelectOneMenu somAnoFiscal) {
 		this.somAnoFiscal = somAnoFiscal;
 	}
-	
+
 	public InputNumber getNumValorPresupuesto() {
 		return numValorPresupuesto;
 	}
@@ -583,7 +630,7 @@ public class OrganigramView implements Serializable {
 	public void setNumValorPresupuesto(InputNumber numValorPresupuesto) {
 		this.numValorPresupuesto = numValorPresupuesto;
 	}
-	
+
 	public String[] getSelectedDimension() {
 		return selectedDimension;
 	}
@@ -591,7 +638,7 @@ public class OrganigramView implements Serializable {
 	public void setSelectedDimension(String[] selectedDimension) {
 		this.selectedDimension = selectedDimension;
 	}
-	
+
 	public CommandButton getBtnAnadirPlan() {
 		return btnAnadirPlan;
 	}
@@ -599,7 +646,7 @@ public class OrganigramView implements Serializable {
 	public void setBtnAnadirPlan(CommandButton btnAnadirPlan) {
 		this.btnAnadirPlan = btnAnadirPlan;
 	}
-	
+
 	public CommandButton getBtnAnadirDimension() {
 		return btnAnadirDimension;
 	}
@@ -672,9 +719,153 @@ public class OrganigramView implements Serializable {
 		this.detalleProyectoHash = detalleProyectoHash;
 	}
 	
-	
-	
 	// Fin Setters and Getters variables de dialogos
 
+	//Setters and Getters Variables para los dialogos de modificar
+	
+	public InputTextarea getTxtAreaModPlanDescripcion() {
+		return txtAreaModPlanDescripcion;
+	}
 
+	public void setTxtAreaModPlanDescripcion(InputTextarea txtAreaModPlanDescripcion) {
+		this.txtAreaModPlanDescripcion = txtAreaModPlanDescripcion;
+	}
+
+	public InputTextarea getTxtAreaModPlanEslogan() {
+		return txtAreaModPlanEslogan;
+	}
+
+	public void setTxtAreaModPlanEslogan(InputTextarea txtAreaModPlanEslogan) {
+		this.txtAreaModPlanEslogan = txtAreaModPlanEslogan;
+	}
+
+	public InputText getTxtModPlanNombreAlcaldePlan() {
+		return txtModPlanNombreAlcaldePlan;
+	}
+
+	public void setTxtModPlanNombreAlcaldePlan(InputText txtModPlanNombreAlcaldePlan) {
+		this.txtModPlanNombreAlcaldePlan = txtModPlanNombreAlcaldePlan;
+	}
+
+	public Calendar getTxtModPlanAnoFinPlan() {
+		return txtModPlanAnoFinPlan;
+	}
+
+	public void setTxtModPlanAnoFinPlan(Calendar txtModPlanAnoFinPlan) {
+		this.txtModPlanAnoFinPlan = txtModPlanAnoFinPlan;
+	}
+
+	public Calendar getTxtModPlanAnoInicioPlan() {
+		return txtModPlanAnoInicioPlan;
+	}
+
+	public void setTxtModPlanAnoInicioPlan(Calendar txtModPlanAnoInicioPlan) {
+		this.txtModPlanAnoInicioPlan = txtModPlanAnoInicioPlan;
+	}
+
+	public SelectBooleanCheckbox getSbcModPlanActivo() {
+		return sbcModPlanActivo;
+	}
+
+	public void setSbcModPlanActivo(SelectBooleanCheckbox sbcModPlanActivo) {
+		this.sbcModPlanActivo = sbcModPlanActivo;
+	}
+
+	public SelectBooleanCheckbox getSbcModEjeActivo() {
+		return sbcModEjeActivo;
+	}
+
+	public void setSbcModEjeActivo(SelectBooleanCheckbox sbcModEjeActivo) {
+		this.sbcModEjeActivo = sbcModEjeActivo;
+	}
+
+	public InputTextarea getTxtAreaModObjDesc() {
+		return txtAreaModObjDesc;
+	}
+
+	public void setTxtAreaModObjDesc(InputTextarea txtAreaModObjDesc) {
+		this.txtAreaModObjDesc = txtAreaModObjDesc;
+	}
+
+	public SelectBooleanCheckbox getSbcModObjActivo() {
+		return sbcModObjActivo;
+	}
+
+	public void setSbcModObjActivo(SelectBooleanCheckbox sbcModObjActivo) {
+		this.sbcModObjActivo = sbcModObjActivo;
+	}
+
+	public InputTextarea getTxtAreaModProgDesc() {
+		return txtAreaModProgDesc;
+	}
+
+	public void setTxtAreaModProgDesc(InputTextarea txtAreaModProgDesc) {
+		this.txtAreaModProgDesc = txtAreaModProgDesc;
+	}
+
+	public SelectBooleanCheckbox getSbcModProgActivo() {
+		return sbcModProgActivo;
+	}
+
+	public void setSbcModProgActivo(SelectBooleanCheckbox sbcModProgActivo) {
+		this.sbcModProgActivo = sbcModProgActivo;
+	}
+
+	public InputTextarea getTxtAreaModSubProgDesc() {
+		return txtAreaModSubProgDesc;
+	}
+
+	public void setTxtAreaModSubProgDesc(InputTextarea txtAreaModSubProgDesc) {
+		this.txtAreaModSubProgDesc = txtAreaModSubProgDesc;
+	}
+
+	public SelectBooleanCheckbox getSbcModSubProgActivo() {
+		return sbcModSubProgActivo;
+	}
+
+	public void setSbcModSubProgActivo(SelectBooleanCheckbox sbcModSubProgActivo) {
+		this.sbcModSubProgActivo = sbcModSubProgActivo;
+	}
+
+	public InputTextarea getTxtAreaModProyDesc() {
+		return txtAreaModProyDesc;
+	}
+
+	public void setTxtAreaModProyDesc(InputTextarea txtAreaModProyDesc) {
+		this.txtAreaModProyDesc = txtAreaModProyDesc;
+	}
+
+	public SelectBooleanCheckbox getSbcModProyActivo() {
+		return sbcModProyActivo;
+	}
+
+	public void setSbcModProyActivo(SelectBooleanCheckbox sbcModProyActivo) {
+		this.sbcModProyActivo = sbcModProyActivo;
+	}
+
+	public InputNumber getNumModDPValorPresupuesto() {
+		return numModDPValorPresupuesto;
+	}
+
+	public void setNumModDPValorPresupuesto(InputNumber numModDPValorPresupuesto) {
+		this.numModDPValorPresupuesto = numModDPValorPresupuesto;
+	}
+
+	public SelectBooleanCheckbox getSbcModDPActivo() {
+		return sbcModDPActivo;
+	}
+
+	public void setSbcModDPActivo(SelectBooleanCheckbox sbcModDPActivo) {
+		this.sbcModDPActivo = sbcModDPActivo;
+	}
+
+	public InputText getTxtDPValorTotalPresupuesto() {
+		return txtDPValorTotalPresupuesto;
+	}
+
+	public void setTxtDPValorTotalPresupuesto(InputText txtDPValorTotalPresupuesto) {
+		this.txtDPValorTotalPresupuesto = txtDPValorTotalPresupuesto;
+	}
+	
+	//Fin Setters and Getters Variables para los dialogos de modificar
 }

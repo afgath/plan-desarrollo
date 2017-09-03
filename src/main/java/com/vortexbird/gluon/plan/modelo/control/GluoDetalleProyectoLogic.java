@@ -106,6 +106,7 @@ public class GluoDetalleProyectoLogic implements IGluoDetalleProyectoLogic {
             
     		validateGluoDetalleProyecto(entity);
     		
+    		entity.getGluoAnoFiscal().getAnoFiscal();
 
 		} catch (Exception e) {
 			throw new Exception(e.getMessage());
