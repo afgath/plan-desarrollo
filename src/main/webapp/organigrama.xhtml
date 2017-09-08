@@ -517,7 +517,8 @@
 
 					<p:commandButton value="Modificar"
 						update=":form:organigram"
-						oncomplete="PF('dlgModificarObjetivo').hide();" />
+						oncomplete="PF('dlgModificarObjetivo').hide();"
+						actionListener="#{organigramView.modificarObjetivoAction}" />
 
 					<p:commandButton value="Cancelar" icon="ui-icon-close"
 						update=":formModal" />
