@@ -64,7 +64,7 @@
 
 				<p:ajax event="select" process="@this" update="@form:growl"
 					listener="#{organigramView.nodeSelectListener}" />
-				<p:ajax event="contextmenu" process="@this" />
+				<p:ajax event="contextmenu" process="@this"/>
 				<p:ajax event="collapse" process="@this" update="@form:growl"
 					listener="#{organigramView.nodeCollapseListener}" />
 				<p:ajax event="expand" process="@this" update="@form:growl"
@@ -75,7 +75,7 @@
 				</p:organigramNode>
 
 				<p:organigramNode type="root" style="border-radius: 10px;">
-					<h:outputText value="#{node.data}" />
+					<h:outputText value="#{node.data}"/>
 				</p:organigramNode>
 
 				<p:organigramNode type="dimension" styleClass="dimension"
@@ -116,21 +116,22 @@
 					icon="ui-icon-plus"
 					onclick="PF('dlgAnadirDimension').show(); return false;" />
 				<p:menuitem value="Detalles" update="organigram @form:growl"
-					icon="ui-icon-info"/>
+					icon="ui-icon-info" />
 			</p:contextMenu>
 
 			<p:contextMenu for="organigram" nodeType="dimension">
 				<p:menuitem value="Añadir Objetivo" ajax="false" icon="ui-icon-plus"
 					onclick="PF('dlgAnadirObjetivo').show(); return false;" />
 				<p:menuitem value="Detalles" update="organigram @form:growl"
-					icon="ui-icon-info"/>
+					icon="ui-icon-info" />
 			</p:contextMenu>
 
 			<p:contextMenu for="organigram" nodeType="objetivo">
 				<p:menuitem value="Añadir Programa" ajax="false" icon="ui-icon-plus"
 					onclick="PF('dlgAnadirPrograma').show(); return false;" />
 				<p:menuitem value="Detalles" update="organigram @form:growl"
-					icon="ui-icon-info" onclick="PF('dlgModificarObjetivo').show(); return false;"/>
+					icon="ui-icon-info"
+					onclick="PF('dlgModificarObjetivo').show(); return false;" />
 			</p:contextMenu>
 
 			<p:contextMenu for="organigram" nodeType="programa">
@@ -138,26 +139,31 @@
 					icon="ui-icon-plus"
 					onclick="PF('dlgAnadirSubprograma').show(); return false;" />
 				<p:menuitem value="Detalles" update="organigram @form:growl"
-					icon="ui-icon-info" onclick="PF('dlgModificarPrograma').show(); return false;"/>
+					icon="ui-icon-info"
+					onclick="PF('dlgModificarPrograma').show(); return false;" />
 			</p:contextMenu>
 
 			<p:contextMenu for="organigram" nodeType="subprograma">
 				<p:menuitem value="Añadir Proyecto" ajax="false" icon="ui-icon-plus"
 					onclick="PF('dlgAnadirProyecto').show(); return false;" />
 				<p:menuitem value="Detalles" update="organigram @form:growl"
-					icon="ui-icon-info" onclick="PF('dlgModificarSubprograma').show(); return false;"/>
+					icon="ui-icon-info"
+					onclick="PF('dlgModificarSubprograma').show(); return false;" />
 			</p:contextMenu>
 
 			<p:contextMenu for="organigram" nodeType="proyecto">
-				<p:menuitem value="Añadir Detalle del proyecto" ajax="false" icon="ui-icon-plus"
+				<p:menuitem value="Añadir Detalle del proyecto" ajax="false"
+					icon="ui-icon-plus"
 					onclick="PF('dlgAnadirDetalleProyecto').show(); return false;" />
 				<p:menuitem value="Detalles" update="organigram @form:growl"
-					icon="ui-icon-info" onclick="PF('dlgModificarProyecto').show(); return false;"/>
+					icon="ui-icon-info"
+					onclick="PF('dlgModificarProyecto').show(); return false;" />
 			</p:contextMenu>
-			
+
 			<p:contextMenu for="organigram" nodeType="detalleProyecto">
 				<p:menuitem value="Detalles" update="organigram @form:growl"
-					icon="ui-icon-info" onclick="PF('dlgModificarDetalleProyecto').show(); return false;"/>
+					icon="ui-icon-info"
+					onclick="PF('dlgModificarDetalleProyecto').show(); return false;" />
 			</p:contextMenu>
 			<!-- FIN OPCIONES NODO ORGANIGRAMA -->
 		</h:form>
@@ -177,7 +183,7 @@
 			<!-- DIALOGOS DE AÑADIR -->
 
 			<!-- ************************************************** -->
-			<!-- **			 DIÁLOGO AÑADIR PLAN			 ** -->
+			<!-- **			   DIÁLOGO AÑADIR PLAN			 	 ** -->
 			<!-- ************************************************** -->
 			<p:dialog id="dlgAnadirPlan" header="Crear Plan"
 				widgetVar="dlgAnadirPlan" modal="true" draggable="true"
@@ -226,9 +232,9 @@
 						binding="#{organigramView.btnAnadirPlan}"
 						action="#{organigramView.anadirPlanAction}"
 						update=":formModal:msgPlan" />
-						
-					<p:button value="Cancelar" 
-					href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/font-icons.xhtml"/>
+
+					<p:button value="Cancelar"
+						href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/font-icons.xhtml" />
 
 				</div>
 
@@ -267,15 +273,14 @@
 						oncomplete="PF('dlgAnadirDimension').hide();" />
 
 					<p:commandButton value="Cancelar" icon="ui-icon-close"
-						update=":formModal"
-						action="#{organigramView.actionCerrarDialogAnadirDimension}" />
+						update=":formModal" />
 
 				</div>
 
 			</p:dialog>
 			<!-- FIN DIÁLOGO AÑADIR DIMENSIÓN -->
 
-			<!-- ************************************************** -->ge
+			<!-- ************************************************** -->
 			<!-- **			 DIÁLOGO AÑADIR OBJETIVO			 ** -->
 			<!-- ************************************************** -->
 			<p:dialog id="dlgAnadirObjetivo" header="Objetivo"
@@ -408,7 +413,7 @@
 					<h:panelGrid columns="2" style="width: 100% !important">
 
 						<p:outputLabel value="Proyecto" />
-					es	<p:inputTextarea id="txtAreaDescProyecto" rows="6" cols="33"
+						<p:inputTextarea id="txtAreaDescProyecto" rows="6" cols="33"
 							binding="#{organigramView.txtAreaDescProyecto}"
 							placeholder="Ingrese una descripción para el proyecto" />
 
@@ -456,7 +461,7 @@
 						<p:outputLabel value="Presupuesto" />
 						<p:inputNumber id="numValorPresupuesto"
 							binding="#{organigramView.numValorPresupuesto}" minValue="0.0001"
-							decimalPlaces="2"/>
+							decimalPlaces="2" />
 
 					</h:panelGrid>
 
@@ -484,7 +489,7 @@
 
 
 			<!-- DIALOGOS DE MODIFICAR -->
-			
+
 			<!-- ************************************************** -->
 			<!-- **			 DIÁLOGO MODIFICAR OBJETIVO			 ** -->
 			<!-- ************************************************** -->
@@ -501,10 +506,11 @@
 
 						<p:outputLabel value="Objetivo:" />
 						<p:inputTextarea rows="6" cols="33" id="txtAreaModObjDesc"
-							binding="#{organigramView.txtAreaModObjDesc}"/>
-							
-						<p:outputLabel value="¿Activo?:"/>
-						<p:selectBooleanCheckbox id="sbcModObjActivo" binding="#{organigramView.sbcModObjActivo}"/>
+							binding="#{organigramView.txtAreaModObjDesc}" />
+
+						<p:outputLabel value="¿Activo?:" />
+						<p:selectBooleanCheckbox id="sbcModObjActivo"
+							binding="#{organigramView.sbcModObjActivo}" />
 
 
 					</h:panelGrid>
@@ -515,8 +521,7 @@
 
 				<div align="center">
 
-					<p:commandButton value="Modificar"
-						update=":form:organigram"
+					<p:commandButton value="Modificar" update=":form:organigram"
 						oncomplete="PF('dlgModificarObjetivo').hide();"
 						actionListener="#{organigramView.modificarObjetivoAction}" />
 
@@ -543,12 +548,14 @@
 					<h:panelGrid columns="2" style="width: 100% !important">
 
 						<p:outputLabel value="Programa:" />
-						<p:inputTextarea rows="6" cols="33" id="txtAreaModProgDesc" binding="#{organigramView.txtAreaModProgDesc}"
+						<p:inputTextarea rows="6" cols="33" id="txtAreaModProgDesc"
+							binding="#{organigramView.txtAreaModProgDesc}"
 							placeholder="Ingrese una descripción para el programa" />
 
-						<p:outputLabel value="¿Activo?:"/>
-						<p:selectBooleanCheckbox id="sbcModProgActivo" binding="#{organigramView.sbcModProgActivo}"/>
-						
+						<p:outputLabel value="¿Activo?:" />
+						<p:selectBooleanCheckbox id="sbcModProgActivo"
+							binding="#{organigramView.sbcModProgActivo}" />
+
 					</h:panelGrid>
 
 				</p:panel>
@@ -569,7 +576,7 @@
 
 			</p:dialog>
 			<!-- FIN DIÁLOGO MODIFICAR PROGRAMA -->
-			
+
 			<!-- ************************************************** -->
 			<!-- **			 DIÁLOGO MODIFICAR SUBPROGRAMA		 ** -->
 			<!-- ************************************************** -->
@@ -585,12 +592,14 @@
 					<h:panelGrid columns="2" style="width: 100% !important">
 
 						<p:outputLabel value="SubPrograma:" />
-						<p:inputTextarea rows="6" cols="33" id="txtAreaModSubProgDesc" binding="#{organigramView.txtAreaModSubProgDesc}"
+						<p:inputTextarea rows="6" cols="33" id="txtAreaModSubProgDesc"
+							binding="#{organigramView.txtAreaModSubProgDesc}"
 							placeholder="Ingrese una descripción para el programa" />
 
-						<p:outputLabel value="¿Activo?:"/>
-						<p:selectBooleanCheckbox id="sbcModSubProgActivo" binding="#{organigramView.sbcModSubProgActivo}"/>
-						
+						<p:outputLabel value="¿Activo?:" />
+						<p:selectBooleanCheckbox id="sbcModSubProgActivo"
+							binding="#{organigramView.sbcModSubProgActivo}" />
+
 					</h:panelGrid>
 
 				</p:panel>
@@ -599,8 +608,7 @@
 
 				<div align="center">
 
-					<p:commandButton value="Modificar"
-						update=":form:organigram"
+					<p:commandButton value="Modificar" update=":form:organigram"
 						oncomplete="PF('dlgModificarSubprograma').hide();" />
 
 					<p:commandButton value="Cancelar" icon="ui-icon-close"
@@ -610,7 +618,7 @@
 
 			</p:dialog>
 			<!-- FIN DIÁLOGO MODIFICAR SUBPROGRAMA -->
-			
+
 			<!-- ************************************************** -->
 			<!-- **			 DIÁLOGO MODIFICAR PROYECTO		 ** -->
 			<!-- ************************************************** -->
@@ -626,12 +634,14 @@
 					<h:panelGrid columns="2" style="width: 100% !important">
 
 						<p:outputLabel value="Proyecto:" />
-						<p:inputTextarea rows="6" cols="33" id="txtAreaModProyDesc" binding="#{organigramView.txtAreaModProyDesc}"
+						<p:inputTextarea rows="6" cols="33" id="txtAreaModProyDesc"
+							binding="#{organigramView.txtAreaModProyDesc}"
 							placeholder="Ingrese una descripción para el programa" />
 
-						<p:outputLabel value="¿Activo?:"/>
-						<p:selectBooleanCheckbox id="sbcModProyActivo" binding="#{organigramView.sbcModProyActivo}"/>
-						
+						<p:outputLabel value="¿Activo?:" />
+						<p:selectBooleanCheckbox id="sbcModProyActivo"
+							binding="#{organigramView.sbcModProyActivo}" />
+
 					</h:panelGrid>
 
 				</p:panel>
@@ -640,8 +650,7 @@
 
 				<div align="center">
 
-					<p:commandButton value="Modificar"
-						update=":form:organigram"
+					<p:commandButton value="Modificar" update=":form:organigram"
 						oncomplete="PF('dlgModificarProyecto').hide();" />
 
 					<p:commandButton value="Cancelar" icon="ui-icon-close"
@@ -651,13 +660,13 @@
 
 			</p:dialog>
 			<!-- FIN DIÁLOGO MODIFICAR PROYECTO -->
-			
+
 			<!-- ************************************************** -->
 			<!-- **		 DIÁLOGO MODIFICAR DETALLE PROYECTO		 ** -->
 			<!-- ************************************************** -->
 			<p:dialog id="dlgModificarDetalleProyecto" header="Detalle Proyecto"
-				widgetVar="dlgModificarDetalleProyecto" modal="true" draggable="true"
-				closable="false" resizable="true" responsive="true"
+				widgetVar="dlgModificarDetalleProyecto" modal="true"
+				draggable="true" closable="false" resizable="true" responsive="true"
 				style="width: 100% !important;">
 
 				<p:messages id="msgModificarDetalleProyecto" autoUpdate="true"
@@ -673,10 +682,11 @@
 						</p:selectOneMenu>
 						<p:outputLabel value="Presupuesto" />
 						<p:inputNumber id="numModDPValorPresupuesto"
-							binding="#{organigramView.numModDPValorPresupuesto}" minValue="0.0001"
-							decimalPlaces="2"/>
-						<p:outputLabel value="¿Activo?:"/>
-						<p:selectBooleanCheckbox id="sbcModDPActivo" binding="#{organigramView.sbcModDPActivo}"/>
+							binding="#{organigramView.numModDPValorPresupuesto}"
+							minValue="0.0001" decimalPlaces="2" />
+						<p:outputLabel value="¿Activo?:" />
+						<p:selectBooleanCheckbox id="sbcModDPActivo"
+							binding="#{organigramView.sbcModDPActivo}" />
 
 					</h:panelGrid>
 
@@ -686,8 +696,7 @@
 
 				<div align="center">
 
-					<p:commandButton value="Modificar"
-						update=":form:organigram"
+					<p:commandButton value="Modificar" update=":form:organigram"
 						oncomplete="PF('dlgModificarDetalleProyecto').hide();" />
 
 					<p:commandButton value="Cancelar" icon="ui-icon-close"
