@@ -83,6 +83,8 @@ public class OrganigramView implements Serializable {
 	private int contObjetivo;
 	private int contPrograma;
 	private int contSubPrograma;
+	private int contProyecto;
+	private int contDetalleProyecto;
 	// Fin Variables para la creación de los entity
 
 	// Variables de configuración para el organigrama
@@ -92,28 +94,15 @@ public class OrganigramView implements Serializable {
 	// Fin Variables de configuración para el organigrama
 
 	private List<SelectItem> losAnosFiscalItem;
-	// HashMaps para almacenar los nodos creados en la base de datos
-	private HashMap<OrganigramNode, GluoSectorEjeDimension> dimensionHash = new HashMap<OrganigramNode, GluoSectorEjeDimension>();
-	private HashMap<OrganigramNode, GluoObjetivo> objetivoHash = new HashMap<OrganigramNode, GluoObjetivo>();
-	private HashMap<OrganigramNode, GluoPrograma> programaHash = new HashMap<OrganigramNode, GluoPrograma>();
-	private HashMap<OrganigramNode, GluoSubprograma> subprogramaHash = new HashMap<OrganigramNode, GluoSubprograma>();
-	private HashMap<OrganigramNode, GluoProyecto> proyectoHash = new HashMap<OrganigramNode, GluoProyecto>();
-	private HashMap<OrganigramNode, GluoDetalleProyecto> detalleProyectoHash = new HashMap<OrganigramNode, GluoDetalleProyecto>();
 	
-	
+	// HashMaps para almacenar los nodos creados en la base de datos	
 	private Map<String, ElementosPlan> dimensionMap = new HashMap<String, ElementosPlan>();
 	private Map<String, ElementosPlan> objetivoMap = new HashMap<String, ElementosPlan>();
 	private Map<String, ElementosPlan> programaMap = new HashMap<String, ElementosPlan>();
+	private Map<String, ElementosPlan> subProgramaMap = new HashMap<String, ElementosPlan>();
+	private Map<String, ElementosPlan> proyectoMap = new HashMap<String, ElementosPlan>();
+	private Map<String, ElementosPlan> detalleProyectoMap = new HashMap<String, ElementosPlan>();
 	// Fin HashMaps para almacenar los nodos creados en la base de datos
-
-	// HashMaps para modificar los nodos
-	private HashMap<OrganigramNode, GluoSectorEjeDimension> dimensionUpdateHash = new HashMap<OrganigramNode, GluoSectorEjeDimension>();
-	private HashMap<OrganigramNode, GluoObjetivo> objetivoUpdateHash = new HashMap<OrganigramNode, GluoObjetivo>();
-	private HashMap<OrganigramNode, GluoPrograma> programaUpdateHash = new HashMap<OrganigramNode, GluoPrograma>();
-	private HashMap<OrganigramNode, GluoSubprograma> subprogramaUpdateHash = new HashMap<OrganigramNode, GluoSubprograma>();
-	private HashMap<OrganigramNode, GluoProyecto> proyectoUpdateHash = new HashMap<OrganigramNode, GluoProyecto>();
-	private HashMap<OrganigramNode, GluoDetalleProyecto> detalleProyectoUpdateHash = new HashMap<OrganigramNode, GluoDetalleProyecto>();
-	// Fin HashMaps para modificar los nodos
 
 	// Variables de dialogos
 	private InputTextarea txtAreaDescripcionPlan;
@@ -174,7 +163,7 @@ public class OrganigramView implements Serializable {
 
 	public void nodeSelectListener(OrganigramNodeSelectEvent event) {
 		FacesUtils.addInfoMessage(event.getOrganigramNode().getType() + " '" + event.getOrganigramNode().getData()
-				+ "' seleccionado. RowKey: " + event.getOrganigramNode().getRowKey()+" - "+event.getBehavior().toString()+ " Selection: "+selection.getRowKey());
+				+ "' seleccionado. RowKey: " + event.getOrganigramNode().getRowKey()+" Selection: "+selection.getRowKey());
 	}
 
 	public void nodeCollapseListener(OrganigramNodeCollapseEvent event) {
@@ -248,55 +237,42 @@ public class OrganigramView implements Serializable {
 	public String actionGuardar() {
 
 		try {
-			GluoSectorEjeDimension gsed = new GluoSectorEjeDimension();
-			GluoObjetivo gob = new GluoObjetivo();
-			GluoPrograma gpr = new GluoPrograma();
-			GluoSubprograma gsub = new GluoSubprograma();
-			GluoProyecto gproy = new GluoProyecto();
-			GluoDetalleProyecto gdpro = new GluoDetalleProyecto();
-
+			
 			businessDelegatorView.saveGluoPlanDesarrollo(plan);
-
-			for (Entry<OrganigramNode, GluoSectorEjeDimension> entry : dimensionUpdateHash.entrySet()) {
-				gsed = entry.getValue();
-				log.info("WOW------------ " + gsed.getDescripcion());
-				businessDelegatorView.saveGluoSectorEjeDimension(gsed);
+			
+			Iterator itDimKey = dimensionMap.keySet().iterator();
+			while(itDimKey.hasNext()){
+			  String key = (String) itDimKey.next();
+			  businessDelegatorView.saveGluoSectorEjeDimension((GluoSectorEjeDimension)dimensionMap.get(key).getEntity());
 			}
-
-			for (Entry<OrganigramNode, GluoObjetivo> entry : objetivoUpdateHash.entrySet()) {
-				gob = entry.getValue();
-				log.info("AGBC------------ " + gob.getDescripcion());
-				businessDelegatorView.saveGluoObjetivo(gob);
+			
+			Iterator itObjMap = objetivoMap.keySet().iterator();
+			while(itObjMap.hasNext()){
+			  String key = (String) itObjMap.next();
+			  businessDelegatorView.saveGluoObjetivo((GluoObjetivo)objetivoMap.get(key).getEntity());
 			}
-
-			for (Entry<OrganigramNode, GluoPrograma> entry : programaUpdateHash.entrySet()) {
-				gpr = entry.getValue();
-				log.info("AGBC------------ " + gpr.getDescripcion());
-				businessDelegatorView.saveGluoPrograma(gpr);
+			
+			Iterator itPrgMap = programaMap.keySet().iterator();
+			while(itPrgMap.hasNext()){
+			  String key = (String) itPrgMap.next();
+			  businessDelegatorView.saveGluoPrograma((GluoPrograma)programaMap.get(key).getEntity());
 			}
-			////////////////////
-			for (Entry<OrganigramNode, GluoSubprograma> entry : subprogramaUpdateHash.entrySet()) {
-				gsub = entry.getValue();
-				log.info("AGBC------------ " + gsub.getDescripcion());
-				businessDelegatorView.saveGluoSubprograma(gsub);
+			
+			Iterator itSubPrgMap = subProgramaMap.keySet().iterator();
+			while(itSubPrgMap.hasNext()){
+			  String key = (String) itSubPrgMap.next();
+			  businessDelegatorView.saveGluoSubprograma((GluoSubprograma)subProgramaMap.get(key).getEntity());
 			}
-
-			for (Entry<OrganigramNode, GluoProyecto> entry : proyectoUpdateHash.entrySet()) {
-				gproy = entry.getValue();
-				log.info("AGBC------------ " +gproy.getDescripcion());
-				businessDelegatorView.saveGluoProyecto(gproy);
+			
+			Iterator itProyMap = proyectoMap.keySet().iterator();
+			while(itProyMap.hasNext()){
+			  String key = (String) itProyMap.next();
+			  businessDelegatorView.saveGluoProyecto((GluoProyecto)proyectoMap.get(key).getEntity());
 			}
-
-			for (Entry<OrganigramNode, GluoDetalleProyecto> entry : detalleProyectoUpdateHash.entrySet()) {
-				gdpro = entry.getValue();
-				log.info("AGBC------------ " + gdpro.getFechaModificacion());
-				businessDelegatorView.saveGluoDetalleProyecto(gdpro);
-			}
-
+			
 			FacesUtils.addInfoMessage("Se ha guardado el plan");
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
 
@@ -342,7 +318,7 @@ public class OrganigramView implements Serializable {
 
 			log.info("RowKey: " + selection.getRowKey());
 
-			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection.getRowKey());
+			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
 			eje = new GluoSectorEjeDimension();
 			eje.setActivo("S");
 			eje.setDescripcion(txtDimension.getValue().toString().trim());
@@ -354,47 +330,18 @@ public class OrganigramView implements Serializable {
 
 			String rowKey = "dim" + contDimension;
 			contDimension++;
-
-			sector = new DefaultOrganigramNode("dimension", "("+rowKey+") - "+eje.getDescripcion(), currentSelection);
+			
+			String dataNode = "("+rowKey+") - "+eje.getDescripcion();
+			sector = new DefaultOrganigramNode("dimension", dataNode, currentSelection);
 			sector.setSelectable(true);
 			
 			elementoPlan = new ElementosPlan(sector, eje);
 			
-			dimensionHash.put(sector, eje);
-			dimensionUpdateHash.put(currentSelection, eje);
-			txtDimension.resetValue();
+			dimensionMap.put(dataNode, elementoPlan);
+//			txtDimension.resetValue();
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
-	}
-
-	public void modificarDimensionAction() {
-		log.info("modificarDimensionAction");
-		try {
-
-			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
-			eje = new GluoSectorEjeDimension();
-			log.info("" + sbcModEjeActivo.getValue().toString());
-			if (sbcModEjeActivo.getValue().toString().trim().equals("true")) {
-				eje.setActivo("S");
-			} else {
-				eje.setActivo("N");
-			}
-			// Falta configurar
-			String descripcion = txtAreaModObjDesc.getValue().toString().trim();
-			objetivo.setDescripcion(descripcion);
-
-			log.info("" + selection.getData());
-
-			OrganigramNode nodoObjetivo = new DefaultOrganigramNode("eje", descripcion, currentSelection);
-			nodoObjetivo.setSelectable(true);
-			dimensionUpdateHash.replace(currentSelection, eje);
-
-			txtAreaDescObjetivo.resetValue();
-		} catch (Exception e) {
-			FacesUtils.addErrorMessage(e.getMessage());
-		}
-
 	}
 
 	public void anadirObjetivoAction() {
@@ -403,59 +350,29 @@ public class OrganigramView implements Serializable {
 
 			log.info("RowKey: " + selection.getRowKey());
 
-			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection.getRowKey());
+			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
 			objetivo = new GluoObjetivo();
 			objetivo.setActivo("S");
 			objetivo.setFechaCreacion(new Date());
 			String descripcion = txtAreaDescObjetivo.getValue().toString().trim();
 			objetivo.setDescripcion(descripcion);
 			objetivo.setUsuCreador(1);
-			objetivo.setGluoSectorEjeDimension(dimensionHash.get(currentSelection));
+			objetivo.setGluoSectorEjeDimension((GluoSectorEjeDimension)dimensionMap.get(currentSelection.getData()).getEntity());
 
 			businessDelegatorView.evaluarGluoObjetivo(objetivo);
 
 			String rowKey = "obj" + contObjetivo;
 			contObjetivo++;
 			
-
-			nodoObjetivo = new DefaultOrganigramNode("objetivo", "("+rowKey+") - "+descripcion, currentSelection);
+			String dataNode = "("+rowKey+") - "+descripcion;
+			nodoObjetivo = new DefaultOrganigramNode("objetivo", dataNode, currentSelection);
 			nodoObjetivo.setSelectable(true);
 			
-			objetivoHash.put(nodoObjetivo, objetivo);
-			objetivoUpdateHash.put(selection, objetivo);
-
-			txtAreaDescObjetivo.resetValue();
-		} catch (Exception e) {
-			FacesUtils.addErrorMessage(e.getMessage());
-		}
-
-	}
-
-	public void modificarObjetivoAction() {
-		log.info("modificarObjetivoAction");
-		try {
-			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
-			GluoObjetivo objetivo = objetivoUpdateHash.get(selection);
-			if (objetivo == null) {
-				throw new Exception("El valor en el hash es nulo");
-			}
-			log.info(objetivo.getActivo());
-			log.info(objetivo.getDescripcion());
-			log.info("" + sbcModObjActivo.getValue().toString());
-			if (sbcModObjActivo.getValue().toString().trim().equals("true")) {
-				objetivo.setActivo("S");
-			} else {
-				objetivo.setActivo("N");
-			}
-			String descripcion = txtAreaModObjDesc.getValue().toString().trim();
-			objetivo.setDescripcion(descripcion);
-			objetivoUpdateHash.replace(currentSelection, objetivo);
-			selection.setData(descripcion);
-			log.info("Desc - " + programa.getDescripcion());
-			log.info("slctData - " + selection.getData());
-			log.info("objUpdDta - " + objetivoUpdateHash.get(currentSelection).getDescripcion());
-
-			txtAreaDescObjetivo.resetValue();
+			elementoPlan = new ElementosPlan(nodoObjetivo, objetivo);
+			
+			objetivoMap.put(dataNode, elementoPlan);
+			
+//			txtAreaDescObjetivo.resetValue();
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
@@ -465,56 +382,31 @@ public class OrganigramView implements Serializable {
 	public void anadirProgramaAction() {
 		log.info("anadirProgramaAction");
 		try {
-			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection.getRowKey());
+			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
 			programa = new GluoPrograma();
 			programa.setActivo("S");
 			String descripcion = txtAreaDesPrograma.getValue().toString().trim();
 			programa.setDescripcion(descripcion);
 			programa.setFechaCreacion(new Date());
 			programa.setUsuCreador((int) 0);
-			programa.setGluoObjetivo(objetivoHash.get(currentSelection));
+			programa.setGluoObjetivo((GluoObjetivo)objetivoMap.get(currentSelection.getData()).getEntity());
 
 			businessDelegatorView.evaluarGluoPrograma(programa);
 
 			String rowKey = "prog" + contPrograma;
 			contPrograma++;
-
+			
+			String dataNode = "("+rowKey+") - "+descripcion;
 			OrganigramNode nodoPrograma = new DefaultOrganigramNode("programa",
-					"("+rowKey+") - "+descripcion, currentSelection);
+					dataNode, currentSelection);
 			nodoPrograma.setSelectable(true);
-			programaHash.put(nodoPrograma, programa);
-			programaUpdateHash.put(currentSelection, programa);
 
+			elementoPlan = new ElementosPlan(nodoPrograma, programa);
+			
+			programaMap.put(dataNode, elementoPlan);
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
-	}
-
-	public void modificarProgramaAction() {
-		log.info("modificarProgramaAction");
-		try {
-			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
-			programa = new GluoPrograma();
-			log.info("" + sbcModObjActivo.getValue().toString());
-			if (sbcModProgActivo.getValue().toString().trim().equals("true")) {
-				programa.setActivo("S");
-			} else {
-				programa.setActivo("N");
-			}
-			String descripcion = txtAreaModProgDesc.getValue().toString().trim();
-			programa.setDescripcion(descripcion);
-
-			objetivoUpdateHash.replace(currentSelection, objetivo);
-			selection.setData(descripcion);
-			log.info("Desc - " + programa.getDescripcion());
-			log.info("slctData - " + selection.getData());
-			log.info("objUpdDta - " + objetivoUpdateHash.get(currentSelection).getDescripcion());
-
-			txtAreaDescObjetivo.resetValue();
-		} catch (Exception e) {
-			FacesUtils.addErrorMessage(e.getMessage());
-		}
-
 	}
 
 	public void anadirSubProgramaAction() {
@@ -523,22 +415,28 @@ public class OrganigramView implements Serializable {
 
 			log.info("RowKey: " + selection.getRowKey());
 
-			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection.getRowKey());
+			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
 			subprograma = new GluoSubprograma();
 			subprograma.setActivo("S");
-			subprograma.setDescripcion(txtAreaDescSubPrograma.getValue().toString().trim());
+			String descripcion = txtAreaDescSubPrograma.getValue().toString().trim();
+			subprograma.setDescripcion(descripcion);
 			subprograma.setFechaCreacion(new Date());
 			subprograma.setUsuCreador((int) 0);
-			subprograma.setGluoPrograma(programaHash.get(currentSelection));
+			subprograma.setGluoPrograma((GluoPrograma)programaMap.get(currentSelection.getData()).getEntity());
 
 			businessDelegatorView.evaluarGluoSubprograma(subprograma);
 
+			String rowKey = "subProg" + contSubPrograma;
+			contSubPrograma++;
+			
+			String dataNode = "("+rowKey+") - "+descripcion;
 			OrganigramNode nodoSubPrograma = new DefaultOrganigramNode("subprograma",
-					txtAreaDescSubPrograma.getValue().toString().trim(), currentSelection);
+					dataNode, currentSelection);
 			nodoSubPrograma.setSelectable(true);
-			subprogramaHash.put(nodoSubPrograma, subprograma);
-			subprogramaUpdateHash.put(currentSelection, subprograma);
+			
+			elementoPlan = new ElementosPlan(nodoSubPrograma, subprograma);
 
+			subProgramaMap.put(dataNode, elementoPlan);
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
@@ -550,19 +448,26 @@ public class OrganigramView implements Serializable {
 			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
 			proyecto = new GluoProyecto();
 			proyecto.setActivo("S");
-			proyecto.setDescripcion(txtAreaDescProyecto.getValue().toString().trim());
+			String descripcion = txtAreaDescProyecto.getValue().toString().trim();
+			proyecto.setDescripcion(descripcion);
 			proyecto.setFechaCreacion(new Date());
 			proyecto.setUsuCreador((int) 0);
-			proyecto.setGluoSubprograma(subprogramaHash.get(currentSelection));
+			proyecto.setGluoSubprograma((GluoSubprograma)subProgramaMap.get(currentSelection.getData()).getEntity());
 
 			businessDelegatorView.evaluarGluoProyecto(proyecto);
-
+			
+			String rowKey = "proy" + contProyecto;
+			contProyecto++;
+			
+			String dataNode = "("+rowKey+") - "+descripcion;
 			OrganigramNode nodoProyecto = new DefaultOrganigramNode("proyecto",
-					txtAreaDescProyecto.getValue().toString().trim(), currentSelection);
+					dataNode, currentSelection);
 			nodoProyecto.setSelectable(true);
-			proyectoHash.put(nodoProyecto, proyecto);
-			proyectoUpdateHash.put(currentSelection, proyecto);
+			
+			elementoPlan = new ElementosPlan(nodoProyecto, proyecto);
 
+			proyectoMap.put(dataNode, elementoPlan);
+			
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
@@ -581,24 +486,125 @@ public class OrganigramView implements Serializable {
 			detalleProyecto.setActivo("S");
 			detalleProyecto.setFechaCreacion(new Date());
 			detalleProyecto.setUsuCreador(1);
-			detalleProyecto.setGluoProyecto(proyectoHash.get(currentSelection));
+			detalleProyecto.setGluoProyecto((GluoProyecto)proyectoMap.get(currentSelection.getData()).getEntity());
 
 			GluoAnoFiscal anoFiscal = businessDelegatorView
 					.getGluoAnoFiscal(Integer.parseInt(somAnoFiscal.getValue().toString()));
 			detalleProyecto.setGluoAnoFiscal(anoFiscal);
 
 			businessDelegatorView.evaluarGluoDetalleProyecto(detalleProyecto);
-
+			
+			String rowKey = "DtProy" + contDetalleProyecto;
+			contDetalleProyecto++;
+			
+			String dataNode = "("+rowKey+") - "+detalleProyecto.getGluoAnoFiscal().getAnoFiscal();
 			OrganigramNode nodoDetalleProyecto = new DefaultOrganigramNode("detalleProyecto",
-					detalleProyecto.getGluoAnoFiscal().getAnoFiscal(), currentSelection);
-			detalleProyectoHash.put(nodoDetalleProyecto, detalleProyecto);
-			detalleProyectoUpdateHash.put(currentSelection, detalleProyecto);
+					dataNode, currentSelection);
+			
+			elementoPlan = new ElementosPlan(nodoDetalleProyecto, detalleProyecto);
 
+			detalleProyectoMap.put(dataNode, elementoPlan);
 		} catch (Exception e) {
 
 		}
 	}
+	
+	public void dialogModificarDimension() {
+		try {
+			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
+			
+			OrganigramNode nodeDimension = dimensionMap.get(currentSelection.getData()).getNodeEntity();
+			GluoSectorEjeDimension dimension = (GluoSectorEjeDimension)dimensionMap.get(currentSelection.getData()).getEntity();
+			
+			//txtAreaMod.setValue(dimension.getDescripcion());
+			if(dimension.getActivo().toLowerCase().trim()=="s") {
+				//sbcModEjeActivo.setValid(true);
+			}else {
+				//sbcModEjeActivo.setValid(false);
+			}
+			
+			RequestContext.getCurrentInstance().update(":formModal");
+			RequestContext.getCurrentInstance().execute("PF('dlgModificarObjetivo').show()");
+		} catch (Exception e) {
+			FacesUtils.addErrorMessage(e.getMessage());
+		}
+	}
+	
+	public void dialogModificarObjetivo() {
+		try {
+			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
+			
+			OrganigramNode nodeObjetivo = objetivoMap.get(currentSelection.getData()).getNodeEntity();
+			GluoObjetivo objetivo = (GluoObjetivo)objetivoMap.get(currentSelection.getData()).getEntity();
+			
+			txtAreaModObjDesc.setValue(objetivo.getDescripcion());
+			log.info("Descripcion objetivo: "+objetivo.getDescripcion());
+			if(objetivo.getActivo().toLowerCase().trim()=="s") {
+				sbcModObjActivo.setValid(true);
+			}else {
+				sbcModObjActivo.setValid(false);
+			}
+			
+			RequestContext.getCurrentInstance().execute("PF('dlgModificarObjetivo').show()");
+		} catch (Exception e) {
+			FacesUtils.addErrorMessage(e.getMessage());
+		}
+	}
+	
+	public void dialogModificarPrograma() {
+		try {
+			
+		} catch (Exception e) {
+			FacesUtils.addErrorMessage(e.getMessage());
+		}
+	}
+	
+	public void modificarDimensionAction() {
+		log.info("modificarDimensionAction");
+		try {
 
+			
+		} catch (Exception e) {
+			FacesUtils.addErrorMessage(e.getMessage());
+		}
+
+	}
+	
+	public void modificarObjetivoAction() {
+		log.info("modificarObjetivoAction");
+		try {
+			
+		} catch (Exception e) {
+			FacesUtils.addErrorMessage(e.getMessage());
+		}
+
+	}
+	
+	public void modificarProgramaAction() {
+		log.info("modificarProgramaAction");
+		try {
+			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
+			programa = new GluoPrograma();
+			log.info("" + sbcModObjActivo.getValue().toString());
+			if (sbcModProgActivo.getValue().toString().trim().equals("true")) {
+				programa.setActivo("S");
+			} else {
+				programa.setActivo("N");
+			}
+			String descripcion = txtAreaModProgDesc.getValue().toString().trim();
+			programa.setDescripcion(descripcion);
+
+			selection.setData(descripcion);
+			log.info("Desc - " + programa.getDescripcion());
+			log.info("slctData - " + selection.getData());
+
+			txtAreaDescObjetivo.resetValue();
+		} catch (Exception e) {
+			FacesUtils.addErrorMessage(e.getMessage());
+		}
+
+	}
+	
 	public OrganigramNode getRootNode() {
 		return rootNode;
 	}
@@ -817,55 +823,6 @@ public class OrganigramView implements Serializable {
 	public void setBtnAnadirPrograma(CommandButton btnAnadirPrograma) {
 		this.btnAnadirPrograma = btnAnadirPrograma;
 	}
-
-	public HashMap<OrganigramNode, GluoSectorEjeDimension> getDimensionHash() {
-		return dimensionHash;
-	}
-
-	public void setDimensionHash(HashMap<OrganigramNode, GluoSectorEjeDimension> dimensionHash) {
-		this.dimensionHash = dimensionHash;
-	}
-
-	public HashMap<OrganigramNode, GluoObjetivo> getObjetivoHash() {
-		return objetivoHash;
-	}
-
-	public void setObjetivoHash(HashMap<OrganigramNode, GluoObjetivo> objetivoHash) {
-		this.objetivoHash = objetivoHash;
-	}
-
-	public HashMap<OrganigramNode, GluoPrograma> getProgramaHash() {
-		return programaHash;
-	}
-
-	public void setProgramaHash(HashMap<OrganigramNode, GluoPrograma> programaHash) {
-		this.programaHash = programaHash;
-	}
-
-	public HashMap<OrganigramNode, GluoSubprograma> getSubprogramaHash() {
-		return subprogramaHash;
-	}
-
-	public void setSubprogramaHash(HashMap<OrganigramNode, GluoSubprograma> subprogramaHash) {
-		this.subprogramaHash = subprogramaHash;
-	}
-
-	public HashMap<OrganigramNode, GluoProyecto> getProyectoHash() {
-		return proyectoHash;
-	}
-
-	public void setProyectoHash(HashMap<OrganigramNode, GluoProyecto> proyectoHash) {
-		this.proyectoHash = proyectoHash;
-	}
-
-	public HashMap<OrganigramNode, GluoDetalleProyecto> getDetalleProyectoHash() {
-		return detalleProyectoHash;
-	}
-
-	public void setDetalleProyectoHash(HashMap<OrganigramNode, GluoDetalleProyecto> detalleProyectoHash) {
-		this.detalleProyectoHash = detalleProyectoHash;
-	}
-
 	// Fin Setters and Getters variables de dialogos
 
 	// Setters and Getters Variables para los dialogos de modificar
