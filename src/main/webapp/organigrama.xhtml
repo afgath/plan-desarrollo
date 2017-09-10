@@ -125,55 +125,62 @@
 				<p:menuitem value="Detalles" update="organigram @form:growl"
 					icon="ui-icon-info"/>
 				<p:menuitem value="Eliminar" update="organigram @form:growl"
-					icon="ui-icon-trash"/>
+					icon="ui-icon-trash" actionListener="#{organigramView.eliminarDimension}"/>
 			</p:contextMenu>
 
 			<p:contextMenu for="organigram" nodeType="objetivo">
 				<p:menuitem value="Añadir Programa" ajax="false" icon="ui-icon-plus"
 					onclick="PF('dlgAnadirPrograma').show(); return false;" />
-				<p:menuitem value="Detalles" update="organigram @form:growl"
+				<p:menuitem value="Detalles" update="formModal"
+					oncomplete="PF('dlgModificarObjetivo').show()"
 					icon="ui-icon-info"
 					action="#{organigramView.dialogModificarObjetivo}" />
 				<p:menuitem value="Eliminar" update="organigram @form:growl"
-					icon="ui-icon-trash"/>
+					icon="ui-icon-trash" actionListener="#{organigramView.eliminarObjetivo}"/>
 			</p:contextMenu>
 
 			<p:contextMenu for="organigram" nodeType="programa">
 				<p:menuitem value="Añadir Subprograma" ajax="false"
 					icon="ui-icon-plus"
 					onclick="PF('dlgAnadirSubprograma').show(); return false;" />
-				<p:menuitem value="Detalles" update="organigram @form:growl"
+				<p:menuitem value="Detalles" update="formModal"
+					oncomplete="PF('dlgModificarPrograma').show()"
 					icon="ui-icon-info"
-					onclick="PF('dlgModificarPrograma').show(); return false;" />
+					action="#{organigramView.dialogModificarPrograma}"/>
 				<p:menuitem value="Eliminar" update="organigram @form:growl"
-					icon="ui-icon-trash"/>
+					icon="ui-icon-trash" actionListener="#{organigramView.eliminarPrograma}"/>
 			</p:contextMenu>
 
 			<p:contextMenu for="organigram" nodeType="subprograma">
 				<p:menuitem value="Añadir Proyecto" ajax="false" icon="ui-icon-plus"
 					onclick="PF('dlgAnadirProyecto').show(); return false;" />
-				<p:menuitem value="Detalles" update="organigram @form:growl"
+				<p:menuitem value="Detalles" update="formModal"
+					oncomplete="PF('dlgModificarSubprograma').show()"
 					icon="ui-icon-info"
-					onclick="PF('dlgModificarSubprograma').show(); return false;" />
+					action="#{organigramView.dialogModificarSubPrograma}"/>
 				<p:menuitem value="Eliminar" update="organigram @form:growl"
-					icon="ui-icon-trash"/>
+					icon="ui-icon-trash" actionListener="#{organigramView.eliminarSubPrograma}"/>
 			</p:contextMenu>
 
 			<p:contextMenu for="organigram" nodeType="proyecto">
 				<p:menuitem value="Añadir Detalle del proyecto" ajax="false"
 					icon="ui-icon-plus"
 					onclick="PF('dlgAnadirDetalleProyecto').show(); return false;" />
-				<p:menuitem value="Detalles" update="organigram @form:growl"
+				<p:menuitem value="Detalles" update="formModal"
+					oncomplete="PF('dlgModificarProyecto').show()"
 					icon="ui-icon-info"
-					onclick="PF('dlgModificarProyecto').show(); return false;" />
+					action="#{organigramView.dialogModificarProyecto}"/>
 				<p:menuitem value="Eliminar" update="organigram @form:growl"
-					icon="ui-icon-trash"/>
+					icon="ui-icon-trash" actionListener="#{organigramView.eliminarPoyecto}"/>
 			</p:contextMenu>
 
 			<p:contextMenu for="organigram" nodeType="detalleProyecto">
-				<p:menuitem value="Detalles" update="organigram @form:growl"
+				<p:menuitem value="Detalles" update="formModal"
+					oncomplete="PF('dlgModificarDetalleProyecto').show()"
 					icon="ui-icon-info"
-					onclick="PF('dlgModificarDetalleProyecto').show(); return false;" />
+					action="#{organigramView.dialogModificarDetalleProyecto}"/>
+				<p:menuitem value="Eliminar" update="organigram @form:growl"
+					icon="ui-icon-trash" actionListener="#{organigramView.eliminarDetalleProyecto}"/>
 			</p:contextMenu>
 			<!-- FIN OPCIONES NODO ORGANIGRAMA -->
 		</h:form>
@@ -573,8 +580,8 @@
 
 				<div align="center">
 
-					<p:commandButton value="Añadir"
-						actionListener="#{organigramView.anadirProgramaAction}"
+					<p:commandButton value="Modificar"
+						actionListener="#{organigramView.modificarProgramaAction}"
 						update=":form:organigram"
 						oncomplete="PF('dlgModificarPrograma').hide();" />
 
@@ -617,7 +624,9 @@
 
 				<div align="center">
 
-					<p:commandButton value="Modificar" update=":form:organigram"
+					<p:commandButton value="Modificar"
+						actionListener="#{organigramView.modificarSubProgramaAction}"
+						update=":form:organigram"
 						oncomplete="PF('dlgModificarSubprograma').hide();" />
 
 					<p:commandButton value="Cancelar" icon="ui-icon-close"
@@ -659,7 +668,9 @@
 
 				<div align="center">
 
-					<p:commandButton value="Modificar" update=":form:organigram"
+					<p:commandButton value="Modificar"
+						actionListener="#{organigramView.modificarProyectoAction}"
+						update=":form:organigram"
 						oncomplete="PF('dlgModificarProyecto').hide();" />
 
 					<p:commandButton value="Cancelar" icon="ui-icon-close"

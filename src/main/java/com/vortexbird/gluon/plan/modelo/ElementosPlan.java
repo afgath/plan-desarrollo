@@ -6,6 +6,7 @@ public class ElementosPlan {
 
 	private OrganigramNode nodeEntity;
 	private Object entity;
+	private String rowKey = null;
 	
 	public ElementosPlan(OrganigramNode nodeEntity, Object entity) {
 		this.nodeEntity = nodeEntity;
@@ -27,4 +28,13 @@ public class ElementosPlan {
 	public void setEntity(Object entity) {
 		this.entity = entity;
 	}
+
+	public String getRowKey() {
+		return rowKey;
+	}
+
+	public void setRowKey(String rowKey) {
+		this.rowKey = rowKey;
+	}
+	
 }
