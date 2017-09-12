@@ -40,10 +40,10 @@
 }
 
 .ui-organigram .ui-organigram-node.proyecto {
-	background: #eff3f6;
-	background: -moz-linear-gradient(top, #eff3f6 0%, #e2eaf1 100%);
-	background: -webkit-linear-gradient(top, #eff3f6 0%, #e2eaf1 100%);
-	background: linear-gradient(to bottom, #eff3f6 0%, #e2eaf1 100%);
+	background: #929292;
+	background: -moz-linear-gradient(top, #929292 0%, #e2eaf1 100%);
+	background: -webkit-linear-gradient(top, #929292 0%, #e2eaf1 100%);
+	background: linear-gradient(to bottom, #929292 0%, #e2eaf1 100%);
 }
 
 .ui-organigram .ui-organigram-node.detalleProyecto {
@@ -52,6 +52,14 @@
 	background: -webkit-linear-gradient(top, #9be2a1 0%, #99e49f 100%);
 	background: linear-gradient(to bottom, #9be2a1 0%, #99e49f 100%);
 }
+
+.ui-organigram .ui-organigram-node.indicador {
+	background: #e8c32d;
+	background: -moz-linear-gradient(top, #e8c32d 0%, #f7ca16 100%);
+	background: -webkit-linear-gradient(top, #e8c32d 0%, #f7ca16 100%);
+	background: linear-gradient(to bottom, #e8c32d 0%, #f7ca16 100%);
+}
+
 </style>
 			<p:growl id="growl" />
 
@@ -105,6 +113,11 @@
 
 				<p:organigramNode type="detalleProyecto"
 					styleClass="detalleProyecto" icon="ui-icon-suitcase" iconPos="left">
+					<h:outputText value="#{node.data}" />
+				</p:organigramNode>
+				
+				<p:organigramNode type="indicador"
+					styleClass="indicador" icon="ui-icon-suitcase" iconPos="left">
 					<h:outputText value="#{node.data}" />
 				</p:organigramNode>
 			</p:organigram>
@@ -166,6 +179,9 @@
 				<p:menuitem value="Añadir Detalle del proyecto" ajax="false"
 					icon="ui-icon-plus"
 					onclick="PF('dlgAnadirDetalleProyecto').show(); return false;" />
+				<p:menuitem value="Añadir Indicador" ajax="false"
+					icon="ui-icon-plus"
+					onclick="PF('dlgAnadirIndicador').show(); return false;" />
 				<p:menuitem value="Detalles" update="formModal"
 					oncomplete="PF('dlgModificarProyecto').show()"
 					icon="ui-icon-info"
@@ -179,6 +195,15 @@
 					oncomplete="PF('dlgModificarDetalleProyecto').show()"
 					icon="ui-icon-info"
 					action="#{organigramView.dialogModificarDetalleProyecto}"/>
+				<p:menuitem value="Eliminar" update="organigram @form:growl"
+					icon="ui-icon-trash" actionListener="#{organigramView.eliminarDetalleProyecto}"/>
+			</p:contextMenu>
+			
+			<p:contextMenu for="organigram" nodeType="indicador">
+				<p:menuitem value="Detalles" update="formModal"
+					oncomplete="PF('dlgModificarIndicador').show()"
+					icon="ui-icon-info"
+					action="#{organigramView.dialogModificarIndicador}"/>
 				<p:menuitem value="Eliminar" update="organigram @form:growl"
 					icon="ui-icon-trash" actionListener="#{organigramView.eliminarDetalleProyecto}"/>
 			</p:contextMenu>
@@ -472,7 +497,7 @@
 
 						<p:outputLabel value="Año fiscal:" />
 						<p:selectOneMenu id="somAnoFiscal"
-							binding="#{organigramView.somAnoFiscal}">
+							binding="#{organigramView.somAnoFiscal}" >
 							<f:selectItems value="#{organigramView.losAnosFiscalItem}" />
 						</p:selectOneMenu>
 						<p:outputLabel value="Presupuesto" />
@@ -500,6 +525,56 @@
 
 			</p:dialog>
 			<!-- **		FIN DIÁLOGO AÑADIR DETALLE DEL PROYECTO		 ** -->
+			
+			<!-- ************************************************** -->
+			<!-- **		      DIÁLOGO AÑADIR INDICADOR   		 ** -->
+			<!-- ************************************************** -->
+			<p:dialog id="dlgAnadirIndicador" header="Indicador"
+				widgetVar="dlgAnadirIndicador" modal="true" draggable="true"
+				closable="false" resizable="true" responsive="true"
+				style="width: 100% !important;">
+
+				<p:messages id="msgIndicador" autoUpdate="true"
+					closable="true" style="width: 100%;" />
+
+				<p:panel header="Añadir Indicador">
+					<h:panelGrid columns="2" style="width: 100% !important">
+
+						<p:outputLabel value="Descripción del indicador" />
+						<p:inputText id="txtDescIndicador"
+							binding="#{organigramView.txtDescIndicador}"/>
+						<p:outputLabel value="Descripción Línea Base" />
+						<p:inputText id="txtDescLineaBase"
+							binding="#{organigramView.txtDescLineaBase}"/>						
+						<p:outputLabel value="Descripción Meta" />
+						<p:inputText id="txtDescMeta"
+							binding="#{organigramView.txtDescMeta}"/>
+						<p:outputLabel value="Valor Meta" />
+						<p:inputNumber id="numValorMeta"
+							binding="#{organigramView.numValorMeta}"
+							minValue="0.0001"
+							decimalPlaces="2" />
+
+					</h:panelGrid>
+
+				</p:panel>
+
+				<br />
+
+				<div align="center">
+
+					<p:commandButton value="Añadir"
+						actionListener="#{organigramView.anadirIndicadorAction}"
+						update=":form:organigram"
+						oncomplete="PF('dlgAnadirIndicador').hide();" />
+
+					<p:commandButton value="Cancelar" icon="ui-icon-close"
+						update=":formModal" />
+
+				</div>
+
+			</p:dialog>
+			<!-- **		FIN DIÁLOGO AÑADIR INDICADOR		 ** -->
 
 
 			<!-- FIN DIALOGOS DE AÑADIR -->
@@ -726,6 +801,58 @@
 
 			</p:dialog>
 			<!-- FIN DIÁLOGO MODIFICAR DETALLE PROYECTO -->
+			
+			<!-- ************************************************** -->
+			<!-- **		    DIÁLOGO MODIFICAR INDICADOR		     ** -->
+			<!-- ************************************************** -->
+			<p:dialog id="dlgModificarIndicador" header="Indicador"
+				widgetVar="dlgModificarIndicador" modal="true"
+				draggable="true" closable="false" resizable="true" responsive="true"
+				style="width: 100% !important;">
+
+				<p:messages id="msgModificarIndicador" autoUpdate="true"
+					closable="true" style="width: 100%;" />
+
+				<p:panel header="Modificar Indicador">
+					<h:panelGrid columns="2" style="width: 100% !important">
+
+						<p:outputLabel value="Descripción del indicador" />
+						<p:inputText id="txtModDescIndicador"
+							binding="#{organigramView.txtModDescIndicador}"/>
+						<p:outputLabel value="Descripción Línea Base" />
+						<p:inputText id="txtModDescLineaBase"
+							binding="#{organigramView.txtModDescLineaBase}"/>						
+						<p:outputLabel value="Descripción Meta" />
+						<p:inputText id="txtModDescMeta"
+							binding="#{organigramView.txtModDescMeta}"/>
+						<p:outputLabel value="Presupuesto" />
+						<p:inputNumber id="numModValorMeta"
+							binding="#{organigramView.numModValorMeta}"
+							minValue="0.0001" decimalPlaces="2" />
+						<p:outputLabel value="¿Activo?:" />
+						<p:selectBooleanCheckbox id="sbcModIndicadorActivo"
+							binding="#{organigramView.sbcModIndicadorActivo}" />
+
+					</h:panelGrid>
+
+				</p:panel>
+
+				<br />
+
+				<div align="center">
+
+					<p:commandButton value="Modificar" update=":form:organigram"
+						oncomplete="PF('dlgModificarIndicador').hide();" 
+						actionListener="#{organigramView.modificarIndicadorAction}"/>
+
+					<p:commandButton value="Cancelar" icon="ui-icon-close"
+						update=":formModal" />
+
+				</div>
+
+			</p:dialog>
+			<!-- FIN DIÁLOGO MODIFICAR INDICADOR -->
+			
 
 			<!-- FIN DIALOGOS DE MODIFICAR -->
 		</h:form>

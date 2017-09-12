@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import com.vortexbird.gluon.plan.modelo.ElementosPlan;
 import com.vortexbird.gluon.plan.modelo.GluoAnoFiscal;
 import com.vortexbird.gluon.plan.modelo.GluoDetalleProyecto;
+import com.vortexbird.gluon.plan.modelo.GluoIndicador;
 import com.vortexbird.gluon.plan.modelo.GluoObjetivo;
 import com.vortexbird.gluon.plan.modelo.GluoPlanDesarrollo;
 import com.vortexbird.gluon.plan.modelo.GluoPrograma;
@@ -78,6 +79,7 @@ public class OrganigramView implements Serializable {
 	private GluoProyecto proyecto;
 	private GluoDetalleProyecto detalleProyecto;
 	private ElementosPlan elementoPlan;
+	private GluoIndicador indicador;
 
 	private int contPlan;
 	private int contDimension;
@@ -86,6 +88,7 @@ public class OrganigramView implements Serializable {
 	private int contSubPrograma;
 	private int contProyecto;
 	private int contDetalleProyecto;
+	private int contIndicador;
 	// Fin Variables para la creación de los entity
 
 	// Variables de configuración para el organigrama
@@ -103,6 +106,7 @@ public class OrganigramView implements Serializable {
 	private Map<String, ElementosPlan> subProgramaMap = new HashMap<String, ElementosPlan>();
 	private Map<String, ElementosPlan> proyectoMap = new HashMap<String, ElementosPlan>();
 	private Map<String, ElementosPlan> detalleProyectoMap = new HashMap<String, ElementosPlan>();
+	private Map<String, ElementosPlan> indicadorMap = new HashMap<String, ElementosPlan>();
 	// Fin HashMaps para almacenar los nodos creados en la base de datos
 
 	// Variables de dialogos
@@ -112,14 +116,16 @@ public class OrganigramView implements Serializable {
 	private Calendar txtAnoFinPlan;
 	private Calendar txtAnoInicioPlan;
 	private InputText txtDimension;
-	private SelectOneMenu somDimensionObjetivo;
 	private InputTextarea txtAreaDescObjetivo;
 	private InputTextarea txtAreaDesPrograma;
 	private InputTextarea txtAreaDescSubPrograma;
 	private InputTextarea txtAreaDescProyecto;
 	private SelectOneMenu somAnoFiscal;
 	private InputNumber numValorPresupuesto;
-	private String[] selectedDimension;
+	private InputText txtDescIndicador;
+	private InputText txtDescLineaBase;
+	private InputText txtDescMeta;
+	private InputNumber numValorMeta;
 	private CommandButton btnAnadirPlan;
 	private CommandButton btnAnadirDimension;
 	private CommandButton btnAnadirObjetivo;
@@ -151,6 +157,12 @@ public class OrganigramView implements Serializable {
 	private InputNumber numModDPValorPresupuesto;
 	private SelectBooleanCheckbox sbcModDPActivo;
 	private InputText txtDPValorTotalPresupuesto;
+	
+	private InputText txtModDescIndicador;
+	private InputText txtModDescLineaBase;
+	private InputText txtModDescMeta;
+	private InputNumber numModValorMeta;
+	private SelectBooleanCheckbox sbcModIndicadorActivo;
 	// Fin Variables para los dialogos de modificar
 
 	@PostConstruct
@@ -353,6 +365,13 @@ public class OrganigramView implements Serializable {
 				String key = (String) itDetProyMap.next();
 				businessDelegatorView
 						.saveGluoDetalleProyecto((GluoDetalleProyecto) detalleProyectoMap.get(key).getEntity());
+			}
+			
+			Iterator itInticadorMap = indicadorMap.keySet().iterator();
+			while (itInticadorMap.hasNext()) {
+				String key = (String) itInticadorMap.next();
+				businessDelegatorView
+						.saveGluoIndicador((GluoIndicador) indicadorMap.get(key).getEntity());
 			}
 
 			FacesUtils.addInfoMessage("Se ha guardado el plan");
@@ -588,6 +607,40 @@ public class OrganigramView implements Serializable {
 
 		}
 	}
+	
+	public void anadirIndicadorAction() {
+		log.info("anadirIndicadorAction");
+		try {
+			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
+			indicador = new GluoIndicador();
+			
+			indicador.setActivo("S");
+			indicador.setDescripcionIndicador(txtDescIndicador.getValue().toString());
+			indicador.setDescripcionLineaBase(txtDescLineaBase.getValue().toString());
+			indicador.setDescripcionMeta(txtDescMeta.getValue().toString());
+			indicador.setValorMeta(Double.parseDouble(numValorMeta.getValue().toString().trim()));
+			indicador.setGluoProyecto((GluoProyecto) proyectoMap.get(currentSelection.getData()).getEntity());
+			indicador.setFechaCreacion(new Date());
+			indicador.setUsuCreador(1);
+			businessDelegatorView.validateGluoIndicador(indicador);
+			
+			String rowKey = "Ind" + contIndicador;
+			contIndicador++;
+
+			String dataNode = "(" + rowKey + ") - " + indicador.getDescripcionIndicador();
+			OrganigramNode nodoIndicador = new DefaultOrganigramNode("detalleProyecto", dataNode,
+					currentSelection);
+			
+			elementoPlan = new ElementosPlan(nodoIndicador, indicador);
+			elementoPlan.setRowKey(rowKey);
+			
+			indicadorMap.put(dataNode, elementoPlan);
+
+
+		} catch (Exception e) {
+
+		}
+	}
 
 	public void dialogModificarDimension() {
 		try {
@@ -699,6 +752,27 @@ public class OrganigramView implements Serializable {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
 	}
+	
+	public void dialogModificarIndicador() {
+		try {
+			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
+
+			GluoIndicador indicador = (GluoIndicador) indicadorMap.get(currentSelection.getData()).getEntity();
+
+			txtModDescIndicador.setValue(indicador.getDescripcionIndicador());
+			txtModDescLineaBase.setValue(indicador.getDescripcionLineaBase());
+			txtModDescMeta.setValue(indicador.getDescripcionMeta());
+			numModValorMeta.setValue(indicador.getValorMeta());
+			if (proyecto.getActivo().toLowerCase().trim().equals("s")) {
+				sbcModProyActivo.setValue(true);
+			} else {
+				sbcModProyActivo.setValue(false);
+			}
+
+		} catch (Exception e) {
+			FacesUtils.addErrorMessage(e.getMessage());
+		}
+	}
 
 	public void modificarDimensionAction() {
 		log.info("modificarDimensionAction");
@@ -797,6 +871,27 @@ public class OrganigramView implements Serializable {
 		}
 
 	}
+	
+	public void modificarIndicadorAction() {
+		log.info("modificarIndicdorAction");
+		try {
+			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
+			OrganigramNode nodoindIndicador = indicadorMap.get(currentSelection.getData()).getNodeEntity();
+			GluoIndicador indicador = (GluoIndicador) indicadorMap.get(currentSelection.getData()).getEntity();
+
+			indicador.setDescripcionIndicador(txtModDescIndicador.getValue().toString());
+			nodoindIndicador.setData(
+					"(" + indicadorMap.get(currentSelection.getData()).getRowKey() + ") - " + indicador.getDescripcionIndicador());
+			if (sbcModIndicadorActivo.isSelected() == true) {
+				proyecto.setActivo("S");
+			} else {
+				proyecto.setActivo("N");
+			}
+		} catch (Exception e) {
+			FacesUtils.addErrorMessage(e.getMessage());
+		}
+
+	}
 
 	public OrganigramNode getRootNode() {
 		return rootNode;
@@ -858,6 +953,7 @@ public class OrganigramView implements Serializable {
 		if (losAnosFiscalItem == null) {
 			losAnosFiscalItem = new ArrayList<SelectItem>();
 			List<GluoAnoFiscalDTO> losAnosFiscal = businessDelegatorView.getDataGluoAnoFiscal();
+			log.info("Sí carga el wey SelectItem");
 			for (GluoAnoFiscalDTO anosFiscal : losAnosFiscal) {
 				losAnosFiscalItem
 						.add(new SelectItem(anosFiscal.getAnofId(), String.valueOf(anosFiscal.getAnoFiscal())));
@@ -921,14 +1017,6 @@ public class OrganigramView implements Serializable {
 		this.txtDimension = txtDimension;
 	}
 
-	public SelectOneMenu getSomDimensionObjetivo() {
-		return somDimensionObjetivo;
-	}
-
-	public void setSomDimensionObjetivo(SelectOneMenu somDimensionObjetivo) {
-		this.somDimensionObjetivo = somDimensionObjetivo;
-	}
-
 	public InputTextarea getTxtAreaDescObjetivo() {
 		return txtAreaDescObjetivo;
 	}
@@ -975,14 +1063,6 @@ public class OrganigramView implements Serializable {
 
 	public void setNumValorPresupuesto(InputNumber numValorPresupuesto) {
 		this.numValorPresupuesto = numValorPresupuesto;
-	}
-
-	public String[] getSelectedDimension() {
-		return selectedDimension;
-	}
-
-	public void setSelectedDimension(String[] selectedDimension) {
-		this.selectedDimension = selectedDimension;
 	}
 
 	public CommandButton getBtnAnadirPlan() {
@@ -1163,6 +1243,89 @@ public class OrganigramView implements Serializable {
 	public void setTxtDPValorTotalPresupuesto(InputText txtDPValorTotalPresupuesto) {
 		this.txtDPValorTotalPresupuesto = txtDPValorTotalPresupuesto;
 	}
+
+	public GluoIndicador getIndicador() {
+		return indicador;
+	}
+
+	public void setIndicador(GluoIndicador indicador) {
+		this.indicador = indicador;
+	}
+
+	public InputText getTxtDescIndicador() {
+		return txtDescIndicador;
+	}
+
+	public void setTxtDescIndicador(InputText txtDescIndicador) {
+		this.txtDescIndicador = txtDescIndicador;
+	}
+
+	public InputText getTxtDescLineaBase() {
+		return txtDescLineaBase;
+	}
+
+	public void setTxtDescLineaBase(InputText txtDescLineaBase) {
+		this.txtDescLineaBase = txtDescLineaBase;
+	}
+
+	public InputText getTxtDescMeta() {
+		return txtDescMeta;
+	}
+
+	public void setTxtDescMeta(InputText txtDescMeta) {
+		this.txtDescMeta = txtDescMeta;
+	}
+
+	public InputNumber getNumValorMeta() {
+		return numValorMeta;
+	}
+
+	public void setNumValorMeta(InputNumber numValorMeta) {
+		this.numValorMeta = numValorMeta;
+	}
+
+	public InputText getTxtModDescIndicador() {
+		return txtModDescIndicador;
+	}
+
+	public void setTxtModDescIndicador(InputText txtModDescIndicador) {
+		this.txtModDescIndicador = txtModDescIndicador;
+	}
+
+	public InputText getTxtModDescLineaBase() {
+		return txtModDescLineaBase;
+	}
+
+	public void setTxtModDescLineaBase(InputText txtModDescLineaBase) {
+		this.txtModDescLineaBase = txtModDescLineaBase;
+	}
+
+	public InputText getTxtModDescMeta() {
+		return txtModDescMeta;
+	}
+
+	public void setTxtModDescMeta(InputText txtModDescMeta) {
+		this.txtModDescMeta = txtModDescMeta;
+	}
+
+	public InputNumber getNumModValorMeta() {
+		return numModValorMeta;
+	}
+
+	public void setNumModValorMeta(InputNumber numModValorMeta) {
+		this.numModValorMeta = numModValorMeta;
+	}
+
+	public SelectBooleanCheckbox getSbcModIndicadorActivo() {
+		return sbcModIndicadorActivo;
+	}
+
+	public void setSbcModIndicadorActivo(SelectBooleanCheckbox sbcModIndicadorActivo) {
+		this.sbcModIndicadorActivo = sbcModIndicadorActivo;
+	}
+	
+	
+	
 
 	// Fin Setters and Getters Variables para los dialogos de modificar
 }
