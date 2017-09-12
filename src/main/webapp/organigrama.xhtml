@@ -60,6 +60,13 @@
 	background: linear-gradient(to bottom, #e8c32d 0%, #f7ca16 100%);
 }
 
+.ui-organigram .ui-organigram-node.historialIndicador {
+	background: #38ffc8;
+	background: -moz-linear-gradient(top, #38ffc8 0%, #93fde5 100%);
+	background: -webkit-linear-gradient(top, #38ffc8 0%, #93fde5 100%);
+	background: linear-gradient(to bottom, #38ffc8 0%, #93fde5 100%);
+}
+
 </style>
 			<p:growl id="growl" />
 
@@ -120,6 +127,11 @@
 					styleClass="indicador" icon="ui-icon-suitcase" iconPos="left">
 					<h:outputText value="#{node.data}" />
 				</p:organigramNode>
+				<p:organigramNode type="historialIndicador" styleClass="historialIndicador"
+					icon="ui-icon-suitcase" iconPos="left">
+					<h:outputText value="#{node.data}" />
+				</p:organigramNode>
+				
 			</p:organigram>
 			<!-- FIN ORGNIGRAMA -->
 
@@ -204,8 +216,9 @@
 					oncomplete="PF('dlgModificarIndicador').show()"
 					icon="ui-icon-info"
 					action="#{organigramView.dialogModificarIndicador}"/>
-				<p:menuitem value="Eliminar" update="organigram @form:growl"
-					icon="ui-icon-trash" actionListener="#{organigramView.eliminarDetalleProyecto}"/>
+				<p:menuitem value="Añadir Historial Indicador" ajax="false"
+					icon="ui-icon-plus"
+					onclick="PF('dlgAnadirHistorialIndicador').show(); return false;" />
 			</p:contextMenu>
 			<!-- FIN OPCIONES NODO ORGANIGRAMA -->
 		</h:form>
@@ -576,6 +589,51 @@
 			</p:dialog>
 			<!-- **		FIN DIÁLOGO AÑADIR INDICADOR		 ** -->
 
+			<!-- ************************************************** -->
+			<!-- **	   DIÁLOGO AÑADIR HISTORIAL INDICADOR	 	 ** -->
+			<!-- ************************************************** -->
+			<p:dialog id="dlgAnadirHistorialIndicador" header="Crear Historial de Indicador"
+				widgetVar="dlgAnadirHistorialIndicador" modal="true" draggable="true"
+				closable="false" resizable="true" responsive="true"
+				style="width: 100% !important;">
+
+				<p:messages id="msgHistorialIndicador" autoUpdate="true" closable="true"
+					style="width: 100%;" />
+
+				<p:panel header="Añadir Historial de Indicador">
+					<h:panelGrid columns="2" style="width: 100% !important">
+
+						<h:outputText id="msgHIAno" value=" Año" />
+						<p:calendar showOn="button" navigator="true" locale="en"
+							binding="#{organigramView.txtHIAno}">
+							<p:ajax event="dateSelect"
+								listener="#{organigramView.listener_txtAnoInicio}" />
+						</p:calendar>
+						<h:outputText id="msgHIValorReal" value=" Valor Real" />
+						<p:inputNumber id="numHIValorReal"
+							binding="#{organigramView.numHIValorReal}"
+							minValue="0.0001"
+							decimalPlaces="2" />
+
+					</h:panelGrid>
+
+				</p:panel>
+
+				<br />
+
+				<div align="center">
+
+					<p:commandButton value="Añadir"
+						action="#{organigramView.anadirHistorialIndicadorAction}"
+						update=":formModal:msgPlan" />
+
+					<p:commandButton value="Cancelar" icon="ui-icon-close"
+						update=":formModal" />
+				</div>
+
+			</p:dialog>
+			<!-- FIN DIÁLOGO AÑADIR HISTORIAL INDICADOR -->
+
 
 			<!-- FIN DIALOGOS DE AÑADIR -->
 
@@ -825,7 +883,7 @@
 						<p:outputLabel value="Descripción Meta" />
 						<p:inputText id="txtModDescMeta"
 							binding="#{organigramView.txtModDescMeta}"/>
-						<p:outputLabel value="Presupuesto" />
+						<p:outputLabel value="Valor Meta" />
 						<p:inputNumber id="numModValorMeta"
 							binding="#{organigramView.numModValorMeta}"
 							minValue="0.0001" decimalPlaces="2" />
@@ -852,6 +910,56 @@
 
 			</p:dialog>
 			<!-- FIN DIÁLOGO MODIFICAR INDICADOR -->
+			
+			<!-- ************************************************** -->
+			<!-- **	   DIÁLOGO MODIFICAR HISTORIAL INDICADOR	 ** -->
+			<!-- ************************************************** -->
+			<p:dialog id="dlgModificarHistorialIndicador" header="Historial Indicador"
+				widgetVar="dlgModificarHistorialIndicador" modal="true"
+				draggable="true" closable="false" resizable="true" responsive="true"
+				style="width: 100% !important;">
+
+				<p:messages id="msgModificarHistorialIndicador" autoUpdate="true"
+					closable="true" style="width: 100%;" />
+
+				<p:panel header="Modificar Historial Indicador">
+					<h:panelGrid columns="2" style="width: 100% !important">
+
+						<h:outputText id="msgModHIAno" value=" Año" />
+						<p:calendar showOn="button" navigator="true" locale="en"
+							binding="#{organigramView.txtModHIAno}">
+							<p:ajax event="dateSelect"
+								listener="#{organigramView.listener_txtAnoInicio}" />
+						</p:calendar>
+						<h:outputText id="msgModHIValorReal" value=" Valor Real" />
+						<p:inputNumber id="numModHIValorReal"
+							binding="#{organigramView.numModHIValorReal}"
+							minValue="0.0001"
+							decimalPlaces="2" />
+
+						<p:outputLabel value="¿Activo?:" />
+						<p:selectBooleanCheckbox id="sbcModHistorialIndicadorActivo"
+							binding="#{organigramView.sbcModHistorialIndicadorActivo}" />
+
+					</h:panelGrid>
+
+				</p:panel>
+
+				<br />
+
+				<div align="center">
+
+					<p:commandButton value="Modificar" update=":form:organigram"
+						oncomplete="PF('dlgModificarHistorialIndicador').hide();" 
+						actionListener="#{organigramView.modificarHistorialIndicadorAction}"/>
+
+					<p:commandButton value="Cancelar" icon="ui-icon-close"
+						update=":formModal" />
+
+				</div>
+
+			</p:dialog>
+			<!-- FIN DIÁLOGO MODIFICAR HISTORIAL INDICADOR -->
 			
 
 			<!-- FIN DIALOGOS DE MODIFICAR -->

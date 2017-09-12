@@ -180,62 +180,7 @@ public class GluoAnoFiscalView implements Serializable {
             new FacesMessage("Selected Date " + dateFormat.format(inputDate)));
     }
 
-    public void listener_txtId() {
-        try {
-            Integer anofId = FacesUtils.checkInteger(txtAnofId);
-            entity = (anofId != null)
-                ? businessDelegatorView.getGluoAnoFiscal(anofId) : null;
-        } catch (Exception e) {
-            entity = null;
-        }
-
-        if (entity == null) {
-            txtActivo.setDisabled(false);
-            txtAnoFiscal.setDisabled(false);
-            txtDescripcion.setDisabled(false);
-            txtEmprId.setDisabled(false);
-            txtEstado.setDisabled(false);
-            txtUsuCreador.setDisabled(false);
-            txtUsuModificador.setDisabled(false);
-            txtValorSalarioMinimo.setDisabled(false);
-            txtFechaCreacion.setDisabled(false);
-            txtFechaIncioAnoFiscal.setDisabled(false);
-            txtFechaModificacion.setDisabled(false);
-            txtAnofId.setDisabled(false);
-            btnSave.setDisabled(false);
-        } else {
-            txtActivo.setValue(entity.getActivo());
-            txtActivo.setDisabled(false);
-            txtAnoFiscal.setValue(entity.getAnoFiscal());
-            txtAnoFiscal.setDisabled(false);
-            txtDescripcion.setValue(entity.getDescripcion());
-            txtDescripcion.setDisabled(false);
-            txtEmprId.setValue(entity.getEmprId());
-            txtEmprId.setDisabled(false);
-            txtEstado.setValue(entity.getEstado());
-            txtEstado.setDisabled(false);
-            txtFechaCreacion.setValue(entity.getFechaCreacion());
-            txtFechaCreacion.setDisabled(false);
-            txtFechaIncioAnoFiscal.setValue(entity.getFechaIncioAnoFiscal());
-            txtFechaIncioAnoFiscal.setDisabled(false);
-            txtFechaModificacion.setValue(entity.getFechaModificacion());
-            txtFechaModificacion.setDisabled(false);
-            txtUsuCreador.setValue(entity.getUsuCreador());
-            txtUsuCreador.setDisabled(false);
-            txtUsuModificador.setValue(entity.getUsuModificador());
-            txtUsuModificador.setDisabled(false);
-            txtValorSalarioMinimo.setValue(entity.getValorSalarioMinimo());
-            txtValorSalarioMinimo.setDisabled(false);
-            txtAnofId.setValue(entity.getAnofId());
-            txtAnofId.setDisabled(true);
-            btnSave.setDisabled(false);
-
-            if (btnDelete != null) {
-                btnDelete.setDisabled(false);
-            }
-        }
-    }
-
+   
     public String action_edit(ActionEvent evt) {
         selectedGluoAnoFiscal = (GluoAnoFiscalDTO) (evt.getComponent()
                                                        .getAttributes()
@@ -292,19 +237,15 @@ public class GluoAnoFiscalView implements Serializable {
 
             Integer anofId = FacesUtils.checkInteger(txtAnofId);
 
-            entity.setActivo(FacesUtils.checkString(txtActivo));
+            entity.setActivo("S");
             entity.setAnoFiscal(FacesUtils.checkInteger(txtAnoFiscal));
-            entity.setAnofId(anofId);
             entity.setDescripcion(FacesUtils.checkString(txtDescripcion));
             entity.setEmprId(FacesUtils.checkInteger(txtEmprId));
             entity.setEstado(FacesUtils.checkString(txtEstado));
-            entity.setFechaCreacion(FacesUtils.checkDate(txtFechaCreacion));
+            entity.setFechaCreacion(new Date());
             entity.setFechaIncioAnoFiscal(FacesUtils.checkDate(
                     txtFechaIncioAnoFiscal));
-            entity.setFechaModificacion(FacesUtils.checkDate(
-                    txtFechaModificacion));
-            entity.setUsuCreador(FacesUtils.checkInteger(txtUsuCreador));
-            entity.setUsuModificador(FacesUtils.checkInteger(txtUsuModificador));
+            entity.setUsuCreador(1);
             entity.setValorSalarioMinimo(FacesUtils.checkDouble(
                     txtValorSalarioMinimo));
             businessDelegatorView.saveGluoAnoFiscal(entity);
@@ -325,18 +266,12 @@ public class GluoAnoFiscalView implements Serializable {
                 entity = businessDelegatorView.getGluoAnoFiscal(anofId);
             }
 
-            entity.setActivo(FacesUtils.checkString(txtActivo));
             entity.setAnoFiscal(FacesUtils.checkInteger(txtAnoFiscal));
             entity.setDescripcion(FacesUtils.checkString(txtDescripcion));
             entity.setEmprId(FacesUtils.checkInteger(txtEmprId));
             entity.setEstado(FacesUtils.checkString(txtEstado));
-            entity.setFechaCreacion(FacesUtils.checkDate(txtFechaCreacion));
             entity.setFechaIncioAnoFiscal(FacesUtils.checkDate(
                     txtFechaIncioAnoFiscal));
-            entity.setFechaModificacion(FacesUtils.checkDate(
-                    txtFechaModificacion));
-            entity.setUsuCreador(FacesUtils.checkInteger(txtUsuCreador));
-            entity.setUsuModificador(FacesUtils.checkInteger(txtUsuModificador));
             entity.setValorSalarioMinimo(FacesUtils.checkDouble(
                     txtValorSalarioMinimo));
             businessDelegatorView.updateGluoAnoFiscal(entity);
