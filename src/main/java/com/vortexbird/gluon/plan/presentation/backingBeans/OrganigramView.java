@@ -146,6 +146,7 @@ public class OrganigramView implements Serializable {
 	private Calendar txtModPlanAnoInicioPlan;
 	private SelectBooleanCheckbox sbcModPlanActivo;
 
+	private InputText txtModDimension;
 	private SelectBooleanCheckbox sbcModEjeActivo;
 
 	private InputTextarea txtAreaModObjDesc;
@@ -162,6 +163,7 @@ public class OrganigramView implements Serializable {
 
 	private InputNumber numModDPValorPresupuesto;
 	private SelectBooleanCheckbox sbcModDPActivo;
+	private SelectOneMenu somModAnoFiscal;
 	private InputText txtDPValorTotalPresupuesto;
 	
 	private InputText txtModDescIndicador;
@@ -615,7 +617,7 @@ public class OrganigramView implements Serializable {
 			String dataNode = "(" + rowKey + ") - " + detalleProyecto.getGluoAnoFiscal().getAnoFiscal();
 			OrganigramNode nodoDetalleProyecto = new DefaultOrganigramNode("detalleProyecto", dataNode,
 					currentSelection);
-
+			nodoDetalleProyecto.setSelectable(true);
 			elementoPlan = new ElementosPlan(nodoDetalleProyecto, detalleProyecto);
 			elementoPlan.setRowKey(rowKey);
 
@@ -647,6 +649,7 @@ public class OrganigramView implements Serializable {
 			String dataNode = "(" + rowKey + ") - " + indicador.getDescripcionIndicador();
 			OrganigramNode nodoIndicador = new DefaultOrganigramNode("indicador", dataNode,
 					currentSelection);
+			nodoIndicador.setSelectable(true);
 			
 			elementoPlan = new ElementosPlan(nodoIndicador, indicador);
 			elementoPlan.setRowKey(rowKey);
@@ -670,6 +673,7 @@ public class OrganigramView implements Serializable {
 			historialIndicador.setValorReal(Double.parseDouble(numHIValorReal.getValue().toString()));
 			historialIndicador.setFechaCreacion(new Date());
 			historialIndicador.setUsuCreador(1);
+			historialIndicador.setGluoIndicador((GluoIndicador) indicadorMap.get(currentSelection.getData()).getEntity());
 			businessDelegatorView.validateGluoHistorialIndicador(historialIndicador);
 			
 			String rowKey = "HInd" + contHistorialIndicador;
@@ -678,6 +682,7 @@ public class OrganigramView implements Serializable {
 			String dataNode = "(" + rowKey + ") - " + historialIndicador.getValorReal();
 			OrganigramNode nodoHistorialIndicador = new DefaultOrganigramNode("historialIndicador", dataNode,
 					currentSelection);
+			nodoHistorialIndicador.setSelectable(true);
 			
 			elementoPlan = new ElementosPlan(nodoHistorialIndicador, historialIndicador);
 			elementoPlan.setRowKey(rowKey);
@@ -694,16 +699,16 @@ public class OrganigramView implements Serializable {
 		try {
 			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
 
-			// GluoSectorEjeDimension dimension =
-			// (GluoSectorEjeDimension)dimensionMap.get(currentSelection.getData()).getEntity();
-			//
-			// txtAreaModD.setValue(dimension.getDescripcion());
-			// if(dimension.getActivo().toLowerCase().trim()=="s") {
-			// sbcModEjeActivo.setValid(true);
-			// }else {
-			// sbcModEjeActivo.setValid(false);
-			// }
-			//
+			 GluoSectorEjeDimension dimension =
+			 (GluoSectorEjeDimension)dimensionMap.get(currentSelection.getData()).getEntity();
+			
+			 txtModDimension.setValue(dimension.getDescripcion());
+			 if(dimension.getActivo().toLowerCase().trim().equals("s")) {
+			 sbcModEjeActivo.setValue(true);
+			 }else {
+			 sbcModEjeActivo.setValue(false);
+			 }
+			
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
@@ -784,18 +789,16 @@ public class OrganigramView implements Serializable {
 	public void dialogModificarDetalleProyecto() {
 		try {
 			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
-			//
-			// OrganigramNode nodoDetalleProyecto =
-			// detalleProyectoMap.get(currentSelection.getData()).getNodeEntity();
-			// GluoPrograma detalleProyecto =
-			// (GluoPrograma)detalleProyectoMap.get(currentSelection.getData()).getEntity();
-			//
-			// txtAreaModDDesc.setValue(detalleProyecto.getDescripcion());
-			// if(detalleProyecto.getActivo().toLowerCase().trim().equals("s")) {
-			// sbcModProyActivo.setValue(true);
-			// }else {
-			// sbcModProyActivo.setValue(false);
-			// }
+			
+			 GluoDetalleProyecto detalleProyecto =
+			 (GluoDetalleProyecto)detalleProyectoMap.get(currentSelection.getData()).getEntity();
+			
+			 numModDPValorPresupuesto.setValue(detalleProyecto.getValorTotalPresupuesto());
+			 if(detalleProyecto.getActivo().toLowerCase().trim().equals("s")) {
+			 sbcModDPActivo.setValue(true);
+			 }else {
+			 sbcModDPActivo.setValue(false);
+			 }
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
@@ -844,6 +847,19 @@ public class OrganigramView implements Serializable {
 	public void modificarDimensionAction() {
 		log.info("modificarDimensionAction");
 		try {
+			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
+
+			OrganigramNode nodeDimension = dimensionMap.get(currentSelection.getData()).getNodeEntity();
+			GluoSectorEjeDimension dimension = (GluoSectorEjeDimension) dimensionMap.get(currentSelection.getData()).getEntity();
+
+			dimension.setDescripcion(txtModDimension.getValue().toString());
+			nodeDimension.setData(
+					"(" + dimensionMap.get(currentSelection.getData()).getRowKey() + ") - " + dimension.getDescripcion());
+			if (sbcModEjeActivo.isSelected() == true) {
+				dimension.setActivo("S");
+			} else {
+				dimension.setActivo("N");
+			}
 
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
@@ -883,7 +899,7 @@ public class OrganigramView implements Serializable {
 
 			programa.setDescripcion(txtAreaModProgDesc.getValue().toString());
 			nodoPrograma.setData(
-					"(" + programaMap.get(currentSelection.getData()).getRowKey() + ") - " + objetivo.getDescripcion());
+					"(" + programaMap.get(currentSelection.getData()).getRowKey() + ") - " + programa.getDescripcion());
 			if (sbcModProgActivo.isSelected() == true) {
 				programa.setActivo("S");
 			} else {
@@ -905,7 +921,7 @@ public class OrganigramView implements Serializable {
 
 			subPrograma.setDescripcion(txtAreaModSubProgDesc.getValue().toString());
 			nodoSubPrograma.setData(
-					"(" + subProgramaMap.get(currentSelection.getData()).getRowKey() + ") - " + objetivo.getDescripcion());
+					"(" + subProgramaMap.get(currentSelection.getData()).getRowKey() + ") - " + subPrograma.getDescripcion());
 			if (sbcModSubProgActivo.isSelected() == true) {
 				subPrograma.setActivo("S");
 			} else {
@@ -927,12 +943,39 @@ public class OrganigramView implements Serializable {
 
 			proyecto.setDescripcion(txtAreaModProyDesc.getValue().toString());
 			nodoProyecto.setData(
-					"(" + proyectoMap.get(currentSelection.getData()).getRowKey() + ") - " + objetivo.getDescripcion());
+					"(" + proyectoMap.get(currentSelection.getData()).getRowKey() + ") - " + proyecto.getDescripcion());
 			if (sbcModProyActivo.isSelected() == true) {
 				proyecto.setActivo("S");
 			} else {
 				proyecto.setActivo("N");
 			}
+		} catch (Exception e) {
+			FacesUtils.addErrorMessage(e.getMessage());
+		}
+
+	}
+	
+	public void modificarDetalleProyectoAction() {
+		log.info("modificarDetalleProyectoAction");
+		try {
+			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
+
+			OrganigramNode nodoDetalleProyecto = detalleProyectoMap.get(currentSelection.getData()).getNodeEntity();
+			GluoDetalleProyecto detalleProyecto = (GluoDetalleProyecto) detalleProyectoMap.get(currentSelection.getData()).getEntity();
+
+			GluoAnoFiscal anoFiscal = businessDelegatorView
+					.getGluoAnoFiscal(Integer.parseInt(somAnoFiscal.getValue().toString()));
+			detalleProyecto.setGluoAnoFiscal(anoFiscal);
+			
+			detalleProyecto.setValorTotalPresupuesto(Double.parseDouble(numModDPValorPresupuesto.getValue().toString()));
+			nodoDetalleProyecto.setData(
+					"(" + detalleProyectoMap.get(currentSelection.getData()).getRowKey() + ") - " + detalleProyecto.getGluoAnoFiscal().getAnoFiscal());
+			if (sbcModDPActivo.isSelected() == true) {
+				detalleProyecto.setActivo("S");
+			} else {
+				detalleProyecto.setActivo("N");
+			}
+			
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
@@ -1450,6 +1493,22 @@ public class OrganigramView implements Serializable {
 
 	public void setNumModHIValorReal(InputNumber numModHIValorReal) {
 		this.numModHIValorReal = numModHIValorReal;
+	}
+
+	public InputText getTxtModDimension() {
+		return txtModDimension;
+	}
+
+	public void setTxtModDimension(InputText txtModDimension) {
+		this.txtModDimension = txtModDimension;
+	}
+
+	public SelectOneMenu getSomModAnoFiscal() {
+		return somModAnoFiscal;
+	}
+
+	public void setSomModAnoFiscal(SelectOneMenu somModAnoFiscal) {
+		this.somModAnoFiscal = somModAnoFiscal;
 	}
 	
 	

@@ -147,8 +147,10 @@
 			<p:contextMenu for="organigram" nodeType="dimension">
 				<p:menuitem value="Añadir Objetivo" ajax="false" icon="ui-icon-plus"
 					onclick="PF('dlgAnadirObjetivo').show(); return false;" />
-				<p:menuitem value="Detalles" update="organigram @form:growl"
-					icon="ui-icon-info"/>
+				<p:menuitem value="Detalles" update="formModal"
+					oncomplete="PF('dlgModificarDimension').show()"
+					icon="ui-icon-info"
+					action="#{organigramView.dialogModificarDimension}" />
 				<p:menuitem value="Eliminar" update="organigram @form:growl"
 					icon="ui-icon-trash" actionListener="#{organigramView.eliminarDimension}"/>
 			</p:contextMenu>
@@ -624,8 +626,9 @@
 				<div align="center">
 
 					<p:commandButton value="Añadir"
-						action="#{organigramView.anadirHistorialIndicadorAction}"
-						update=":formModal:msgPlan" />
+						actionListener="#{organigramView.anadirHistorialIndicadorAction}"
+						update=":form:organigram"
+						oncomplete="PF('dlgAnadirHistorialIndicador').hide();" />
 
 					<p:commandButton value="Cancelar" icon="ui-icon-close"
 						update=":formModal" />
@@ -639,6 +642,48 @@
 
 
 			<!-- DIALOGOS DE MODIFICAR -->
+			
+			<!-- ************************************************** -->
+			<!-- **			 DIÁLOGO MODIFICAR DIMENSION		 ** -->
+			<!-- ************************************************** -->
+			<p:dialog id="dlgModificarDimension" header="Dimension"
+				widgetVar="dlgModificarDimension" modal="true" draggable="true"
+				closable="false" resizable="true" responsive="true"
+				style="width: 100% !important;">
+
+				<p:messages id="msgModificarDimension" autoUpdate="true"
+					closable="true" style="width: 100%;" />
+
+				<p:panel header="Modificar Dimension">
+					<h:panelGrid columns="2" style="width: 100% !important">
+
+						<p:outputLabel value="Dimension:" />
+						<p:inputText id="txtModDimension"
+							binding="#{organigramView.txtModDimension}"/>	
+
+						<p:outputLabel value="¿Activo?:" />
+						<p:selectBooleanCheckbox id="sbcModEjeActivo"
+							binding="#{organigramView.sbcModEjeActivo}" />
+
+
+					</h:panelGrid>
+				</p:panel>
+
+				<br />
+
+				<div align="center">
+
+					<p:commandButton value="Modificar" update=":form:organigram"
+						oncomplete="PF('dlgModificarDimension').hide();"
+						actionListener="#{organigramView.modificarDimensionAction}" />
+
+					<p:commandButton value="Cancelar" icon="ui-icon-close"
+						update=":formModal" />
+
+				</div>
+
+			</p:dialog>
+			<!-- FIN DIÁLOGO MODIFICAR DIMENSION -->
 
 			<!-- ************************************************** -->
 			<!-- **			 DIÁLOGO MODIFICAR OBJETIVO			 ** -->
@@ -813,7 +858,8 @@
 
 			</p:dialog>
 			<!-- FIN DIÁLOGO MODIFICAR PROYECTO -->
-
+			
+			
 			<!-- ************************************************** -->
 			<!-- **		 DIÁLOGO MODIFICAR DETALLE PROYECTO		 ** -->
 			<!-- ************************************************** -->
@@ -850,7 +896,8 @@
 				<div align="center">
 
 					<p:commandButton value="Modificar" update=":form:organigram"
-						oncomplete="PF('dlgModificarDetalleProyecto').hide();" />
+						oncomplete="PF('dlgModificarDetalleProyecto').hide();" 
+						actionListener="#{organigramView.modificarDetalleProyectoAction}"/>
 
 					<p:commandButton value="Cancelar" icon="ui-icon-close"
 						update=":formModal" />

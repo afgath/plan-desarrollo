@@ -10,17 +10,11 @@
 					
 		  			<h:form id="frm">								  		
 						
-						<p:panel id="panelDataTableGluoAnoFiscal" header="GluoAnoFiscalData">
+						<p:panel id="panelDataTableGluoAnoFiscal" header="Gestión Año Fiscal">
 							<p:growl id="men"/>				
 							<p:dataTable value="#{gluoAnoFiscalView.data}" var="gluoAnoFiscal"
 								paginator="true" rows="5">
-																										<p:column filterBy="#{gluoAnoFiscal.anofId}" sortBy="#{gluoAnoFiscal.anofId}" >
-										 <f:facet name="header">
-										<h:outputText value="anofId"/>
-										</f:facet>
-										 <h:outputText value="#{gluoAnoFiscal.anofId}"/>
-										 </p:column>
-			                    																									
+																																
 										<p:column filterBy="#{gluoAnoFiscal.activo}" sortBy="#{gluoAnoFiscal.activo}" >
 										 <f:facet name="header">
 										<h:outputText value="Activo"/>
@@ -54,14 +48,7 @@
 										<h:outputText value="Estado"/>
 										</f:facet>
 										 <h:outputText value="#{gluoAnoFiscal.estado}"/>
-										</p:column>   
-			                    									
-										<p:column filterBy="#{gluoAnoFiscal.fechaCreacion}" sortBy="#{gluoAnoFiscal.fechaCreacion}" >
-										 <f:facet name="header">
-										<h:outputText value="FechaCreacion"/>
-										</f:facet>
-										 <h:outputText value="#{gluoAnoFiscal.fechaCreacion}"/>
-										</p:column>   
+										</p:column>    
 			                    									
 										<p:column filterBy="#{gluoAnoFiscal.fechaIncioAnoFiscal}" sortBy="#{gluoAnoFiscal.fechaIncioAnoFiscal}" >
 										 <f:facet name="header">
@@ -76,17 +63,10 @@
 										</f:facet>
 										 <h:outputText value="#{gluoAnoFiscal.fechaModificacion}"/>
 										</p:column>   
-			                    									
-										<p:column filterBy="#{gluoAnoFiscal.usuCreador}" sortBy="#{gluoAnoFiscal.usuCreador}" >
-										 <f:facet name="header">
-										<h:outputText value="UsuCreador"/>
-										</f:facet>
-										 <h:outputText value="#{gluoAnoFiscal.usuCreador}"/>
-										</p:column>   
-			                    									
+			                    										
 										<p:column filterBy="#{gluoAnoFiscal.usuModificador}" sortBy="#{gluoAnoFiscal.usuModificador}" >
 										 <f:facet name="header">
-										<h:outputText value="UsuModificador"/>
+										<h:outputText value="Usuario Modificador"/>
 										</f:facet>
 										 <h:outputText value="#{gluoAnoFiscal.usuModificador}"/>
 										</p:column>   
@@ -98,16 +78,16 @@
 										 <h:outputText value="#{gluoAnoFiscal.valorSalarioMinimo}"/>
 										</p:column>   
 			                    			                    
-								<p:column headerText="Options">
+								<p:column headerText="Opciones">
+									<p:commandButton id="btnDelete"									
+										title="Delete" actionListener="#{gluoAnoFiscalView.action_delete_datatable}"
+										onclick="if(!confirm('¿Realmente deses Activar/Desactivar?')){return false;}"
+										icon="ui-icon-trash" update=":frm:panelDataTableGluoAnoFiscal">
+										<f:attribute name="selectedGluoAnoFiscal" value="#{gluoAnoFiscal}" />
+									</p:commandButton>
 									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
 										update=":dialogGluoAnoFiscal"
 										actionListener="#{gluoAnoFiscalView.action_edit}">
-										<f:attribute name="selectedGluoAnoFiscal" value="#{gluoAnoFiscal}" />
-									</p:commandButton>
-									<p:commandButton id="btnDelete"									
-										title="Delete" actionListener="#{gluoAnoFiscalView.action_delete_datatable}"
-										onclick="if(!confirm('Do you really want to delete this Entry?')){return false;}"
-										icon="ui-icon-trash" update="@form">
 										<f:attribute name="selectedGluoAnoFiscal" value="#{gluoAnoFiscal}" />
 									</p:commandButton>
 								</p:column>									                    
@@ -115,7 +95,7 @@
 						</p:panel>
 						<p:panel id="panelBoton">
 							<div align="center">
-								<p:commandButton id="btnNew" value="New"
+								<p:commandButton id="btnNew" value="Nuevo Año Fiscal"
 									action="#{gluoAnoFiscalView.action_new()}" update=":dialogGluoAnoFiscal" />
 							</div>
 						</p:panel>						
@@ -127,50 +107,33 @@
 							<p:messages id="msg" />
 							<p:panel id="panelGluoAnoFiscal" header="GluoAnoFiscal">							
 							    <h:panelGrid columns="2" id="panelGrid" >
-																		 <h:outputText id="msgAnofId" value="AnofId"/>
-									 <p:inputText id="txtAnofId" binding="#{gluoAnoFiscalView.txtAnofId}">
-									 <p:ajax update=":dialogGluoAnoFiscal" listener="#{gluoAnoFiscalView.listener_txtId}"/>
-									 </p:inputText>	
-																											
-																		<h:outputText id="msgActivo" value=" Activo"/>
-									<p:inputText id="txtActivo" disabled="true" binding="#{gluoAnoFiscalView.txtActivo}"/>
-																		<h:outputText id="msgAnoFiscal" value=" AnoFiscal"/>
-									<p:inputText id="txtAnoFiscal" disabled="true" binding="#{gluoAnoFiscalView.txtAnoFiscal}"/>
+																		 									
+																		<h:outputText id="msgAnoFiscal" value=" Año Fiscal"/>
+									<p:inputText id="txtAnoFiscal" disabled="false" binding="#{gluoAnoFiscalView.txtAnoFiscal}"/>
 																		<h:outputText id="msgDescripcion" value=" Descripcion"/>
-									<p:inputText id="txtDescripcion" disabled="true" binding="#{gluoAnoFiscalView.txtDescripcion}"/>
+									<p:inputText id="txtDescripcion" disabled="false" binding="#{gluoAnoFiscalView.txtDescripcion}"/>
 																		<h:outputText id="msgEmprId" value=" EmprId"/>
-									<p:inputText id="txtEmprId" disabled="true" binding="#{gluoAnoFiscalView.txtEmprId}"/>
+									<p:inputText id="txtEmprId" disabled="false" binding="#{gluoAnoFiscalView.txtEmprId}"/>
 																		<h:outputText id="msgEstado" value=" Estado"/>
-									<p:inputText id="txtEstado" disabled="true" binding="#{gluoAnoFiscalView.txtEstado}"/>
-																		<h:outputText id="msgUsuCreador" value=" UsuCreador"/>
-									<p:inputText id="txtUsuCreador" disabled="true" binding="#{gluoAnoFiscalView.txtUsuCreador}"/>
-																		<h:outputText id="msgUsuModificador" value=" UsuModificador"/>
-									<p:inputText id="txtUsuModificador" disabled="true" binding="#{gluoAnoFiscalView.txtUsuModificador}"/>
+									<p:inputText id="txtEstado" disabled="false" binding="#{gluoAnoFiscalView.txtEstado}"/>						
 																		<h:outputText id="msgValorSalarioMinimo" value=" ValorSalarioMinimo"/>
-									<p:inputText id="txtValorSalarioMinimo" disabled="true" binding="#{gluoAnoFiscalView.txtValorSalarioMinimo}"/>
+									<p:inputNumber id="txtValorSalarioMinimo" disabled="false" binding="#{gluoAnoFiscalView.txtValorSalarioMinimo}"
+													minValue="0.0001" decimalPlaces="2"/>
 																		
-																													<h:outputText id="msgFechaCreacion" value=" FechaCreacion"/>
-																				<p:calendar showOn="button" navigator="true" locale="en" 
-										binding="#{gluoAnoFiscalView.txtFechaCreacion}" >
-										<p:ajax event="dateSelect" listener="#{gluoAnoFiscalView.listener_txtFechaCreacion}" />
-										</p:calendar>
+																												
 																				<h:outputText id="msgFechaIncioAnoFiscal" value=" FechaIncioAnoFiscal"/>
 																				<p:calendar showOn="button" navigator="true" locale="en" 
 										binding="#{gluoAnoFiscalView.txtFechaIncioAnoFiscal}" >
 										<p:ajax event="dateSelect" listener="#{gluoAnoFiscalView.listener_txtFechaIncioAnoFiscal}" />
 										</p:calendar>
-																				<h:outputText id="msgFechaModificacion" value=" FechaModificacion"/>
-																				<p:calendar showOn="button" navigator="true" locale="en" 
-										binding="#{gluoAnoFiscalView.txtFechaModificacion}" >
-										<p:ajax event="dateSelect" listener="#{gluoAnoFiscalView.listener_txtFechaModificacion}" />
-										</p:calendar>
+					
 																										    </h:panelGrid>
 							</p:panel>						   
 							<p:panel id="panelBotones">
 								<div align="center">					
-									<p:commandButton id="btnSave" binding="#{gluoAnoFiscalView.btnSave}" value="Save" action="#{gluoAnoFiscalView.action_save()}" update=":dialogGluoAnoFiscal :frm:panelDataTableGluoAnoFiscal" />
-									<p:commandButton id="btnClear" value="Clear" action="#{gluoAnoFiscalView.action_clear()}" update=":dialogGluoAnoFiscal" />
-									<p:commandButton id="btnExit" value="Exit" action="#{gluoAnoFiscalView.action_closeDialog()}" update=":dialogGluoAnoFiscal" />
+									<p:commandButton id="btnSave" binding="#{gluoAnoFiscalView.btnSave}" value="Guardar" action="#{gluoAnoFiscalView.action_save()}" update=":dialogGluoAnoFiscal :frm:panelDataTableGluoAnoFiscal" disabled="false" />
+									<p:commandButton id="btnClear" value="Limpiar" action="#{gluoAnoFiscalView.action_clear()}" update=":dialogGluoAnoFiscal" />
+									<p:commandButton id="btnExit" value="Salir" action="#{gluoAnoFiscalView.action_closeDialog()}" update=":dialogGluoAnoFiscal" />
 								</div>
 				</p:panel>
 			</h:form>
