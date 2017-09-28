@@ -258,6 +258,8 @@ public class OrganigramView implements Serializable {
 				detalleProyecto = (GluoDetalleProyecto)detalleProyectoMap.get(key).getEntity();
 				
 				detalleProyecto.setGluoProyecto(proyecto);
+				
+				detalleProyectoMap.get(key).setEntity(detalleProyecto);
 				break;
 
 			case "proyecto":
@@ -268,6 +270,8 @@ public class OrganigramView implements Serializable {
 				proyecto = (GluoProyecto)proyectoMap.get(key).getEntity();
 				
 				proyecto.setGluoSubprograma(subPrograma);
+				
+				proyectoMap.get(key).setEntity(proyecto);
 				break;
 
 			case "subprograma":
@@ -278,6 +282,8 @@ public class OrganigramView implements Serializable {
 				subPrograma = (GluoSubprograma)subProgramaMap.get(key).getEntity();
 				
 				subPrograma.setGluoPrograma(programa);
+				
+				subProgramaMap.get(key).setEntity(subPrograma);
 				break;
 
 			case "programa":
@@ -288,6 +294,8 @@ public class OrganigramView implements Serializable {
 				programa = (GluoPrograma)programaMap.get(key).getEntity();
 				
 				programa.setGluoObjetivo(objetivo);
+				
+				programaMap.get(key).setEntity(programa);
 				break;
 
 			case "objetivo":
@@ -299,6 +307,7 @@ public class OrganigramView implements Serializable {
 				
 				objetivo.setGluoSectorEjeDimension(dimension);
 				
+				objetivoMap.get(key).setEntity(objetivo);
 				break;
 			}
 		} catch (Exception e) {
