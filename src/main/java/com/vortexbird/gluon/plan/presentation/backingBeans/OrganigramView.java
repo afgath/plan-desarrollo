@@ -11,6 +11,7 @@ import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.component.selectonemenu.SelectOneMenu;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.organigram.OrganigramNodeCollapseEvent;
+import org.primefaces.event.organigram.OrganigramNodeDragDropEvent;
 import org.primefaces.event.organigram.OrganigramNodeExpandEvent;
 import org.primefaces.event.organigram.OrganigramNodeSelectEvent;
 import org.primefaces.model.DefaultOrganigramNode;
@@ -204,6 +205,107 @@ public class OrganigramView implements Serializable {
 
 		FacesContext.getCurrentInstance().addMessage(null, message);
 	}
+	
+	public void nodeDragDropListener(OrganigramNodeDragDropEvent event) {
+		try {
+			String tipoOrigen =  event.getSourceOrganigramNode().getType();
+			String tipoDestino = event.getTargetOrganigramNode().getType();
+			OrganigramNode nodo = event.getOrganigramNode();
+			OrganigramNode nodoPadre = event.getTargetOrganigramNode();
+			sePuedeMover(tipoOrigen, tipoDestino);
+			
+			FacesUtils.addInfoMessage("Nodo '" + event.getOrganigramNode().getData() + "' movido de " + event.getSourceOrganigramNode().getData() + " a '" + event.getTargetOrganigramNode().getData() + "'");
+			
+			modficarEntity(nodo, nodoPadre);
+			
+			
+		} catch (Exception e) {
+			event.getOrganigramNode().setParent(event.getSourceOrganigramNode());
+			event.getTargetOrganigramNode().getChildren().remove(event.getOrganigramNode());
+			FacesUtils.addErrorMessage(e.getMessage());
+			RequestContext.getCurrentInstance().update("form:organigram");
+		}
+    }
+	
+	public boolean sePuedeMover(String tipoOrigen, String tipoDestino) throws Exception{
+		if(!tipoOrigen.equals(tipoDestino)) {
+			throw new Exception("El nodo no se puede mover");
+		}
+		return true;
+	}
+	
+	private void modficarEntity(OrganigramNode nodo, OrganigramNode nodoPadre) {
+		log.info("modificarEntity");
+		try {
+			String tipo = nodo.getType();
+			String key = "";
+			String keyPadre = "";
+			
+			//Entidades
+			GluoSectorEjeDimension dimension;
+			GluoObjetivo objetivo;
+			GluoPrograma programa;
+			GluoSubprograma subPrograma;
+			GluoProyecto proyecto;
+			GluoDetalleProyecto detalleProyecto;
+			
+			switch (tipo) {
+			case "detalleProyecto":
+				key = "(" + nodo.getRowKey() + ") - " + nodo.getData();
+				keyPadre = "(" + nodoPadre.getRowKey() + ") - " + nodoPadre.getData();
+				
+				proyecto = (GluoProyecto)proyectoMap.get(keyPadre).getEntity();
+				detalleProyecto = (GluoDetalleProyecto)detalleProyectoMap.get(key).getEntity();
+				
+				detalleProyecto.setGluoProyecto(proyecto);
+				break;
+
+			case "proyecto":
+				key = "(" + nodo.getRowKey() + ") - " + nodo.getData();
+				keyPadre = "(" + nodoPadre.getRowKey() + ") - " + nodoPadre.getData();
+				
+				subPrograma = (GluoSubprograma)subProgramaMap.get(keyPadre).getEntity();
+				proyecto = (GluoProyecto)proyectoMap.get(key).getEntity();
+				
+				proyecto.setGluoSubprograma(subPrograma);
+				break;
+
+			case "subprograma":
+				key = "(" + nodo.getRowKey() + ") - " + nodo.getData();
+				keyPadre = "(" + nodoPadre.getRowKey() + ") - " + nodoPadre.getData();
+				
+				programa = (GluoPrograma)programaMap.get(keyPadre).getEntity();
+				subPrograma = (GluoSubprograma)subProgramaMap.get(key).getEntity();
+				
+				subPrograma.setGluoPrograma(programa);
+				break;
+
+			case "programa":
+				key = "(" + nodo.getRowKey() + ") - " + nodo.getData();
+				keyPadre = "(" + nodoPadre.getRowKey() + ") - " + nodoPadre.getData();
+				
+				objetivo = (GluoObjetivo)objetivoMap.get(keyPadre).getEntity();
+				programa = (GluoPrograma)programaMap.get(key).getEntity();
+				
+				programa.setGluoObjetivo(objetivo);
+				break;
+
+			case "objetivo":
+				key = "(" + nodo.getRowKey() + ") - " + nodo.getData();
+				keyPadre = "(" + nodoPadre.getRowKey() + ") - " + nodoPadre.getData();
+				
+				dimension = (GluoSectorEjeDimension)dimensionMap.get(keyPadre).getEntity();
+				objetivo = (GluoObjetivo)objetivoMap.get(key).getEntity();
+				
+				objetivo.setGluoSectorEjeDimension(dimension);
+				
+				break;
+			}
+		} catch (Exception e) {
+			FacesUtils.addErrorMessage(e.getMessage());
+		}
+
+	}
 
 	public void listener_txtAnoFin() {
 		Date inputDate = (Date) txtAnoFinPlan.getValue();
@@ -220,12 +322,52 @@ public class OrganigramView implements Serializable {
 	}
 
 	public void removeEmployee() {
-		// re-evaluate selection - might be a differenct object instance if viewstate
-		// serialization is enabled
 		OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
+		eliminarNodo(currentSelection);
 		currentSelection.getParent().getChildren().remove(currentSelection);
 	}
 
+	public void eliminarNodo(OrganigramNode nodo) {
+		String key = "";
+		switch (nodo.getType()) {
+		case "detalleProyecto":
+			key = "(" + nodo.getRowKey() + ") - " + nodo.getData();
+			detalleProyectoMap.get(key).getNodeEntity().getParent().getChildren().remove(nodo);
+			detalleProyectoMap.remove(key);
+			break;
+
+		case "proyecto":
+			key = "(" + nodo.getRowKey() + ") - " + nodo.getData();
+			proyectoMap.get(key).getNodeEntity().getParent().getChildren().remove(nodo);
+			proyectoMap.remove(key);
+			break;
+
+		case "subprograma":
+			key = "(" + nodo.getRowKey() + ") - " + nodo.getData();
+			subProgramaMap.get(key).getNodeEntity().getParent().getChildren().remove(nodo);
+			subProgramaMap.remove(key);
+			break;
+
+		case "programa":
+			key = "(" + nodo.getRowKey() + ") - " + nodo.getData();
+			programaMap.get(key).getNodeEntity().getParent().getChildren().remove(nodo);
+			programaMap.remove(key);
+			break;
+
+		case "objetivo":
+			key = "(" + nodo.getRowKey() + ") - " + nodo.getData();
+			objetivoMap.get(key).getNodeEntity().getParent().getChildren().remove(nodo);
+			objetivoMap.remove(key);
+			break;
+
+		case "dimension":
+			key = "(" + nodo.getRowKey() + ") - " + nodo.getData();
+			dimensionMap.get(key).getNodeEntity().getParent().getChildren().remove(nodo);
+			dimensionMap.remove(key);
+			break;
+		}
+	}
+	
 	public void eliminarDimension() {
 		try {
 			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
@@ -240,6 +382,7 @@ public class OrganigramView implements Serializable {
 		try {
 			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
 			List<OrganigramNode> nodos = currentSelection.getParent().getChildren();
+			log.info("El nodo "+currentSelection.getData()+" tiene "+nodos.size()+" hijos");
 			log.info("Antes de if");
 			if (!nodos.isEmpty()) {
 				ListIterator it = nodos.listIterator(nodos.size()-1);
@@ -289,42 +432,6 @@ public class OrganigramView implements Serializable {
 				}
 			}
 
-		} catch (Exception e) {
-			FacesUtils.addErrorMessage(e.getMessage());
-		}
-	}
-
-	public void eliminarPrograma() {
-		try {
-			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
-			currentSelection.getParent().getChildren().remove(currentSelection);
-		} catch (Exception e) {
-			FacesUtils.addErrorMessage(e.getMessage());
-		}
-	}
-
-	public void eliminarSubPrograma() {
-		try {
-			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
-			currentSelection.getParent().getChildren().remove(currentSelection);
-		} catch (Exception e) {
-			FacesUtils.addErrorMessage(e.getMessage());
-		}
-	}
-
-	public void eliminarProyecto() {
-		try {
-			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
-			currentSelection.getParent().getChildren().remove(currentSelection);
-		} catch (Exception e) {
-			FacesUtils.addErrorMessage(e.getMessage());
-		}
-	}
-
-	public void eliminarDetalleProyecto() {
-		try {
-			OrganigramNode currentSelection = OrganigramHelper.findTreeNode(rootNode, selection);
-			currentSelection.getParent().getChildren().remove(currentSelection);
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
@@ -393,7 +500,7 @@ public class OrganigramView implements Serializable {
 						.saveGluoHistorialIndicador((GluoHistorialIndicador) historialIndicadorMap.get(key).getEntity());
 			}
 
-			FacesUtils.addInfoMessage("Se ha guardado el plan");
+			FacesUtils.addInfoMessage("El plan se ha guardado exitosamente!!");
 
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
@@ -412,6 +519,7 @@ public class OrganigramView implements Serializable {
 			plan.setAnoInicio(FacesUtils.checkDate(txtAnoInicioPlan));
 			plan.setDescripcion(FacesUtils.checkString(txtAreaDescripcionPlan));
 			plan.setEslogan(FacesUtils.checkString(txtAreaEsloganPlan));
+			log.info("Eslogan: "+FacesUtils.checkString(txtAreaEsloganPlan));
 			plan.setFechaCreacion(new Date());
 			plan.setNombreAlcalde(FacesUtils.checkString(txtNombreAlcaldePlan));
 			plan.setUsuCreador((int) 0);
@@ -454,6 +562,7 @@ public class OrganigramView implements Serializable {
 			String dataNode = "(" + rowKey + ") - " + eje.getDescripcion();
 			sector = new DefaultOrganigramNode("dimension", dataNode, currentSelection);
 			sector.setSelectable(true);
+			sector.setDroppable(true);
 
 			elementoPlan = new ElementosPlan(sector, eje);
 			elementoPlan.setRowKey(rowKey);
@@ -486,12 +595,14 @@ public class OrganigramView implements Serializable {
 			String dataNode = "(" + rowKey + ") - " + descripcion;
 			nodoObjetivo = new DefaultOrganigramNode("objetivo", dataNode, currentSelection);
 			nodoObjetivo.setSelectable(true);
-
+			nodoObjetivo.setDraggable(true);
+			nodoObjetivo.setDroppable(true);
+			
 			elementoPlan = new ElementosPlan(nodoObjetivo, objetivo);
 			elementoPlan.setRowKey(rowKey);
 
 			objetivoMap.put(dataNode, elementoPlan);
-
+			
 			// txtAreaDescObjetivo.resetValue();
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
@@ -519,6 +630,8 @@ public class OrganigramView implements Serializable {
 			String dataNode = "(" + rowKey + ") - " + descripcion;
 			OrganigramNode nodoPrograma = new DefaultOrganigramNode("programa", dataNode, currentSelection);
 			nodoPrograma.setSelectable(true);
+			nodoPrograma.setDraggable(true);
+			nodoPrograma.setDroppable(true);
 
 			elementoPlan = new ElementosPlan(nodoPrograma, programa);
 			elementoPlan.setRowKey(rowKey);
@@ -549,7 +662,9 @@ public class OrganigramView implements Serializable {
 			String dataNode = "(" + rowKey + ") - " + descripcion;
 			OrganigramNode nodoSubPrograma = new DefaultOrganigramNode("subprograma", dataNode, currentSelection);
 			nodoSubPrograma.setSelectable(true);
-
+			nodoSubPrograma.setDraggable(true);
+			nodoSubPrograma.setDroppable(true);
+			
 			elementoPlan = new ElementosPlan(nodoSubPrograma, subprograma);
 			elementoPlan.setRowKey(rowKey);
 
@@ -579,7 +694,9 @@ public class OrganigramView implements Serializable {
 			String dataNode = "(" + rowKey + ") - " + descripcion;
 			OrganigramNode nodoProyecto = new DefaultOrganigramNode("proyecto", dataNode, currentSelection);
 			nodoProyecto.setSelectable(true);
-
+			nodoProyecto.setDraggable(true);
+			nodoProyecto.setDroppable(true);
+			
 			elementoPlan = new ElementosPlan(nodoProyecto, proyecto);
 			elementoPlan.setRowKey(rowKey);
 
@@ -618,6 +735,9 @@ public class OrganigramView implements Serializable {
 			OrganigramNode nodoDetalleProyecto = new DefaultOrganigramNode("detalleProyecto", dataNode,
 					currentSelection);
 			nodoDetalleProyecto.setSelectable(true);
+			nodoDetalleProyecto.setDraggable(true);
+			nodoDetalleProyecto.setDroppable(true);
+			
 			elementoPlan = new ElementosPlan(nodoDetalleProyecto, detalleProyecto);
 			elementoPlan.setRowKey(rowKey);
 
@@ -650,6 +770,7 @@ public class OrganigramView implements Serializable {
 			OrganigramNode nodoIndicador = new DefaultOrganigramNode("indicador", dataNode,
 					currentSelection);
 			nodoIndicador.setSelectable(true);
+			nodoIndicador.setDraggable(true);
 			
 			elementoPlan = new ElementosPlan(nodoIndicador, indicador);
 			elementoPlan.setRowKey(rowKey);
@@ -683,6 +804,7 @@ public class OrganigramView implements Serializable {
 			OrganigramNode nodoHistorialIndicador = new DefaultOrganigramNode("historialIndicador", dataNode,
 					currentSelection);
 			nodoHistorialIndicador.setSelectable(true);
+			nodoHistorialIndicador.setDraggable(true);
 			
 			elementoPlan = new ElementosPlan(nodoHistorialIndicador, historialIndicador);
 			elementoPlan.setRowKey(rowKey);
@@ -1120,7 +1242,7 @@ public class OrganigramView implements Serializable {
 		return txtAreaEsloganPlan;
 	}
 
-	public void setTxtAreaEsloganPlan(InputTextarea txbatAreaEsloganPlan) {
+	public void setTxtAreaEsloganPlan(InputTextarea txtAreaEsloganPlan) {
 		this.txtAreaEsloganPlan = txtAreaEsloganPlan;
 	}
 
