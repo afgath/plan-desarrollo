@@ -251,8 +251,8 @@ public class OrganigramView implements Serializable {
 			
 			switch (tipo) {
 			case "detalleProyecto":
-				key = "(" + nodo.getRowKey() + ") - " + nodo.getData();
-				keyPadre = "(" + nodoPadre.getRowKey() + ") - " + nodoPadre.getData();
+				key = (String) nodo.getData();
+				keyPadre = (String) nodoPadre.getData();
 				
 				proyecto = (GluoProyecto)proyectoMap.get(keyPadre).getEntity();
 				detalleProyecto = (GluoDetalleProyecto)detalleProyectoMap.get(key).getEntity();
@@ -263,8 +263,8 @@ public class OrganigramView implements Serializable {
 				break;
 
 			case "proyecto":
-				key = "(" + nodo.getRowKey() + ") - " + nodo.getData();
-				keyPadre = "(" + nodoPadre.getRowKey() + ") - " + nodoPadre.getData();
+				key = (String) nodo.getData();
+				keyPadre = (String) nodoPadre.getData();
 				
 				subPrograma = (GluoSubprograma)subProgramaMap.get(keyPadre).getEntity();
 				proyecto = (GluoProyecto)proyectoMap.get(key).getEntity();
@@ -275,8 +275,8 @@ public class OrganigramView implements Serializable {
 				break;
 
 			case "subprograma":
-				key = "(" + nodo.getRowKey() + ") - " + nodo.getData();
-				keyPadre = "(" + nodoPadre.getRowKey() + ") - " + nodoPadre.getData();
+				key = (String) nodo.getData();
+				keyPadre = (String) nodoPadre.getData();
 				
 				programa = (GluoPrograma)programaMap.get(keyPadre).getEntity();
 				subPrograma = (GluoSubprograma)subProgramaMap.get(key).getEntity();
@@ -287,8 +287,8 @@ public class OrganigramView implements Serializable {
 				break;
 
 			case "programa":
-				key = "(" + nodo.getRowKey() + ") - " + nodo.getData();
-				keyPadre = "(" + nodoPadre.getRowKey() + ") - " + nodoPadre.getData();
+				key = (String) nodo.getData();
+				keyPadre = (String) nodoPadre.getData();
 				
 				objetivo = (GluoObjetivo)objetivoMap.get(keyPadre).getEntity();
 				programa = (GluoPrograma)programaMap.get(key).getEntity();
@@ -299,8 +299,9 @@ public class OrganigramView implements Serializable {
 				break;
 
 			case "objetivo":
-				key = "(" + nodo.getRowKey() + ") - " + nodo.getData();
-				keyPadre = "(" + nodoPadre.getRowKey() + ") - " + nodoPadre.getData();
+				
+				key = (String) nodo.getData();
+				keyPadre = (String) nodoPadre.getData();
 				
 				dimension = (GluoSectorEjeDimension)dimensionMap.get(keyPadre).getEntity();
 				objetivo = (GluoObjetivo)objetivoMap.get(key).getEntity();
