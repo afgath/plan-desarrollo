@@ -154,7 +154,7 @@
 					action="#{organigramView.dialogModificarDimension}" />
 				<p:menuitem value="Eliminar" update="organigram @form:growl"
 					icon="ui-icon-trash"
-					actionListener="#{organigramView.removeEmployee}" />
+					actionListener="#{organigramView.eliminarNodoAction}" />
 			</p:contextMenu>
 
 			<p:contextMenu for="organigram" nodeType="objetivo">
@@ -165,7 +165,7 @@
 					action="#{organigramView.dialogModificarObjetivo}" />
 				<p:menuitem value="Eliminar" update="organigram @form:growl"
 					icon="ui-icon-trash"
-					actionListener="#{organigramView.removeEmployee}" />
+					actionListener="#{organigramView.eliminarNodoAction}" />
 			</p:contextMenu>
 
 			<p:contextMenu for="organigram" nodeType="programa">
@@ -177,7 +177,7 @@
 					action="#{organigramView.dialogModificarPrograma}" />
 				<p:menuitem value="Eliminar" update="organigram @form:growl"
 					icon="ui-icon-trash"
-					actionListener="#{organigramView.eliminarPrograma}" />
+					actionListener="#{organigramView.eliminarNodoAction}" />
 			</p:contextMenu>
 
 			<p:contextMenu for="organigram" nodeType="subprograma">
@@ -189,7 +189,7 @@
 					action="#{organigramView.dialogModificarSubPrograma}" />
 				<p:menuitem value="Eliminar" update="organigram @form:growl"
 					icon="ui-icon-trash"
-					actionListener="#{organigramView.eliminarSubPrograma}" />
+					actionListener="#{organigramView.eliminarNodoAction}" />
 			</p:contextMenu>
 
 			<p:contextMenu for="organigram" nodeType="proyecto">
@@ -204,7 +204,7 @@
 					action="#{organigramView.dialogModificarProyecto}" />
 				<p:menuitem value="Eliminar" update="organigram @form:growl"
 					icon="ui-icon-trash"
-					actionListener="#{organigramView.eliminarPoyecto}" />
+					actionListener="#{organigramView.eliminarNodoAction}" />
 			</p:contextMenu>
 
 			<p:contextMenu for="organigram" nodeType="detalleProyecto">
@@ -214,7 +214,7 @@
 					action="#{organigramView.dialogModificarDetalleProyecto}" />
 				<p:menuitem value="Eliminar" update="organigram @form:growl"
 					icon="ui-icon-trash"
-					actionListener="#{organigramView.eliminarDetalleProyecto}" />
+					actionListener="#{organigramView.eliminarNodoAction}" />
 			</p:contextMenu>
 
 			<p:contextMenu for="organigram" nodeType="indicador">
