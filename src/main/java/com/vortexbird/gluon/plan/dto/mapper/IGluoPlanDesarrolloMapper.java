@@ -1,9 +1,11 @@
 package com.vortexbird.gluon.plan.dto.mapper;
 
 import com.vortexbird.gluon.plan.modelo.GluoPlanDesarrollo;
+import com.vortexbird.gluon.plan.modelo.GluoSectorEjeDimension;
 import com.vortexbird.gluon.plan.modelo.dto.GluoPlanDesarrolloDTO;
 
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -24,4 +26,8 @@ public interface IGluoPlanDesarrolloMapper {
     public List<GluoPlanDesarrollo> listGluoPlanDesarrolloDTOToListGluoPlanDesarrollo(
         List<GluoPlanDesarrolloDTO> gluoPlanDesarrolloDTOs)
         throws Exception;
+    
+    public Set<GluoSectorEjeDimension> listDimensionesPorPlan(
+    		GluoPlanDesarrollo gluoPlanDesarrollo)
+            throws Exception;
 }

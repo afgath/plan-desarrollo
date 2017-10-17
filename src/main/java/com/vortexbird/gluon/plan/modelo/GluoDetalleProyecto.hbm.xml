@@ -32,7 +32,7 @@
         <property name="valorTotalPresupuesto" type="java.lang.Double">
             <column name="valor_total_presupuesto" precision="16" scale="4" not-null="true" />
         </property>
-        <set name="gluoDetalleProyectoXRubros" table="gluo_detalle_proyecto_x_rubro" inverse="true" lazy="true" fetch="select">
+        <set name="gluoDetalleProyectoXRubros" table="gluo_detalle_proyecto_x_rubro" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="dpro_id" not-null="true" />
             </key>

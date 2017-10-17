@@ -1,7 +1,6 @@
 package com.vortexbird.gluon.plan.dto.mapper;
 
 import com.vortexbird.gluon.plan.modelo.*;
-import com.vortexbird.gluon.plan.modelo.GluoPlanDesarrollo;
 import com.vortexbird.gluon.plan.modelo.control.*;
 import com.vortexbird.gluon.plan.modelo.dto.GluoPlanDesarrolloDTO;
 
@@ -18,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -53,6 +53,8 @@ public class GluoPlanDesarrolloMapper implements IGluoPlanDesarrolloMapper {
                 ? gluoPlanDesarrollo.getUsuCreador() : null);
             gluoPlanDesarrolloDTO.setUsuModificador((gluoPlanDesarrollo.getUsuModificador() != null)
                 ? gluoPlanDesarrollo.getUsuModificador() : null);
+            gluoPlanDesarrolloDTO.setGluoSectorEjeDimensions((gluoPlanDesarrollo.getGluoSectorEjeDimensions() != null)
+                    ? gluoPlanDesarrollo.getGluoSectorEjeDimensions() : null);
 
             return gluoPlanDesarrolloDTO;
         } catch (Exception e) {
@@ -83,6 +85,8 @@ public class GluoPlanDesarrolloMapper implements IGluoPlanDesarrolloMapper {
                 ? gluoPlanDesarrolloDTO.getUsuCreador() : null);
             gluoPlanDesarrollo.setUsuModificador((gluoPlanDesarrolloDTO.getUsuModificador() != null)
                 ? gluoPlanDesarrolloDTO.getUsuModificador() : null);
+            gluoPlanDesarrollo.setGluoSectorEjeDimensions((gluoPlanDesarrolloDTO.getGluoSectorEjeDimensions() != null)
+                    ? gluoPlanDesarrolloDTO.getGluoSectorEjeDimensions() : null);
 
             return gluoPlanDesarrollo;
         } catch (Exception e) {
@@ -127,4 +131,17 @@ public class GluoPlanDesarrolloMapper implements IGluoPlanDesarrolloMapper {
             throw e;
         }
     }
+
+	@Transactional(readOnly = true)
+	public Set<GluoSectorEjeDimension> listDimensionesPorPlan(GluoPlanDesarrollo gluoPlanDesarrollo) throws Exception {
+		 try {
+			 GluoPlanDesarrolloDTO gluoPlanDesarrolloDTO = new GluoPlanDesarrolloDTO();
+
+	            gluoPlanDesarrolloDTO.setGluoSectorEjeDimensions(gluoPlanDesarrollo.getGluoSectorEjeDimensions());
+
+	            return gluoPlanDesarrolloDTO.getGluoSectorEjeDimensions();
+	        } catch (Exception e) {
+	            throw e;
+	        }
+	}
 }

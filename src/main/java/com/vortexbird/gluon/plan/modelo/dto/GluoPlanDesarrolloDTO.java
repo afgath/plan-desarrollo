@@ -3,11 +3,15 @@ package com.vortexbird.gluon.plan.modelo.dto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.vortexbird.gluon.plan.modelo.GluoSectorEjeDimension;
+
 import java.io.Serializable;
 
 import java.sql.*;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -30,6 +34,7 @@ public class GluoPlanDesarrolloDTO implements Serializable {
     private Integer planId;
     private Integer usuCreador;
     private Integer usuModificador;
+    private Set<GluoSectorEjeDimension> gluoSectorEjeDimensions = new HashSet<GluoSectorEjeDimension>(0);
 
     public String getActivo() {
         return activo;
@@ -118,4 +123,12 @@ public class GluoPlanDesarrolloDTO implements Serializable {
     public void setUsuModificador(Integer usuModificador) {
         this.usuModificador = usuModificador;
     }
+
+	public Set<GluoSectorEjeDimension> getGluoSectorEjeDimensions() {
+		return gluoSectorEjeDimensions;
+	}
+
+	public void setGluoSectorEjeDimensions(Set<GluoSectorEjeDimension> gluoSectorEjeDimensions) {
+		this.gluoSectorEjeDimensions = gluoSectorEjeDimensions;
+	}
 }

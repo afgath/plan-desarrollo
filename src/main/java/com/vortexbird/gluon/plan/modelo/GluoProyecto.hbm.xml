@@ -29,13 +29,13 @@
         <property name="descripcion" type="java.lang.String">
             <column name="descripcion" not-null="true" />
         </property>
-        <set name="gluoIndicadors" table="gluo_indicador" inverse="true" lazy="true" fetch="select">
+        <set name="gluoIndicadors" table="gluo_indicador" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="proy_id" not-null="true" />
             </key>
             <one-to-many class="com.vortexbird.gluon.plan.modelo.GluoIndicador" />
         </set>
-        <set name="gluoDetalleProyectos" table="gluo_detalle_proyecto" inverse="true" lazy="true" fetch="select">
+        <set name="gluoDetalleProyectos" table="gluo_detalle_proyecto" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="proy_id" not-null="true" />
             </key>

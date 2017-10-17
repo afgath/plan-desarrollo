@@ -29,7 +29,7 @@
         <property name="descripcion" type="java.lang.String">
             <column name="descripcion" not-null="true" />
         </property>
-        <set name="gluoProgramas" table="gluo_programa" inverse="true" lazy="true" fetch="select">
+        <set name="gluoProgramas" table="gluo_programa" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="obje_id" not-null="true" />
             </key>
