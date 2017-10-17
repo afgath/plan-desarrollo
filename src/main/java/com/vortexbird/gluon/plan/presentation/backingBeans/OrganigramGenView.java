@@ -464,62 +464,112 @@ public class OrganigramGenView implements Serializable {
 	public String actionGuardar() {
 
 		try {
+			
+			if(plan==null){
+				throw new Exception("No has cargado ningún plan");
+			}
 
-			businessDelegatorView.saveGluoPlanDesarrollo(plan);
+			if(businessDelegatorView.getGluoPlanDesarrollo(plan.getPlanId())!=null){
+				businessDelegatorView.updateGluoPlanDesarrollo(plan);
+			}if(businessDelegatorView.getGluoPlanDesarrollo(plan.getPlanId())==null){
+				businessDelegatorView.saveGluoPlanDesarrollo(plan);
+			}
 
 			Iterator itDimKey = dimensionMap.keySet().iterator();
 			while (itDimKey.hasNext()) {
 				String key = (String) itDimKey.next();
-				businessDelegatorView
-						.saveGluoSectorEjeDimension((GluoSectorEjeDimension) dimensionMap.get(key).getEntity());
+				GluoSectorEjeDimension dimensionAGuardar = (GluoSectorEjeDimension) dimensionMap.get(key).getEntity();
+				if(dimensionAGuardar.getSediId()!=null){
+					businessDelegatorView.updateGluoSectorEjeDimension(dimensionAGuardar);
+				}else{
+					businessDelegatorView.saveGluoSectorEjeDimension(dimensionAGuardar);
+				}
 			}
 
 			Iterator itObjMap = objetivoMap.keySet().iterator();
 			while (itObjMap.hasNext()) {
 				String key = (String) itObjMap.next();
-				businessDelegatorView.saveGluoObjetivo((GluoObjetivo) objetivoMap.get(key).getEntity());
+				GluoObjetivo objetivoAGuardar = (GluoObjetivo) objetivoMap.get(key).getEntity();
+				if(objetivoAGuardar.getObjeId()!=null){
+					businessDelegatorView.updateGluoObjetivo(objetivoAGuardar);
+				}else{
+					businessDelegatorView.saveGluoObjetivo(objetivoAGuardar);
+				}
 			}
 
 			Iterator itPrgMap = programaMap.keySet().iterator();
 			while (itPrgMap.hasNext()) {
 				String key = (String) itPrgMap.next();
-				businessDelegatorView.saveGluoPrograma((GluoPrograma) programaMap.get(key).getEntity());
+				GluoPrograma programaAGuardar = (GluoPrograma) programaMap.get(key).getEntity();
+				if(programaAGuardar.getProgId()!=null){
+					businessDelegatorView.updateGluoPrograma(programaAGuardar);
+				}else{
+					businessDelegatorView.saveGluoPrograma(programaAGuardar);
+				}
 			}
 
 			Iterator itSubPrgMap = subProgramaMap.keySet().iterator();
 			while (itSubPrgMap.hasNext()) {
 				String key = (String) itSubPrgMap.next();
-				businessDelegatorView.saveGluoSubprograma((GluoSubprograma) subProgramaMap.get(key).getEntity());
+				GluoSubprograma subprogramaAGuardar = (GluoSubprograma) subProgramaMap.get(key).getEntity();
+				if(subprogramaAGuardar.getSubpId()!=null){
+					businessDelegatorView.updateGluoSubprograma(subprogramaAGuardar);
+				}else{
+					businessDelegatorView.saveGluoSubprograma(subprogramaAGuardar);
+				}
 			}
 
 			Iterator itProyMap = proyectoMap.keySet().iterator();
 			while (itProyMap.hasNext()) {
 				String key = (String) itProyMap.next();
-				businessDelegatorView.saveGluoProyecto((GluoProyecto) proyectoMap.get(key).getEntity());
+				GluoProyecto proyectoAGuardar = (GluoProyecto) proyectoMap.get(key).getEntity();
+				if(proyectoAGuardar.getProyId()!=null){
+					businessDelegatorView.updateGluoProyecto(proyectoAGuardar);
+				}else{
+					businessDelegatorView.saveGluoProyecto(proyectoAGuardar);
+				}
 			}
 
 			Iterator itDetProyMap = detalleProyectoMap.keySet().iterator();
 			while (itDetProyMap.hasNext()) {
 				String key = (String) itDetProyMap.next();
-				businessDelegatorView
-						.saveGluoDetalleProyecto((GluoDetalleProyecto) detalleProyectoMap.get(key).getEntity());
+				GluoDetalleProyecto detalleProyectoAGuardar = (GluoDetalleProyecto) detalleProyectoMap.get(key).getEntity();
+				if(detalleProyectoAGuardar.getDproId()!=null){
+					businessDelegatorView
+					.updateGluoDetalleProyecto(detalleProyectoAGuardar);
+				}else{
+					businessDelegatorView
+					.saveGluoDetalleProyecto(detalleProyectoAGuardar);
+				}
 			}
 			
 			Iterator itInticadorMap = indicadorMap.keySet().iterator();
 			while (itInticadorMap.hasNext()) {
 				String key = (String) itInticadorMap.next();
-				businessDelegatorView
-						.saveGluoIndicador((GluoIndicador) indicadorMap.get(key).getEntity());
+				GluoIndicador indicadorAGuardar = (GluoIndicador) indicadorMap.get(key).getEntity();
+				if(indicadorAGuardar.getIndiId()!=null){
+					businessDelegatorView
+					.updateGluoIndicador(indicadorAGuardar);
+				}else{
+					businessDelegatorView
+					.saveGluoIndicador(indicadorAGuardar);
+				}
 			}
 			
 			Iterator itHistorialInticadorMap = historialIndicadorMap.keySet().iterator();
 			while (itHistorialInticadorMap.hasNext()) {
 				String key = (String) itHistorialInticadorMap.next();
-				businessDelegatorView
-						.saveGluoHistorialIndicador((GluoHistorialIndicador) historialIndicadorMap.get(key).getEntity());
+				GluoHistorialIndicador historialIndicadorAGuardar = (GluoHistorialIndicador) historialIndicadorMap.get(key).getEntity();
+				if(historialIndicadorAGuardar.getHiinId()!=null){
+					businessDelegatorView
+					.updateGluoHistorialIndicador(historialIndicadorAGuardar);
+				}else{
+					businessDelegatorView
+					.saveGluoHistorialIndicador(historialIndicadorAGuardar);
+				}
 			}
 
-			FacesUtils.addInfoMessage("El plan se ha guardado exitosamente!!");
+			FacesUtils.addInfoMessage("Todas las modificaciones se han aplicado exitosamente!!");
 
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
@@ -849,6 +899,7 @@ public class OrganigramGenView implements Serializable {
 			 }else {
 			 sbcModEjeActivo.setValue(false);
 			 }
+			 dimension.setFechaModificacion(new Date());
 			
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
@@ -867,6 +918,7 @@ public class OrganigramGenView implements Serializable {
 			} else {
 				sbcModObjActivo.setValue(false);
 			}
+			objetivo.setFechaModificacion(new Date());
 
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
@@ -885,6 +937,7 @@ public class OrganigramGenView implements Serializable {
 			} else {
 				sbcModProgActivo.setValue(false);
 			}
+			programa.setFechaModificacion(new Date());
 
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
@@ -903,6 +956,7 @@ public class OrganigramGenView implements Serializable {
 			} else {
 				sbcModSubProgActivo.setValue(false);
 			}
+			subPrograma.setFechaModificacion(new Date());
 
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
@@ -921,6 +975,7 @@ public class OrganigramGenView implements Serializable {
 			} else {
 				sbcModProyActivo.setValue(false);
 			}
+			proyecto.setFechaModificacion(new Date());
 
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
@@ -940,6 +995,7 @@ public class OrganigramGenView implements Serializable {
 			 }else {
 			 sbcModDPActivo.setValue(false);
 			 }
+			 detalleProyecto.setFechaModificacion(new Date());
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
@@ -960,6 +1016,7 @@ public class OrganigramGenView implements Serializable {
 			} else {
 				sbcModProyActivo.setValue(false);
 			}
+			indicador.setFechaModificacion(new Date());
 
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
@@ -979,6 +1036,7 @@ public class OrganigramGenView implements Serializable {
 			} else {
 				sbcModHistorialIndicadorActivo.setValue(false);
 			}
+			historialIndicador.setFechaModificacion(new Date());
 
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
@@ -1278,7 +1336,7 @@ public class OrganigramGenView implements Serializable {
 									elementoPlan.setRowKey(rowKey);
 				
 									subProgramaMap.put(dataNode, elementoPlan);
-									log.info("Se Añade: "+gluoObjetivo.getDescripcion());
+									log.info("Se Añade: "+gluoSubprograma.getDescripcion());
 									
 									
 									
@@ -1301,7 +1359,7 @@ public class OrganigramGenView implements Serializable {
 										elementoPlan = new ElementosPlan(nodoProyecto, gluoProyecto);
 										elementoPlan.setRowKey(rowKey);
 					
-										subProgramaMap.put(dataNode, elementoPlan);
+										proyectoMap.put(dataNode, elementoPlan);
 										log.info("Se Añade: "+gluoProyecto.getDescripcion());
 										
 										
@@ -1325,7 +1383,7 @@ public class OrganigramGenView implements Serializable {
 											elementoPlan = new ElementosPlan(nodoDetalleProyecto, gluoDetalleProyecto);
 											elementoPlan.setRowKey(rowKey);
 						
-											subProgramaMap.put(dataNode, elementoPlan);
+											detalleProyectoMap.put(dataNode, elementoPlan);
 											log.info("Se Añade: "+gluoDetalleProyecto.getValorTotalPresupuesto());	
 											
 										}
@@ -1348,7 +1406,7 @@ public class OrganigramGenView implements Serializable {
 											elementoPlan = new ElementosPlan(nodoIndicador, gluoIndicador);
 											elementoPlan.setRowKey(rowKey);
 						
-											subProgramaMap.put(dataNode, elementoPlan);
+											indicadorMap.put(dataNode, elementoPlan);
 											log.info("Se Añade: "+gluoIndicador.getDescripcionIndicador());	
 											
 											
@@ -1370,7 +1428,7 @@ public class OrganigramGenView implements Serializable {
 												elementoPlan = new ElementosPlan(nodoHistorialIndicador, gluoHistorialIndicador);
 												elementoPlan.setRowKey(rowKey);
 							
-												subProgramaMap.put(dataNode, elementoPlan);
+												historialIndicadorMap.put(dataNode, elementoPlan);
 												log.info("Se Añade: "+gluoHistorialIndicador.getValorReal());	
 												
 											}

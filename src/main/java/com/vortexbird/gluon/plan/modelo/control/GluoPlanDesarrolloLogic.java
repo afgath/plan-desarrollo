@@ -187,11 +187,11 @@ public class GluoPlanDesarrolloLogic implements IGluoPlanDesarrolloLogic {
                 throw new ZMessManager().new NullEntityExcepcion(
                     "GluoPlanDesarrollo");
             }
-            
-            if(entity.getFechaCreacion().compareTo(entity.getFechaModificacion())<=0){
-            	throw new ZMessManager("El plan no se puede modificar antes de ser creado");
-            }
-
+	        if(entity.getFechaModificacion()!=null){    
+	            if(entity.getFechaCreacion().compareTo(entity.getFechaModificacion())<=0){
+	            	throw new ZMessManager("El plan no se puede modificar antes de ser creado");
+	            }
+	        }
             validateGluoPlanDesarrollo(entity);
 
             gluoPlanDesarrolloDAO.update(entity);
