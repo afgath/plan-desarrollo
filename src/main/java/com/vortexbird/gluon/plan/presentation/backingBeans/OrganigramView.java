@@ -442,8 +442,6 @@ public class OrganigramView implements Serializable {
 				eje = null;
 				
 				for(GluoObjetivo obj : gluoObjetivos) {
-					log.info("-----------------------------------------------");
-					log.info(obj.getDescripcion());
 					Set<GluoPrograma> gluoProgramas = obj.getGluoProgramas();
 					Iterator itObjMap = objetivoMap.keySet().iterator();
 					while (itObjMap.hasNext()) {
@@ -453,8 +451,8 @@ public class OrganigramView implements Serializable {
 						}
 					}
 					itObjMap=null;
+					
 					for(GluoPrograma prog : gluoProgramas) {
-						log.info(prog.getDescripcion());
 						Set<GluoSubprograma> gluoSubprogrmas = prog.getGluoSubprogramas();
 						Iterator itPrgMap = programaMap.keySet().iterator();
 						while (itPrgMap.hasNext()) {
@@ -463,8 +461,9 @@ public class OrganigramView implements Serializable {
 								programaMap.remove(key);
 							}
 						}
+						itPrgMap = null;
+						
 						for(GluoSubprograma subProg : gluoSubprogrmas) {
-							log.info(subProg.getDescripcion());
 							Set<GluoProyecto> gluoProyetos = subProg.getGluoProyectos();
 							Iterator itSubPrgMap = subProgramaMap.keySet().iterator();
 							while (itSubPrgMap.hasNext()) {
@@ -473,6 +472,8 @@ public class OrganigramView implements Serializable {
 									subProgramaMap.remove(key);
 								}
 							}
+							itPrgMap = null;
+							
 							for(GluoProyecto proy : gluoProyetos) {
 								Iterator itProyMap = proyectoMap.keySet().iterator();
 								while (itProyMap.hasNext()) {
@@ -481,6 +482,7 @@ public class OrganigramView implements Serializable {
 										proyectoMap.remove(key);
 									}
 								}
+								itProyMap = null;
 								
 							}
 						}

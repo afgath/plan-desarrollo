@@ -8,6 +8,7 @@ import com.vortexbird.gluon.plan.utilities.*;
 
 import org.primefaces.component.calendar.*;
 import org.primefaces.component.commandbutton.CommandButton;
+import org.primefaces.component.inputmask.InputMask;
 import org.primefaces.component.inputnumber.InputNumber;
 import org.primefaces.component.inputtext.InputText;
 
@@ -48,9 +49,8 @@ public class GluoAnoFiscalView implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final Logger log = LoggerFactory.getLogger(GluoAnoFiscalView.class);
     private InputText txtActivo;
-    private InputText txtAnoFiscal;
+    private InputMask mskAnoFiscall;
     private InputText txtDescripcion;
-    private InputText txtEmprId;
     private InputText txtEstado;
     private InputText txtUsuCreador;
     private InputText txtUsuModificador;
@@ -86,19 +86,14 @@ public class GluoAnoFiscalView implements Serializable {
         entity = null;
         selectedGluoAnoFiscal = null;
 
-        if (txtAnoFiscal != null) {
-            txtAnoFiscal.setValue(null);
-            txtAnoFiscal.setDisabled(false);
+        if (mskAnoFiscall != null) {
+            mskAnoFiscall.setValue(null);
+            mskAnoFiscall.setDisabled(false);
         }
 
         if (txtDescripcion != null) {
             txtDescripcion.setValue(null);
             txtDescripcion.setDisabled(false);
-        }
-
-        if (txtEmprId != null) {
-            txtEmprId.setValue(null);
-            txtEmprId.setDisabled(false);
         }
 
         if (txtEstado != null) {
@@ -159,12 +154,10 @@ public class GluoAnoFiscalView implements Serializable {
                                                        .getAttributes()
                                                        .get("selectedGluoAnoFiscal"));
 
-        txtAnoFiscal.setValue(selectedGluoAnoFiscal.getAnoFiscal());
-        txtAnoFiscal.setDisabled(false);
+        mskAnoFiscall.setValue(selectedGluoAnoFiscal.getAnoFiscal());
+        mskAnoFiscall.setDisabled(false);
         txtDescripcion.setValue(selectedGluoAnoFiscal.getDescripcion());
         txtDescripcion.setDisabled(false);
-        txtEmprId.setValue(selectedGluoAnoFiscal.getEmprId());
-        txtEmprId.setDisabled(false);
         txtEstado.setValue(selectedGluoAnoFiscal.getEstado());
         txtEstado.setDisabled(false);
         txtFechaIncioAnoFiscal.setValue(selectedGluoAnoFiscal.getFechaIncioAnoFiscal());
@@ -198,9 +191,9 @@ public class GluoAnoFiscalView implements Serializable {
             entity = new GluoAnoFiscal();
 
             entity.setActivo("S");
-            entity.setAnoFiscal(FacesUtils.checkInteger(txtAnoFiscal));
+            entity.setAnoFiscal(FacesUtils.checkInteger(mskAnoFiscall));
             entity.setDescripcion(FacesUtils.checkString(txtDescripcion));
-            entity.setEmprId(FacesUtils.checkInteger(txtEmprId));
+            entity.setEmprId(1);
             entity.setEstado(FacesUtils.checkString(txtEstado));
             entity.setFechaCreacion(new Date());
             entity.setFechaIncioAnoFiscal(FacesUtils.checkDate(
@@ -226,9 +219,9 @@ public class GluoAnoFiscalView implements Serializable {
                 entity = businessDelegatorView.getGluoAnoFiscal(anofId);
             }
 
-            entity.setAnoFiscal(FacesUtils.checkInteger(txtAnoFiscal));
+            entity.setAnoFiscal(FacesUtils.checkInteger(mskAnoFiscall));
             entity.setDescripcion(FacesUtils.checkString(txtDescripcion));
-            entity.setEmprId(FacesUtils.checkInteger(txtEmprId));
+            entity.setEmprId(1);
             entity.setEstado(FacesUtils.checkString(txtEstado));
             entity.setFechaIncioAnoFiscal(FacesUtils.checkDate(
                     txtFechaIncioAnoFiscal));
@@ -336,12 +329,12 @@ public class GluoAnoFiscalView implements Serializable {
         this.txtActivo = txtActivo;
     }
 
-    public InputText getTxtAnoFiscal() {
-        return txtAnoFiscal;
+    public InputMask getMskAnoFiscal() {
+        return mskAnoFiscall;
     }
 
-    public void setTxtAnoFiscal(InputText txtAnoFiscal) {
-        this.txtAnoFiscal = txtAnoFiscal;
+    public void setMskAnoFiscal(InputMask mskAnoFiscall) {
+        this.mskAnoFiscall = mskAnoFiscall;
     }
 
     public InputText getTxtDescripcion() {
@@ -350,14 +343,6 @@ public class GluoAnoFiscalView implements Serializable {
 
     public void setTxtDescripcion(InputText txtDescripcion) {
         this.txtDescripcion = txtDescripcion;
-    }
-
-    public InputText getTxtEmprId() {
-        return txtEmprId;
-    }
-
-    public void setTxtEmprId(InputText txtEmprId) {
-        this.txtEmprId = txtEmprId;
     }
 
     public InputText getTxtEstado() {

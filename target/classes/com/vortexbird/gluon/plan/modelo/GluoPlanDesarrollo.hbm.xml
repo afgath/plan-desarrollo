@@ -38,7 +38,7 @@
         <property name="anoFin" type="java.util.Date">
             <column name="ano_fin" length="13" not-null="true" />
         </property>
-        <set name="gluoSectorEjeDimensions" table="gluo_sector_eje_dimension" inverse="true" lazy="true" fetch="select">
+        <set name="gluoSectorEjeDimensions" table="gluo_sector_eje_dimension" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="plan_id" not-null="true" />
             </key>
