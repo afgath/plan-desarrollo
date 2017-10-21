@@ -109,6 +109,10 @@ public class GluoTipoRecursoLogic implements IGluoTipoRecursoLogic {
                 throw new ZMessManager().new NullEntityExcepcion(
                     "GluoTipoRecurso");
             }
+            
+            if(entity.getDescripcion().equals(null)){
+            	throw new ZMessManager().new EmptyFieldException("Descripcion");
+            }
 
             validateGluoTipoRecurso(entity);
 
@@ -133,7 +137,11 @@ public class GluoTipoRecursoLogic implements IGluoTipoRecursoLogic {
         }
 
         if (entity.getTireId() == null) {
-            throw new ZMessManager().new EmptyFieldException("tireId");
+            throw new ZMessManager().new EmptyFieldException("ID");
+        }
+        
+        if(entity.getDescripcion().equals(null)){
+        	throw new ZMessManager().new EmptyFieldException("Descripcion");
         }
 
         List<GluoDetallePresupuesto> gluoDetallePresupuestos = null;

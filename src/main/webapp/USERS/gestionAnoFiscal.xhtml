@@ -87,19 +87,22 @@
 					</p:column>
 
 					<p:column headerText="Opciones">
-						<p:commandButton id="btnDelete" title="Delete"
-							actionListener="#{gluoAnoFiscalView.action_delete_datatable}"
-							onclick="if(!confirm('¿Realmente deses Activar/Desactivar?')){return false;}"
-							icon="ui-icon-trash" update=":frm:panelDataTableGluoAnoFiscal">
-							<f:attribute name="selectedGluoAnoFiscal"
-								value="#{gluoAnoFiscal}" />
-						</p:commandButton>
+					
 						<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+							title="Editar"
 							update=":dialogGluoAnoFiscal"
 							actionListener="#{gluoAnoFiscalView.action_edit}">
 							<f:attribute name="selectedGluoAnoFiscal"
 								value="#{gluoAnoFiscal}" />
 						</p:commandButton>
+						<p:commandButton id="btnDelete" title="Activar/Desactivar"
+							actionListener="#{gluoAnoFiscalView.action_delete_datatable}"
+							onclick="if(!confirm('¿Realmente deses Activar/Desactivar?')){return false;}"
+							icon="ui-icon-alert" update=":frm:panelDataTableGluoAnoFiscal">
+							<f:attribute name="selectedGluoAnoFiscal"
+								value="#{gluoAnoFiscal}" />
+						</p:commandButton>
+						
 					</p:column>
 				</p:dataTable>
 			</p:panel>

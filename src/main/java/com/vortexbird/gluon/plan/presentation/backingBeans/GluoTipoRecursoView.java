@@ -1,19 +1,25 @@
 package com.vortexbird.gluon.plan.presentation.backingBeans;
 
+import com.hazelcast.util.StringUtil;
 import com.vortexbird.gluon.plan.exceptions.*;
+import com.vortexbird.gluon.plan.exceptions.ZMessManager.EmptyFieldException;
 import com.vortexbird.gluon.plan.modelo.*;
 import com.vortexbird.gluon.plan.modelo.dto.GluoTipoRecursoDTO;
 import com.vortexbird.gluon.plan.presentation.businessDelegate.*;
 import com.vortexbird.gluon.plan.utilities.*;
 
+import antlr.StringUtils;
+
+import org.hibernate.type.NumericBooleanType;
 import org.primefaces.component.calendar.*;
 import org.primefaces.component.commandbutton.CommandButton;
 import org.primefaces.component.inputtext.InputText;
-
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.RowEditEvent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.NumberUtils;
 
 import java.io.Serializable;
 
@@ -232,6 +238,7 @@ public class GluoTipoRecursoView implements Serializable {
             entity.setDescripcion(FacesUtils.checkString(txtDescripcion));
             entity.setFechaCreacion(new Date());
             entity.setUsuCreador(1);
+            
             businessDelegatorView.saveGluoTipoRecurso(entity);
             FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYSAVED);
             action_clear();
@@ -277,6 +284,14 @@ public class GluoTipoRecursoView implements Serializable {
             }else{
             	entity.setActivo("A");
             }
+            
+            entity.setUsuModificador(1);
+            entity.setFechaModificacion(new Date());
+           
+            businessDelegatorView.updateGluoTipoRecurso(entity);
+            FacesUtils.addInfoMessage("Se ha Activado/Desactivado el Tipo de Recurso");
+            
+            
         } catch (Exception e) {
             FacesUtils.addErrorMessage(e.getMessage());
         }

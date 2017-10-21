@@ -32,7 +32,7 @@ public class GluoTipoRecurso implements java.io.Serializable {
     @NotEmpty
     @Size(max = 1)
     private String activo;
-    @NotNull
+    @NotNull(message="La descripción no puede ser nula o estar vacía")
     @NotEmpty
     @Size(max = 255)
     private String codigo;

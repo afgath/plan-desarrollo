@@ -255,7 +255,7 @@ public class GluoAnoFiscalView implements Serializable {
         	   entity.setActivo("S");
            }
            businessDelegatorView.updateGluoAnoFiscal(entity);
-           FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYMODIFIED);
+           FacesUtils.addInfoMessage("Se ha Activado/Desactivado el Año Fiscal");
            
         } catch (Exception e) {
             FacesUtils.addErrorMessage(e.getMessage());

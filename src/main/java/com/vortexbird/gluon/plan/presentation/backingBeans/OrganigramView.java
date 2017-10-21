@@ -141,6 +141,11 @@ public class OrganigramView implements Serializable {
 	// Fin Variables de dialogos
 
 	// Variables para los dialogos de modificar
+	private InputTextarea txtModAreaDescripcionPlan;
+	private InputTextarea txtModAreaEsloganPlan;
+	private InputText txtModNombreAlcaldePlan;
+	private Calendar txtModAnoFinPlan;
+	private Calendar txtModAnoInicioPlan;
 	private InputTextarea txtAreaModPlanDescripcion;
 	private InputTextarea txtAreaModPlanEslogan;
 	private InputText txtModPlanNombreAlcaldePlan;
@@ -935,6 +940,29 @@ public class OrganigramView implements Serializable {
 
 		}
 	}
+	
+	
+	public void dialogModificarPlan() {
+		try {		
+			
+			GluoPlanDesarrollo plan = (GluoPlanDesarrollo) this.plan;
+			
+			 txtModNombreAlcaldePlan.setValue(plan.getNombreAlcalde());
+			 txtModAreaDescripcionPlan.setValue(plan.getDescripcion());
+			 txtModAreaEsloganPlan.setValue(plan.getEslogan());
+			 txtModAnoInicioPlan.setValue(plan.getAnoInicio());
+			 txtModAnoFinPlan.setValue(plan.getAnoFin());
+			 if(plan.getActivo().toLowerCase().trim().equals("s")) {
+			 sbcModPlanActivo.setValue(true);
+			 }else {
+			 sbcModPlanActivo.setValue(false);
+			 }
+			 plan.setFechaModificacion(new Date());
+			
+		} catch (Exception e) {
+			FacesUtils.addErrorMessage(e.getMessage());
+		}
+	}
 
 	public void dialogModificarDimension() {
 		try {
@@ -1086,6 +1114,34 @@ public class OrganigramView implements Serializable {
 		}
 	}
 
+	
+	public void modificarPlanAction() {
+		log.info("modificarPlanAction");
+		try {
+
+			OrganigramNode nodePlan = rootNode;
+
+			plan.setNombreAlcalde(txtModNombreAlcaldePlan.getValue().toString());
+			plan.setEslogan(txtModAreaEsloganPlan.getValue().toString());
+			plan.setDescripcion(txtModAreaDescripcionPlan.getValue().toString());
+			plan.setAnoInicio(FacesUtils.checkDate(txtModPlanAnoInicioPlan.getValue().toString()));
+			plan.setAnoFin(FacesUtils.checkDate(txtModPlanAnoFinPlan.getValue().toString()));
+			
+			nodePlan.setData(
+					plan.getDescripcion());
+			if (sbcModPlanActivo.isSelected() == true) {
+				plan.setActivo("S");
+			} else {
+				plan.setActivo("N");
+			}
+
+		} catch (Exception e) {
+			FacesUtils.addErrorMessage(e.getMessage());
+		}
+
+	}
+	
+	
 	public void modificarDimensionAction() {
 		log.info("modificarDimensionAction");
 		try {
@@ -1652,6 +1708,46 @@ public class OrganigramView implements Serializable {
 
 	public void setIndicador(GluoIndicador indicador) {
 		this.indicador = indicador;
+	}
+
+	public InputTextarea getTxtModAreaDescripcionPlan() {
+		return txtModAreaDescripcionPlan;
+	}
+
+	public void setTxtModAreaDescripcionPlan(InputTextarea txtModAreaDescripcionPlan) {
+		this.txtModAreaDescripcionPlan = txtModAreaDescripcionPlan;
+	}
+
+	public InputTextarea getTxtModAreaEsloganPlan() {
+		return txtModAreaEsloganPlan;
+	}
+
+	public void setTxtModAreaEsloganPlan(InputTextarea txtModAreaEsloganPlan) {
+		this.txtModAreaEsloganPlan = txtModAreaEsloganPlan;
+	}
+
+	public InputText getTxtModNombreAlcaldePlan() {
+		return txtModNombreAlcaldePlan;
+	}
+
+	public void setTxtModNombreAlcaldePlan(InputText txtModNombreAlcaldePlan) {
+		this.txtModNombreAlcaldePlan = txtModNombreAlcaldePlan;
+	}
+
+	public Calendar getTxtModAnoFinPlan() {
+		return txtModAnoFinPlan;
+	}
+
+	public void setTxtModAnoFinPlan(Calendar txtModAnoFinPlan) {
+		this.txtModAnoFinPlan = txtModAnoFinPlan;
+	}
+
+	public Calendar getTxtModAnoInicioPlan() {
+		return txtModAnoInicioPlan;
+	}
+
+	public void setTxtModAnoInicioPlan(Calendar txtModAnoInicioPlan) {
+		this.txtModAnoInicioPlan = txtModAnoInicioPlan;
 	}
 
 	public InputText getTxtDescIndicador() {

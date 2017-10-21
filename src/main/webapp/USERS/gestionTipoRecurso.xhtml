@@ -12,7 +12,7 @@
 						
 						<p:panel id="panelDataTableGluoTipoRecurso" header="Tipo de Recurso">
 							<p:growl id="men"/>				
-							<p:dataTable value="#{gluoTipoRecursoView.data}" var="gluoTipoRecurso"
+							<p:dataTable id="dtblTipoRecurso" value="#{gluoTipoRecursoView.data}" var="gluoTipoRecurso"
 								paginator="true" rows="5">
 																									
 			                    																									
@@ -53,14 +53,15 @@
 			                    			                    
 								<p:column headerText="Opciones">
 									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										title="Editar"
 										update=":dialogGluoTipoRecurso"
 										actionListener="#{gluoTipoRecursoView.action_edit}">
 										<f:attribute name="selectedGluoTipoRecurso" value="#{gluoTipoRecurso}" />
 									</p:commandButton>
 									<p:commandButton id="btnDelete"									
-										title="Delete" actionListener="#{gluoTipoRecursoView.action_delete_datatable}"
-										onclick="if(!confirm('Do you really want to delete this Entry?')){return false;}"
-										icon="ui-icon-trash" update="@form">
+										title="Activar/Desactivar" actionListener="#{gluoTipoRecursoView.action_delete_datatable}"
+										onclick="if(!confirm('Realmente deseas Activar/Desactivar este Tipo de Recurso')){return false;}"
+										icon="ui-icon-alert" update="frm :frm:panelDataTableGluoTipoRecurso">
 										<f:attribute name="selectedGluoTipoRecurso" value="#{gluoTipoRecurso}" />
 									</p:commandButton>
 								</p:column>									                    
