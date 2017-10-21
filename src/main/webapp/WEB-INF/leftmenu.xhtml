@@ -27,6 +27,9 @@
 				<p:menuitem id="sm_fonts" value="Font Icons" icon="icon-book"
 					outcome="font-icons.xhtml" />
 				
+				<p:menuitem icon="icon-users" value="Usuarios"
+						url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/ADMIN/usuarios.xhtml"/>
+				
 				<p:submenu label="Plan" icon="icon-tasks">
 				
 					<p:menuitem value=" Nuevo" icon="fa fa-plus"

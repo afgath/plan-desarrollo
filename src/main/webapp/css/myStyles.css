@@ -1,0 +1,22 @@
+/* Estilos propios */
+.panel-center {
+	padding: 10opx !important;
+	margin: 200px !important;
+	margin-left: 78px !important;
+}
+
+.panelGridCenter {
+    margin: 0 auto;
+    text-align: center;
+}
+
+#formRegistro {
+	padding: 10opx !important;
+	margin: 200px !important;
+	margin-left: 78px !important;
+}
+
+.companyHeaderGrid.ui-panelgrid>*>tr,
+.companyHeaderGrid.ui-panelgrid .ui-panelgrid-cell {
+    border: none;
+}

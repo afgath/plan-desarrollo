@@ -109,18 +109,14 @@ public class SegUsuarioLogic implements ISegUsuarioLogic {
             }
 
             validateSegUsuario(entity);
-
-            if (getSegUsuario(entity.getUsuId()) != null) {
-                throw new ZMessManager(ZMessManager.ENTITY_WITHSAMEKEY);
-            }
             
-            if(entity.getUsuId()==entity.getUsuModificador()){
-            	throw new ZMessManager("El usuario no se puede modificar a si mismo");
-            }
-            
-            if(entity.getUsuId()==entity.getUsuCreador()){
-            	throw new ZMessManager("El usuario no se puede crear a si mismo");
-            }
+//            if(entity.getUsuId()==entity.getUsuModificador()){
+//            	throw new ZMessManager("El usuario no se puede modificar a si mismo");
+//            }
+//            
+//            if(entity.getUsuId()==entity.getUsuCreador()){
+//            	throw new ZMessManager("El usuario no se puede crear a si mismo");
+//            }
 
             segUsuarioDAO.save(entity);
 

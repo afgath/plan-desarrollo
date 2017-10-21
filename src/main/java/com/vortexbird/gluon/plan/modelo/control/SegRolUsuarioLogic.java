@@ -126,9 +126,6 @@ public class SegRolUsuarioLogic implements ISegRolUsuarioLogic {
 
             validateSegRolUsuario(entity);
 
-            if (getSegRolUsuario(entity.getRlusId()) != null) {
-                throw new ZMessManager(ZMessManager.ENTITY_WITHSAMEKEY);
-            }
 
             segRolUsuarioDAO.save(entity);
 

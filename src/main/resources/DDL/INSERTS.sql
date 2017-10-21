@@ -2,9 +2,10 @@
 
 
 INSERT INTO seg_opcion (opcn_id, activo, fecha_creacion, fecha_modificacion, usu_creador, usu_modificador, nombre) VALUES (1, 'A', '2017-10-19 09:52:24.717000', '2017-10-19 09:52:24.717000', 1, 1, 'PLAN');
-
+INSERT INTO seg_opcion (opcn_id, activo, fecha_creacion, fecha_modificacion, usu_creador, usu_modificador, nombre) VALUES (2, 'A', '2017-10-19 09:52:24.717000', '2017-10-19 09:52:24.717000', 1, 1, 'AÑO FISCAL');
 
 INSERT INTO seg_rol  (rol_id, activo, fecha_creacion, fecha_modificacion, usu_creador, usu_modificador, nombre) VALUES (1, 'A', '2017-10-19 09:52:24.717000', '2017-10-19 09:52:24.717000', 1, 1, 'ADMINISTRADOR');
+INSERT INTO seg_rol  (rol_id, activo, fecha_creacion, fecha_modificacion, usu_creador, usu_modificador, nombre) VALUES (2, 'A', '2017-10-19 09:52:24.717000', '2017-10-19 09:52:24.717000', 1, 1, 'USUARIO');
 
 
 INSERT INTO seg_rol_usuario  (rlus_id, activo, fecha_creacion, fecha_modificacion, usu_creador, usu_modificador, usu_id, rol_id) VALUES (1, 'A', '2017-10-19 09:52:24.717000', '2017-10-19 09:52:24.717000', 1, 1, 1, 1);
