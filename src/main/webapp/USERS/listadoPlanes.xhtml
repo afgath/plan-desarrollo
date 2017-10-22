@@ -10,7 +10,7 @@
 		<h:form id="frm">
 
 			<p:panel id="panelDataTableGluoPlanDesarrollo"
-				header="GluoPlanDesarrolloData">
+				header="Planes">
 				<p:growl id="men" />
 				<p:dataTable value="#{gluoPlanDesarrolloView.data}"
 					var="gluoPlanDesarrollo" paginator="true" rows="5">
@@ -55,23 +55,6 @@
 							<h:outputText value="Año de Finalización del Plan" />
 						</f:facet>
 						<h:outputText value="#{gluoPlanDesarrollo.anoFin}" />
-					</p:column>
-
-
-					<p:column filterBy="#{gluoPlanDesarrollo.usuModificador}"
-						sortBy="#{gluoPlanDesarrollo.usuModificador}">
-						<f:facet name="header">
-							<h:outputText value="Último usuario que modificó" />
-						</f:facet>
-						<h:outputText value="#{gluoPlanDesarrollo.usuModificador}" />
-					</p:column>
-
-					<p:column filterBy="#{gluoPlanDesarrollo.fechaModificacion}"
-						sortBy="#{gluoPlanDesarrollo.fechaModificacion}">
-						<f:facet name="header">
-							<h:outputText value="Fecha de la Última Modificación" />
-						</f:facet>
-						<h:outputText value="#{gluoPlanDesarrollo.fechaModificacion}" />
 					</p:column>
 
 					<p:column headerText="Opciones">

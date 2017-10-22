@@ -223,17 +223,21 @@ public class OrganigramGenView implements Serializable {
 	
 	public void nodeDragDropListener(OrganigramNodeDragDropEvent event) {
 		try {
-			String tipoOrigen =  event.getSourceOrganigramNode().getType();
-			String tipoDestino = event.getTargetOrganigramNode().getType();
 			OrganigramNode nodo = event.getOrganigramNode();
 			OrganigramNode nodoPadre = event.getTargetOrganigramNode();
+			OrganigramNode nodoAntiguoPadre = event.getSourceOrganigramNode();
+			
+			String tipoOrigen = nodoAntiguoPadre.getType();
+			String tipoDestino = nodoPadre.getType();
+			
 			sePuedeMover(tipoOrigen, tipoDestino);
-			
-			FacesUtils.addInfoMessage("Nodo '" + event.getOrganigramNode().getData() + "' movido de " + event.getSourceOrganigramNode().getData() + " a '" + event.getTargetOrganigramNode().getData() + "'");
-			
-			modficarEntity(nodo, nodoPadre);
-			
-			
+
+			FacesUtils.addInfoMessage("Nodo '" + event.getOrganigramNode().getData() + "' movido de "
+					+ event.getSourceOrganigramNode().getData() + " a '" + event.getTargetOrganigramNode().getData()
+					+ "'");
+
+			modficarEntity(nodo, nodoPadre, nodoAntiguoPadre);
+
 		} catch (Exception e) {
 			event.getOrganigramNode().setParent(event.getSourceOrganigramNode());
 			event.getTargetOrganigramNode().getChildren().remove(event.getOrganigramNode());
@@ -249,79 +253,138 @@ public class OrganigramGenView implements Serializable {
 		return true;
 	}
 	
-	private void modficarEntity(OrganigramNode nodo, OrganigramNode nodoPadre) {
+	private void modficarEntity(OrganigramNode nodo, OrganigramNode nodoPadre, OrganigramNode nodoAntiguoPadre) {
 		log.info("modificarEntity");
 		try {
 			String tipo = nodo.getType();
 			String key = "";
 			String keyPadre = "";
-			
-			//Entidades
-			GluoSectorEjeDimension dimension;
-			GluoObjetivo objetivo;
-			GluoPrograma programa;
-			GluoSubprograma subPrograma;
-			GluoProyecto proyecto;
-			GluoDetalleProyecto detalleProyecto;
-			
+			String keyAntiguoPadre = "";
+
 			switch (tipo) {
 			case "detalleProyecto":
-				key = "(" + nodo.getRowKey() + ") - " + nodo.getData();
-				keyPadre = "(" + nodoPadre.getRowKey() + ") - " + nodoPadre.getData();
-				
-				proyecto = (GluoProyecto)proyectoMap.get(keyPadre).getEntity();
-				detalleProyecto = (GluoDetalleProyecto)detalleProyectoMap.get(key).getEntity();
-				
+				key = (String) nodo.getData();
+				keyPadre = (String) nodoPadre.getData();
+				keyAntiguoPadre = (String) nodoAntiguoPadre.getData();
+
+				proyecto = (GluoProyecto) proyectoMap.get(keyPadre).getEntity();
+				detalleProyecto = (GluoDetalleProyecto) detalleProyectoMap.get(key).getEntity();
+				GluoProyecto antiguoProyecto = (GluoProyecto) subProgramaMap.get(keyAntiguoPadre).getEntity();
+				Set<GluoDetalleProyecto> gluoDetalleProyectos = antiguoProyecto.getGluoDetalleProyectos();
+
+				for (GluoDetalleProyecto detProy : gluoDetalleProyectos ) {
+					if(detProy.equals(detalleProyecto)) {
+						log.info("Lo encontré");
+						gluoDetalleProyectos.remove(detalleProyecto);
+						Set<GluoDetalleProyecto> gluoDetalleProyectos2 = proyecto.getGluoDetalleProyectos();
+						gluoDetalleProyectos2.add(detalleProyecto);
+						proyecto.setGluoDetalleProyectos(gluoDetalleProyectos2);;
+					}
+				}
+
 				detalleProyecto.setGluoProyecto(proyecto);
-				
+
 				detalleProyectoMap.get(key).setEntity(detalleProyecto);
 				break;
 
 			case "proyecto":
-				key = "(" + nodo.getRowKey() + ") - " + nodo.getData();
-				keyPadre = "(" + nodoPadre.getRowKey() + ") - " + nodoPadre.getData();
-				
-				subPrograma = (GluoSubprograma)subProgramaMap.get(keyPadre).getEntity();
-				proyecto = (GluoProyecto)proyectoMap.get(key).getEntity();
-				
-				proyecto.setGluoSubprograma(subPrograma);
-				
+				key = (String) nodo.getData();
+				keyPadre = (String) nodoPadre.getData();
+				keyAntiguoPadre = (String) nodoAntiguoPadre.getData();
+
+				subprograma = (GluoSubprograma) subProgramaMap.get(keyPadre).getEntity();
+				proyecto = (GluoProyecto) proyectoMap.get(key).getEntity();
+				GluoSubprograma antiguoSubPrograma = (GluoSubprograma) subProgramaMap.get(keyAntiguoPadre).getEntity();
+				Set<GluoProyecto> gluoProyectos = antiguoSubPrograma.getGluoProyectos();
+
+				for (GluoProyecto proy : gluoProyectos ) {
+					if(proy.equals(proyecto)) {
+						log.info("Lo encontré");
+						gluoProyectos.remove(proyecto);
+						Set<GluoProyecto> gluoProyectos2 = subprograma.getGluoProyectos();
+						gluoProyectos2.add(proyecto);
+						subprograma.setGluoProyectos(gluoProyectos2);
+					}
+				}
+
+				proyecto.setGluoSubprograma(subprograma);
+
 				proyectoMap.get(key).setEntity(proyecto);
 				break;
 
 			case "subprograma":
-				key = "(" + nodo.getRowKey() + ") - " + nodo.getData();
-				keyPadre = "(" + nodoPadre.getRowKey() + ") - " + nodoPadre.getData();
-				
-				programa = (GluoPrograma)programaMap.get(keyPadre).getEntity();
-				subPrograma = (GluoSubprograma)subProgramaMap.get(key).getEntity();
-				
-				subPrograma.setGluoPrograma(programa);
-				
-				subProgramaMap.get(key).setEntity(subPrograma);
+				key = (String) nodo.getData();
+				keyPadre = (String) nodoPadre.getData();
+				keyAntiguoPadre = (String) nodoAntiguoPadre.getData();
+
+				programa = (GluoPrograma) programaMap.get(keyPadre).getEntity();
+				subprograma = (GluoSubprograma) subProgramaMap.get(key).getEntity();
+				GluoPrograma antiguoPrograma = (GluoPrograma) programaMap.get(keyAntiguoPadre).getEntity();
+				Set<GluoSubprograma> gluoSubProgramas = antiguoPrograma.getGluoSubprogramas();
+
+				for (GluoSubprograma subProg : gluoSubProgramas ) {
+					if(subProg.equals(subprograma)) {
+						log.info("Lo encontré");
+						gluoSubProgramas.remove(subprograma);
+						Set<GluoSubprograma> gluoSubProgramas2 = programa.getGluoSubprogramas();
+						gluoSubProgramas2.add(subprograma);
+						programa.setGluoSubprogramas(gluoSubProgramas2);
+					}
+				}
+
+				subprograma.setGluoPrograma(programa);
+
+				subProgramaMap.get(key).setEntity(subprograma);
 				break;
 
 			case "programa":
-				key = "(" + nodo.getRowKey() + ") - " + nodo.getData();
-				keyPadre = "(" + nodoPadre.getRowKey() + ") - " + nodoPadre.getData();
-				
-				objetivo = (GluoObjetivo)objetivoMap.get(keyPadre).getEntity();
-				programa = (GluoPrograma)programaMap.get(key).getEntity();
-				
+				key = (String) nodo.getData();
+				keyPadre = (String) nodoPadre.getData();
+				keyAntiguoPadre = (String) nodoAntiguoPadre.getData();
+
+				objetivo = (GluoObjetivo) objetivoMap.get(keyPadre).getEntity();
+				programa = (GluoPrograma) programaMap.get(key).getEntity();
+				GluoObjetivo antiguoObjetivo = (GluoObjetivo) objetivoMap.get(keyAntiguoPadre).getEntity();
+				Set<GluoPrograma> gluoProgramas = antiguoObjetivo.getGluoProgramas();
+
+				for (GluoPrograma prog : gluoProgramas ) {
+					if(prog.equals(programa)) {
+						log.info("Lo encontré");
+						gluoProgramas.remove(programa);
+						Set<GluoPrograma> gluoProgramas2 = objetivo.getGluoProgramas();
+						gluoProgramas2.add(programa);
+						objetivo.setGluoProgramas(gluoProgramas2);
+					}
+				}
+
 				programa.setGluoObjetivo(objetivo);
-				
+
 				programaMap.get(key).setEntity(programa);
 				break;
 
 			case "objetivo":
-				key = "(" + nodo.getRowKey() + ") - " + nodo.getData();
-				keyPadre = "(" + nodoPadre.getRowKey() + ") - " + nodoPadre.getData();
+
+				key = (String) nodo.getData();
+				keyPadre = (String) nodoPadre.getData();
+				keyAntiguoPadre = (String) nodoAntiguoPadre.getData();
+
+				eje = (GluoSectorEjeDimension) dimensionMap.get(keyPadre).getEntity();
+				objetivo = (GluoObjetivo) objetivoMap.get(key).getEntity();
+				GluoSectorEjeDimension antiguoEje = (GluoSectorEjeDimension) dimensionMap.get(keyAntiguoPadre).getEntity();
+				Set<GluoObjetivo> gluoObjetivos = antiguoEje.getGluoObjetivos();
+
+				for (GluoObjetivo obj : gluoObjetivos ) {
+					if(obj.equals(objetivo)) {
+						log.info("Lo encontré");
+						gluoObjetivos.remove(objetivo);
+						Set<GluoObjetivo> gluoObjetivos2 = eje.getGluoObjetivos();
+						gluoObjetivos2.add(objetivo);
+						eje.setGluoObjetivos(gluoObjetivos2);
+					}
+				}
 				
-				dimension = (GluoSectorEjeDimension)dimensionMap.get(keyPadre).getEntity();
-				objetivo = (GluoObjetivo)objetivoMap.get(key).getEntity();
-				
-				objetivo.setGluoSectorEjeDimension(dimension);
-				
+				objetivo.setGluoSectorEjeDimension(eje);
+
 				objetivoMap.get(key).setEntity(objetivo);
 				break;
 			}
@@ -330,7 +393,7 @@ public class OrganigramGenView implements Serializable {
 		}
 
 	}
-
+	
 	public void listener_txtAnoFin() {
 		Date inputDate = (Date) txtAnoFinPlan.getValue();
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");

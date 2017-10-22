@@ -27,8 +27,11 @@
 				<p:menuitem id="sm_fonts" value="Font Icons" icon="icon-book"
 					outcome="font-icons.xhtml" />
 				
-				<p:menuitem icon="icon-users" value="Usuarios"
+				<p:menuitem icon="icon-users" value="Usuarios" rendered="#{leftMenuVista.contains('USUARIOS')==true ? true : false}"
 						url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/ADMIN/usuarios.xhtml"/>
+						
+				<p:menuitem icon="icon-key" value="Roles" rendered="#{leftMenuVista.contains('ROLES')}"
+						url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/ADMIN/roles.xhtml"/>
 				
 				<p:submenu label="Plan" icon="icon-tasks">
 				
