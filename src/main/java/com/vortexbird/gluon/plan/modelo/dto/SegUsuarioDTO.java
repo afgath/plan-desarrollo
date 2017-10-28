@@ -20,12 +20,12 @@ public class SegUsuarioDTO implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final Logger log = LoggerFactory.getLogger(SegUsuarioDTO.class);
     private String activo;
-    private Date fechaCreacion;
-    private Date fechaModificacion;
-    private Integer usuCreador;
+    private String fechaCreacion;
+    private String fechaModificacion;
+    private String usuCreador;
     private Integer usuId;
     private String usuLogin;
-    private Integer usuModificador;
+    private String usuModificador;
     private String usuPassword;
 
     public String getActivo() {
@@ -36,27 +36,27 @@ public class SegUsuarioDTO implements Serializable {
         this.activo = activo;
     }
 
-    public Date getFechaCreacion() {
+    public String getFechaCreacion() {
         return fechaCreacion;
     }
 
-    public void setFechaCreacion(Date fechaCreacion) {
+    public void setFechaCreacion(String fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
 
-    public Date getFechaModificacion() {
+    public String getFechaModificacion() {
         return fechaModificacion;
     }
 
-    public void setFechaModificacion(Date fechaModificacion) {
+    public void setFechaModificacion(String fechaModificacion) {
         this.fechaModificacion = fechaModificacion;
     }
 
-    public Integer getUsuCreador() {
+    public String getUsuCreador() {
         return usuCreador;
     }
 
-    public void setUsuCreador(Integer usuCreador) {
+    public void setUsuCreador(String usuCreador) {
         this.usuCreador = usuCreador;
     }
 
@@ -76,11 +76,11 @@ public class SegUsuarioDTO implements Serializable {
         this.usuLogin = usuLogin;
     }
 
-    public Integer getUsuModificador() {
+    public String getUsuModificador() {
         return usuModificador;
     }
 
-    public void setUsuModificador(Integer usuModificador) {
+    public void setUsuModificador(String usuModificador) {
         this.usuModificador = usuModificador;
     }
 

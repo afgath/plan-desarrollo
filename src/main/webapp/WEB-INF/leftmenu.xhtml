@@ -27,17 +27,17 @@
 				<p:menuitem id="sm_fonts" value="Font Icons" icon="icon-book"
 					outcome="font-icons.xhtml" />
 				
-				<p:menuitem icon="icon-users" value="Usuarios" rendered="#{leftMenuVista.contains('USUARIOS')==true ? true : false}"
+				<p:menuitem icon="icon-users" value="Usuarios" rendered="#{leftMenuVista.contains('USUARIOS')}"
 						url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/ADMIN/usuarios.xhtml"/>
 						
 				<p:menuitem icon="icon-key" value="Roles" rendered="#{leftMenuVista.contains('ROLES')}"
 						url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/ADMIN/roles.xhtml"/>
 				
-				<p:submenu label="Plan" icon="icon-tasks">
+				<p:submenu label="Plan" icon="icon-tasks" rendered="#{(leftMenuVista.contains('NUEVO_PLAN') or leftMenuVista.contains('MODIFICAR_PLAN'))}">
 				
-					<p:menuitem value=" Nuevo" icon="fa fa-plus"
+					<p:menuitem value=" Nuevo" icon="fa fa-plus" rendered="#{(leftMenuVista.contains('NUEVO_PLAN'))}"
 						url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/USERS/organigrama.xhtml"/>
-					<p:menuitem value=" Modificar" icon="fa fa-fw fa-edit" 
+					<p:menuitem value=" Modificar" icon="fa fa-fw fa-edit" rendered="#{(leftMenuVista.contains('MODIFICAR_PLAN'))}"
 						url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/USERS/listadoPlanes.xhtml"/>
 				
 				</p:submenu>

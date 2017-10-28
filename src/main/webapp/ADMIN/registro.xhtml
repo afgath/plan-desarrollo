@@ -19,13 +19,16 @@
 						style="padding-left: 15%; border: none;">
 
 						<p:outputLabel value="Login:* " />
-						<p:inputText placeholder="login" style="width: 200px;" binding="#{registroVista.txtLogin}"/>
+						<p:inputText placeholder="login" style="width: 200px;"
+							binding="#{registroVista.txtLogin}" />
 
 						<p:outputLabel value="Contraseña:* " />
-						<p:password placeholder="contraseña" style="width: 200px;" binding="#{registroVista.passContraseña}"/>
+						<p:password placeholder="contraseña" style="width: 200px;"
+							binding="#{registroVista.passContraseña}" />
 
 						<p:outputLabel value="Repetir Contraseña:* " />
-						<p:password placeholder="repetir contraseña" style="width: 200px;" binding="#{registroVista.passRepetirContraseña}"/>
+						<p:password placeholder="repetir contraseña" style="width: 200px;"
+							binding="#{registroVista.passRepetirContraseña}" />
 
 					</p:panelGrid>
 				</p:panel>
@@ -51,13 +54,11 @@
 						<p:fieldset legend="Configuración avanzada" toggleable="true"
 							toggleSpeed="500">
 
-							<p:panelGrid columns="4" layout="grid"
-								styleClass="companyHeaderGrid" style="border: none;">
-								<p:repeat var="opcion" value="#{registroVista.lasOpciones}">
-									<p:outputLabel value="#{opcion.nombre}" />
-									<p:selectBooleanCheckbox value="false" />
-								</p:repeat>
-							</p:panelGrid>
+							<p:selectManyCheckbox id="opciones"
+								value="#{registroVista.selectedOpciones}" layout="responsive"
+								columns="3">
+								<f:selectItems value="#{registroVista.lasOpcionesItem}" />
+							</p:selectManyCheckbox>
 
 						</p:fieldset>
 
@@ -65,8 +66,7 @@
 				</p:panel>
 
 				<p:panel>
-					<p:messages id="messages" autoUpdate="true"
-						closable="true" />
+					<p:messages id="messages" autoUpdate="true" closable="true" />
 					<p:panelGrid columns="2" layout="grid"
 						style="padding-left: 20%; border: none;">
 						<p:commandButton value="Registrar"

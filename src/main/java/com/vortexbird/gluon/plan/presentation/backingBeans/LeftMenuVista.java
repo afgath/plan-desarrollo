@@ -48,13 +48,15 @@ public class LeftMenuVista {
 			getLasOpciones();
 						
 			for(SegOpcion opc : lasOpciones) {
-				if(opc.getNombre().toString()==opcion) {
+				if(opc.getNombre().toString().equals(opcion)) {
+					log.info("TRUE");
 					return true;
 				}
 			}
 		} catch (Exception e) {
 			log.info(e.getMessage());
 		}
+		log.info("FALSE");
 		return false;
 	}
 	

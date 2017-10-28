@@ -29,6 +29,8 @@ import com.vortexbird.gluon.plan.utilities.FacesUtils;
 
 import static java.lang.Math.toIntExact;
 
+import java.io.Console;
+
 @ManagedBean
 @ViewScoped
 public class RegistroVista {
@@ -47,6 +49,8 @@ public class RegistroVista {
 	private SelectCheckboxMenu somRol;
 	private List<SelectItem> losRolesItem;
 	private String[] selectRoles;
+	private String[] selectedOpciones;
+	private List<SelectItem> lasOpcionesItem;
 	
 	//Variables botones
 	private CommandButton btnRegistrar;
@@ -62,6 +66,11 @@ public class RegistroVista {
 			if(!passContraseña.getValue().toString().equals(passRepetirContraseña.getValue().toString())) {
 				throw new Exception("Las contraseñas no son iguales");
 			}
+			
+			if ( !userNameDisponible(txtLogin.getValue().toString()) ) {
+				throw new Exception("El nombre de usuario ya esta en uso");
+			}
+			
 			usuario.setUsuLogin(txtLogin.getValue().toString());
 			usuario.setUsuPassword(passContraseña.getValue().toString());
 			usuario.setActivo("A");
@@ -90,9 +99,52 @@ public class RegistroVista {
 				businessDelegatorView.saveSegRolUsuario(rolUsuario);
 			}
 			
+			if(selectedOpciones.length != 0) {
+				for(int i = 0; i<selectedOpciones.length; i++) {
+					log.info(selectedOpciones[i]);
+				}
+			}
+			
+			usuario = null;
+			selectedOpciones = null;
+			selectRoles = null;
+			
+			FacesUtils.addInfoMessage("El usuario se registro correctamente");
+			
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
+		return "";
+	}
+	
+	private boolean userNameDisponible(String userName) throws Exception {
+		
+		Object[] variables = new Object[4];
+		variables[0] = "usuLogin";
+		variables[1] = true;
+		variables[2] = userName;
+		variables[3] = "=";
+		
+		List<SegUsuario> usuarios = businessDelegatorView.findByCriteriaInSegUsuario(variables, null, null);
+		
+		if(usuarios==null || usuarios.isEmpty()) {
+			return true;
+		}
+		return false;
+	}
+	
+	public String limpiar() {
+		try {
+			txtLogin.resetValue();
+			passContraseña.resetValue();
+			passRepetirContraseña.resetValue();
+			
+			somRol.resetValue();
+			
+		} catch (Exception e) {
+			FacesUtils.addErrorMessage(e.getMessage());
+		}
+		
 		return "";
 	}
 	
@@ -140,7 +192,6 @@ public class RegistroVista {
 		if(losRolesItem==null) {
 			losRolesItem = new ArrayList<SelectItem>();
 			List<SegRol> roles = businessDelegatorView.getSegRol();
-			losRolesItem.add(new SelectItem(-1, "Seleccione uno"));
 			for(SegRol rol : roles) {
 				losRolesItem.add(new SelectItem(rol.getRolId(), rol.getNombre()));
 			}
@@ -158,6 +209,29 @@ public class RegistroVista {
 
 	public void setSelectRoles(String[] selectRoles) {
 		this.selectRoles = selectRoles;
+	}
+
+	public String[] getSelectedOpciones() {
+		return selectedOpciones;
+	}
+
+	public void setSelectedOpciones(String[] selectedOpciones) {
+		this.selectedOpciones = selectedOpciones;
+	}
+
+	public List<SelectItem> getLasOpcionesItem() throws Exception {
+		if (this.lasOpcionesItem == null) {
+			lasOpcionesItem =  new ArrayList<SelectItem>();
+			List<SegOpcion> opciones = businessDelegatorView.getSegOpcion();
+			for (SegOpcion opcion : opciones) {
+				lasOpcionesItem.add(new SelectItem(opcion.getOpcnId(), opcion.getNombre()));
+			}
+		}
+		return lasOpcionesItem;
+	}
+
+	public void setLasOpcionesItem(List<SelectItem> lasOpcionesItem) {
+		this.lasOpcionesItem = lasOpcionesItem;
 	}
 
 	public CommandButton getBtnRegistrar() {
