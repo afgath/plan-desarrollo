@@ -232,6 +232,9 @@
 				<p:menuitem value="Detalles" update="formModal"
 					oncomplete="PF('dlgModificarIndicador').show()" icon="ui-icon-info"
 					action="#{organigramView.dialogModificarIndicador}" />
+				<p:menuitem value="Eliminar" update="organigram @form:growl"
+					icon="ui-icon-trash"
+					actionListener="#{organigramView.eliminarNodoAction}" />
 			</p:contextMenu>
 			<!-- FIN OPCIONES NODO ORGANIGRAMA -->
 		</h:form>

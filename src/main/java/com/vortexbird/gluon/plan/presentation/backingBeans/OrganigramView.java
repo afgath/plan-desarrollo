@@ -412,6 +412,26 @@ public class OrganigramView implements Serializable {
 			String key = null;
 			
 			switch (tipo) {
+			
+			case "historialIndicador":
+				
+				key = (String) currentSelection.getData();
+				
+				historialIndicadorMap.remove(key);
+				
+				currentSelection.getParent().getChildren().remove(currentSelection);
+				
+				//elementoPlan = (ElementosPlan) historialIndicadorMap.get(key).getEntity();
+								
+				
+				log.info("Elemento: "+ elementoPlan.getRowKey());
+				
+				break;
+			
+			case "inidicador":
+				
+				break;
+				
 			case "detalleProyecto":
 				
 				key = (String) currentSelection.getData();
