@@ -128,9 +128,9 @@ public class OrganigramView implements Serializable {
 	private InputTextarea txtAreaDescProyecto;
 	private SelectOneMenu somAnoFiscal;
 	private InputNumber numValorPresupuesto;
-	private InputText txtDescIndicador;
-	private InputText txtDescLineaBase;
-	private InputText txtDescMeta;
+	private InputTextarea txtDescIndicador;
+	private InputTextarea txtDescLineaBase;
+	private InputTextarea txtDescMeta;
 	private InputNumber numValorMeta;
 	private Calendar txtHIAno;
 	private InputNumber numHIValorReal;
@@ -1750,27 +1750,27 @@ public class OrganigramView implements Serializable {
 		this.txtModAnoInicioPlan = txtModAnoInicioPlan;
 	}
 
-	public InputText getTxtDescIndicador() {
+	public InputTextarea getTxtDescIndicador() {
 		return txtDescIndicador;
 	}
 
-	public void setTxtDescIndicador(InputText txtDescIndicador) {
+	public void setTxtDescIndicador(InputTextarea txtDescIndicador) {
 		this.txtDescIndicador = txtDescIndicador;
 	}
 
-	public InputText getTxtDescLineaBase() {
+	public InputTextarea getTxtDescLineaBase() {
 		return txtDescLineaBase;
 	}
 
-	public void setTxtDescLineaBase(InputText txtDescLineaBase) {
+	public void setTxtDescLineaBase(InputTextarea txtDescLineaBase) {
 		this.txtDescLineaBase = txtDescLineaBase;
 	}
 
-	public InputText getTxtDescMeta() {
+	public InputTextarea getTxtDescMeta() {
 		return txtDescMeta;
 	}
 
-	public void setTxtDescMeta(InputText txtDescMeta) {
+	public void setTxtDescMeta(InputTextarea txtDescMeta) {
 		this.txtDescMeta = txtDescMeta;
 	}
 

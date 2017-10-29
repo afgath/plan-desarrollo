@@ -128,6 +128,7 @@
 					icon="ui-icon-suitcase" iconPos="left">
 					<h:outputText value="#{node.data}" />
 				</p:organigramNode>
+				
 				<p:organigramNode type="historialIndicador"
 					styleClass="historialIndicador" icon="ui-icon-suitcase"
 					iconPos="left">
@@ -225,6 +226,12 @@
 				<p:menuitem value="Añadir Historial Indicador" ajax="false"
 					icon="ui-icon-plus"
 					onclick="PF('dlgAnadirHistorialIndicador').show(); return false;" />
+			</p:contextMenu>
+			
+			<p:contextMenu for="organigram" nodeType="historialIndicador">
+				<p:menuitem value="Detalles" update="formModal"
+					oncomplete="PF('dlgModificarIndicador').show()" icon="ui-icon-info"
+					action="#{organigramView.dialogModificarIndicador}" />
 			</p:contextMenu>
 			<!-- FIN OPCIONES NODO ORGANIGRAMA -->
 		</h:form>
@@ -559,13 +566,13 @@
 					<h:panelGrid columns="2" style="width: 100% !important">
 
 						<p:outputLabel value="Descripción del indicador" />
-						<p:inputText id="txtDescIndicador"
+						<p:inputTextarea id="txtDescIndicador" rows="6" cols="33"
 							binding="#{organigramView.txtDescIndicador}" />
 						<p:outputLabel value="Descripción Línea Base" />
-						<p:inputText id="txtDescLineaBase"
+						<p:inputTextarea id="txtDescLineaBase" rows="6" cols="33"
 							binding="#{organigramView.txtDescLineaBase}" />
 						<p:outputLabel value="Descripción Meta" />
-						<p:inputText id="txtDescMeta"
+						<p:inputTextarea id="txtDescMeta" rows="6" cols="33"
 							binding="#{organigramView.txtDescMeta}" />
 						<p:outputLabel value="Valor Meta" />
 						<p:inputNumber id="numValorMeta"
