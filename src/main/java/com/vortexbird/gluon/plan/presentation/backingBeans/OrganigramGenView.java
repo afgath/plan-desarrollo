@@ -35,6 +35,7 @@ import com.vortexbird.gluon.plan.modelo.GluoPrograma;
 import com.vortexbird.gluon.plan.modelo.GluoProyecto;
 import com.vortexbird.gluon.plan.modelo.GluoSectorEjeDimension;
 import com.vortexbird.gluon.plan.modelo.GluoSubprograma;
+import com.vortexbird.gluon.plan.modelo.SegUsuario;
 import com.vortexbird.gluon.plan.modelo.dto.GluoAnoFiscalDTO;
 import com.vortexbird.gluon.plan.modelo.dto.GluoPlanDesarrolloDTO;
 import com.vortexbird.gluon.plan.modelo.dto.GluoSectorEjeDimensionDTO;
@@ -70,6 +71,8 @@ public class OrganigramGenView implements Serializable {
 
 	@ManagedProperty(value = "#{BusinessDelegatorView}")
 	private IBusinessDelegatorView businessDelegatorView;
+	
+	SegUsuario usuario = (SegUsuario) FacesUtils.getfromSession("usuario");
 
 	private static final Logger log = LoggerFactory.getLogger(OrganigramGenView.class);
 
@@ -659,7 +662,7 @@ public class OrganigramGenView implements Serializable {
 			log.info("Eslogan: "+FacesUtils.checkString(txtAreaEsloganPlan));
 			plan.setFechaCreacion(new Date());
 			plan.setNombreAlcalde(FacesUtils.checkString(txtNombreAlcaldePlan));
-			plan.setUsuCreador((int) 0);
+			plan.setUsuCreador(usuario.getUsuId());
 
 			businessDelegatorView.evaluarGluoPlanDesarrollo(plan);
 
@@ -688,7 +691,7 @@ public class OrganigramGenView implements Serializable {
 			eje.setActivo("S");
 			eje.setDescripcion(txtDimension.getValue().toString().trim());
 			eje.setFechaCreacion(new Date());
-			eje.setUsuCreador((int) 0);
+			eje.setUsuCreador(usuario.getUsuId());
 			eje.setGluoPlanDesarrollo(plan);
 
 			businessDelegatorView.evaluarGluoSectorEjeDimension(eje);
@@ -720,7 +723,7 @@ public class OrganigramGenView implements Serializable {
 			objetivo.setFechaCreacion(new Date());
 			String descripcion = txtAreaDescObjetivo.getValue().toString().trim();
 			objetivo.setDescripcion(descripcion);
-			objetivo.setUsuCreador(1);
+			objetivo.setUsuCreador(usuario.getUsuId());
 			objetivo.setGluoSectorEjeDimension(
 					(GluoSectorEjeDimension) dimensionMap.get(currentSelection.getData()).getEntity());
 
@@ -756,7 +759,7 @@ public class OrganigramGenView implements Serializable {
 			String descripcion = txtAreaDesPrograma.getValue().toString().trim();
 			programa.setDescripcion(descripcion);
 			programa.setFechaCreacion(new Date());
-			programa.setUsuCreador((int) 0);
+			programa.setUsuCreador(usuario.getUsuId());
 			programa.setGluoObjetivo((GluoObjetivo) objetivoMap.get(currentSelection.getData()).getEntity());
 
 			businessDelegatorView.evaluarGluoPrograma(programa);
@@ -788,7 +791,7 @@ public class OrganigramGenView implements Serializable {
 			String descripcion = txtAreaDescSubPrograma.getValue().toString().trim();
 			subprograma.setDescripcion(descripcion);
 			subprograma.setFechaCreacion(new Date());
-			subprograma.setUsuCreador((int) 0);
+			subprograma.setUsuCreador(usuario.getUsuId());
 			subprograma.setGluoPrograma((GluoPrograma) programaMap.get(currentSelection.getData()).getEntity());
 
 			businessDelegatorView.evaluarGluoSubprograma(subprograma);
@@ -820,7 +823,7 @@ public class OrganigramGenView implements Serializable {
 			String descripcion = txtAreaDescProyecto.getValue().toString().trim();
 			proyecto.setDescripcion(descripcion);
 			proyecto.setFechaCreacion(new Date());
-			proyecto.setUsuCreador((int) 0);
+			proyecto.setUsuCreador(usuario.getUsuId());
 			proyecto.setGluoSubprograma((GluoSubprograma) subProgramaMap.get(currentSelection.getData()).getEntity());
 
 			businessDelegatorView.evaluarGluoProyecto(proyecto);
@@ -856,7 +859,7 @@ public class OrganigramGenView implements Serializable {
 					Utilities.convertirStringADouble(numValorPresupuesto.getValue().toString()));
 			detalleProyecto.setActivo("S");
 			detalleProyecto.setFechaCreacion(new Date());
-			detalleProyecto.setUsuCreador(1);
+			detalleProyecto.setUsuCreador(usuario.getUsuId());
 			detalleProyecto.setGluoProyecto((GluoProyecto) proyectoMap.get(currentSelection.getData()).getEntity());
 
 			GluoAnoFiscal anoFiscal = businessDelegatorView
@@ -897,7 +900,7 @@ public class OrganigramGenView implements Serializable {
 			indicador.setValorMeta(Double.parseDouble(numValorMeta.getValue().toString().trim()));
 			indicador.setGluoProyecto((GluoProyecto) proyectoMap.get(currentSelection.getData()).getEntity());
 			indicador.setFechaCreacion(new Date());
-			indicador.setUsuCreador(1);
+			indicador.setUsuCreador(usuario.getUsuId());
 			businessDelegatorView.validateGluoIndicador(indicador);
 			
 			String rowKey = "Ind" + contIndicador;
@@ -930,7 +933,7 @@ public class OrganigramGenView implements Serializable {
 			historialIndicador.setFecha(FacesUtils.checkDate(txtHIAno));
 			historialIndicador.setValorReal(Double.parseDouble(numHIValorReal.getValue().toString()));
 			historialIndicador.setFechaCreacion(new Date());
-			historialIndicador.setUsuCreador(1);
+			historialIndicador.setUsuCreador(usuario.getUsuId());
 			historialIndicador.setGluoIndicador((GluoIndicador) indicadorMap.get(currentSelection.getData()).getEntity());
 			businessDelegatorView.validateGluoHistorialIndicador(historialIndicador);
 			
@@ -962,6 +965,7 @@ public class OrganigramGenView implements Serializable {
 			 txtModAreaEsloganPlan.setValue(plan.getEslogan());
 			 txtModAnoInicioPlan.setValue(plan.getAnoInicio());
 			 txtModAnoFinPlan.setValue(plan.getAnoFin());
+			 
 			 if(plan.getActivo().toLowerCase().trim().equals("s")) {
 			 sbcModPlanActivo.setValue(true);
 			 }else {
@@ -983,12 +987,11 @@ public class OrganigramGenView implements Serializable {
 			
 			 txtModDimension.setValue(dimension.getDescripcion());
 			 if(dimension.getActivo().toLowerCase().trim().equals("s")) {
-			 sbcModEjeActivo.setValue(true);
+				 sbcModEjeActivo.setValue(true);
 			 }else {
-			 sbcModEjeActivo.setValue(false);
+				 sbcModEjeActivo.setValue(false);
 			 }
-			 dimension.setFechaModificacion(new Date());
-			
+			 
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
@@ -1006,7 +1009,6 @@ public class OrganigramGenView implements Serializable {
 			} else {
 				sbcModObjActivo.setValue(false);
 			}
-			objetivo.setFechaModificacion(new Date());
 
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
@@ -1025,7 +1027,6 @@ public class OrganigramGenView implements Serializable {
 			} else {
 				sbcModProgActivo.setValue(false);
 			}
-			programa.setFechaModificacion(new Date());
 
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
@@ -1044,7 +1045,6 @@ public class OrganigramGenView implements Serializable {
 			} else {
 				sbcModSubProgActivo.setValue(false);
 			}
-			subPrograma.setFechaModificacion(new Date());
 
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
@@ -1063,7 +1063,6 @@ public class OrganigramGenView implements Serializable {
 			} else {
 				sbcModProyActivo.setValue(false);
 			}
-			proyecto.setFechaModificacion(new Date());
 
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
@@ -1079,11 +1078,11 @@ public class OrganigramGenView implements Serializable {
 			
 			 numModDPValorPresupuesto.setValue(detalleProyecto.getValorTotalPresupuesto());
 			 if(detalleProyecto.getActivo().toLowerCase().trim().equals("s")) {
-			 sbcModDPActivo.setValue(true);
+				 sbcModDPActivo.setValue(true);
 			 }else {
-			 sbcModDPActivo.setValue(false);
+				 sbcModDPActivo.setValue(false);
 			 }
-			 detalleProyecto.setFechaModificacion(new Date());
+
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
@@ -1104,7 +1103,6 @@ public class OrganigramGenView implements Serializable {
 			} else {
 				sbcModProyActivo.setValue(false);
 			}
-			indicador.setFechaModificacion(new Date());
 
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
@@ -1124,7 +1122,6 @@ public class OrganigramGenView implements Serializable {
 			} else {
 				sbcModHistorialIndicadorActivo.setValue(false);
 			}
-			historialIndicador.setFechaModificacion(new Date());
 
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
@@ -1143,6 +1140,8 @@ public class OrganigramGenView implements Serializable {
 			plan.setDescripcion(txtModAreaDescripcionPlan.getValue().toString());
 			plan.setAnoInicio(FacesUtils.checkDate(txtModPlanAnoInicioPlan.getValue().toString()));
 			plan.setAnoFin(FacesUtils.checkDate(txtModPlanAnoFinPlan.getValue().toString()));
+			plan.setFechaModificacion(new Date());
+			plan.setUsuModificador(usuario.getUsuId());
 			
 			nodePlan.setData(
 					plan.getDescripcion());
@@ -1169,6 +1168,9 @@ public class OrganigramGenView implements Serializable {
 			GluoSectorEjeDimension dimension = (GluoSectorEjeDimension) dimensionMap.get(currentSelection.getData()).getEntity();
 
 			dimension.setDescripcion(txtModDimension.getValue().toString());
+			dimension.setFechaModificacion(new Date());
+			dimension.setUsuModificador(usuario.getUsuId());
+			
 			nodeDimension.setData(
 					"(" + dimensionMap.get(currentSelection.getData()).getRowKey() + ") - " + dimension.getDescripcion());
 			if (sbcModEjeActivo.isSelected() == true) {
@@ -1192,6 +1194,9 @@ public class OrganigramGenView implements Serializable {
 			GluoObjetivo objetivo = (GluoObjetivo) objetivoMap.get(currentSelection.getData()).getEntity();
 
 			objetivo.setDescripcion(txtAreaModObjDesc.getValue().toString());
+			objetivo.setFechaModificacion(new Date());
+			objetivo.setUsuModificador(usuario.getUsuId());
+			
 			nodeObjetivo.setData(
 					"(" + objetivoMap.get(currentSelection.getData()).getRowKey() + ") - " + objetivo.getDescripcion());
 			if (sbcModObjActivo.isSelected() == true) {
@@ -1214,6 +1219,9 @@ public class OrganigramGenView implements Serializable {
 			GluoPrograma programa = (GluoPrograma) programaMap.get(currentSelection.getData()).getEntity();
 
 			programa.setDescripcion(txtAreaModProgDesc.getValue().toString());
+			programa.setFechaModificacion(new Date());
+			programa.setUsuModificador(usuario.getUsuId());
+			
 			nodoPrograma.setData(
 					"(" + programaMap.get(currentSelection.getData()).getRowKey() + ") - " + programa.getDescripcion());
 			if (sbcModProgActivo.isSelected() == true) {
@@ -1236,6 +1244,9 @@ public class OrganigramGenView implements Serializable {
 			GluoSubprograma subPrograma = (GluoSubprograma) subProgramaMap.get(currentSelection.getData()).getEntity();
 
 			subPrograma.setDescripcion(txtAreaModSubProgDesc.getValue().toString());
+			subPrograma.setFechaModificacion(new Date());
+			subprograma.setUsuModificador(usuario.getUsuId());
+			
 			nodoSubPrograma.setData(
 					"(" + subProgramaMap.get(currentSelection.getData()).getRowKey() + ") - " + subPrograma.getDescripcion());
 			if (sbcModSubProgActivo.isSelected() == true) {
@@ -1258,6 +1269,9 @@ public class OrganigramGenView implements Serializable {
 			GluoProyecto proyecto = (GluoProyecto) proyectoMap.get(currentSelection.getData()).getEntity();
 
 			proyecto.setDescripcion(txtAreaModProyDesc.getValue().toString());
+			proyecto.setFechaModificacion(new Date());
+			proyecto.setUsuModificador(usuario.getUsuId());
+			
 			nodoProyecto.setData(
 					"(" + proyectoMap.get(currentSelection.getData()).getRowKey() + ") - " + proyecto.getDescripcion());
 			if (sbcModProyActivo.isSelected() == true) {
@@ -1284,6 +1298,9 @@ public class OrganigramGenView implements Serializable {
 			detalleProyecto.setGluoAnoFiscal(anoFiscal);
 			
 			detalleProyecto.setValorTotalPresupuesto(Double.parseDouble(numModDPValorPresupuesto.getValue().toString()));
+			detalleProyecto.setFechaModificacion(new Date());
+			detalleProyecto.setUsuModificador(usuario.getUsuId());
+			
 			nodoDetalleProyecto.setData(
 					"(" + detalleProyectoMap.get(currentSelection.getData()).getRowKey() + ") - " + detalleProyecto.getGluoAnoFiscal().getAnoFiscal());
 			if (sbcModDPActivo.isSelected() == true) {
@@ -1306,6 +1323,9 @@ public class OrganigramGenView implements Serializable {
 			GluoIndicador indicador = (GluoIndicador) indicadorMap.get(currentSelection.getData()).getEntity();
 
 			indicador.setDescripcionIndicador(txtModDescIndicador.getValue().toString());
+			indicador.setFechaModificacion(new Date());
+			indicador.setUsuModificador(usuario.getUsuId());
+			
 			nodoIndicador.setData(
 					"(" + indicadorMap.get(currentSelection.getData()).getRowKey() + ") - " + indicador.getDescripcionIndicador());
 			if (sbcModIndicadorActivo.isSelected() == true) {
@@ -1327,6 +1347,9 @@ public class OrganigramGenView implements Serializable {
 			GluoHistorialIndicador historialIndicador = (GluoHistorialIndicador) historialIndicadorMap.get(currentSelection.getData()).getEntity();
 
 			historialIndicador.setValorReal(Double.parseDouble(numModHIValorReal.getValue().toString()));
+			historialIndicador.setFechaModificacion(new Date());
+			historialIndicador.setUsuModificador(usuario.getUsuId());
+			
 			nodoHistorialIndicador.setData(
 					"(" + historialIndicadorMap.get(currentSelection.getData()).getRowKey() + ") - " + historialIndicador.getValorReal());
 			if (sbcModHistorialIndicadorActivo.isSelected() == true) {

@@ -11,6 +11,11 @@
 		<location>/404.xhtml</location>
 	</error-page>
 	
+	<error-page>
+		<error-code>401</error-code>
+		<location>/access-denied.xhtml</location>
+	</error-page>
+	
 	<mime-mapping>
     	<extension>xhtml</extension>
     	<mime-type>application/xml</mime-type>

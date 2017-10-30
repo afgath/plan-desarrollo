@@ -30,6 +30,7 @@ import com.vortexbird.gluon.plan.modelo.GluoPrograma;
 import com.vortexbird.gluon.plan.modelo.GluoProyecto;
 import com.vortexbird.gluon.plan.modelo.GluoSectorEjeDimension;
 import com.vortexbird.gluon.plan.modelo.GluoSubprograma;
+import com.vortexbird.gluon.plan.modelo.SegUsuario;
 import com.vortexbird.gluon.plan.modelo.dto.GluoAnoFiscalDTO;
 import com.vortexbird.gluon.plan.modelo.dto.GluoSectorEjeDimensionDTO;
 import com.vortexbird.gluon.plan.presentation.businessDelegate.IBusinessDelegatorView;
@@ -66,6 +67,8 @@ public class OrganigramView implements Serializable {
 	private IBusinessDelegatorView businessDelegatorView;
 
 	private static final Logger log = LoggerFactory.getLogger(OrganigramView.class);
+	
+	private SegUsuario usuCreador = (SegUsuario) FacesUtils.getfromSession("usuario");
 
 	// Nodo raiz (rootNode) y nodo que guarda el nodo seleccionado (selection)
 	private OrganigramNode rootNode;
@@ -421,11 +424,6 @@ public class OrganigramView implements Serializable {
 				
 				currentSelection.getParent().getChildren().remove(currentSelection);
 				
-				//elementoPlan = (ElementosPlan) historialIndicadorMap.get(key).getEntity();
-								
-				
-				log.info("Elemento: "+ elementoPlan.getRowKey());
-				
 				break;
 			
 			case "inidicador":
@@ -610,7 +608,7 @@ public class OrganigramView implements Serializable {
 			log.info("Eslogan: " + FacesUtils.checkString(txtAreaEsloganPlan));
 			plan.setFechaCreacion(new Date());
 			plan.setNombreAlcalde(FacesUtils.checkString(txtNombreAlcaldePlan));
-			plan.setUsuCreador((int) 0);
+			plan.setUsuCreador(usuCreador.getUsuId());
 
 			businessDelegatorView.evaluarGluoPlanDesarrollo(plan);
 
@@ -639,7 +637,7 @@ public class OrganigramView implements Serializable {
 			eje.setActivo("S");
 			eje.setDescripcion(txtDimension.getValue().toString().trim());
 			eje.setFechaCreacion(new Date());
-			eje.setUsuCreador((int) 0);
+			eje.setUsuCreador(usuCreador.getUsuId());
 			eje.setGluoPlanDesarrollo(plan);
 
 			businessDelegatorView.evaluarGluoSectorEjeDimension(eje);
@@ -673,7 +671,7 @@ public class OrganigramView implements Serializable {
 			objetivo.setFechaCreacion(new Date());
 			String descripcion = txtAreaDescObjetivo.getValue().toString().trim();
 			objetivo.setDescripcion(descripcion);
-			objetivo.setUsuCreador(1);
+			objetivo.setUsuCreador(usuCreador.getUsuId());
 			
 			eje = (GluoSectorEjeDimension) dimensionMap.get(currentSelection.getData()).getEntity();
 			objetivo.setGluoSectorEjeDimension(eje);
@@ -718,7 +716,7 @@ public class OrganigramView implements Serializable {
 			String descripcion = txtAreaDesPrograma.getValue().toString().trim();
 			programa.setDescripcion(descripcion);
 			programa.setFechaCreacion(new Date());
-			programa.setUsuCreador((int) 0);
+			programa.setUsuCreador(usuCreador.getUsuId());
 			objetivo = (GluoObjetivo) objetivoMap.get(currentSelection.getData()).getEntity();
 			programa.setGluoObjetivo(objetivo);
 
@@ -760,7 +758,7 @@ public class OrganigramView implements Serializable {
 			String descripcion = txtAreaDescSubPrograma.getValue().toString().trim();
 			subprograma.setDescripcion(descripcion);
 			subprograma.setFechaCreacion(new Date());
-			subprograma.setUsuCreador((int) 0);
+			subprograma.setUsuCreador(usuCreador.getUsuId());
 			programa = (GluoPrograma) programaMap.get(currentSelection.getData()).getEntity();
 			subprograma.setGluoPrograma(programa);
 
@@ -802,7 +800,7 @@ public class OrganigramView implements Serializable {
 			String descripcion = txtAreaDescProyecto.getValue().toString().trim();
 			proyecto.setDescripcion(descripcion);
 			proyecto.setFechaCreacion(new Date());
-			proyecto.setUsuCreador((int) 0);
+			proyecto.setUsuCreador(usuCreador.getUsuId());
 			subprograma = (GluoSubprograma) subProgramaMap.get(currentSelection.getData()).getEntity();
 			proyecto.setGluoSubprograma(subprograma);
 
@@ -847,7 +845,7 @@ public class OrganigramView implements Serializable {
 					Utilities.convertirStringADouble(numValorPresupuesto.getValue().toString()));
 			detalleProyecto.setActivo("S");
 			detalleProyecto.setFechaCreacion(new Date());
-			detalleProyecto.setUsuCreador(1);
+			detalleProyecto.setUsuCreador(usuCreador.getUsuId());
 			proyecto = (GluoProyecto) proyectoMap.get(currentSelection.getData()).getEntity();
 			detalleProyecto.setGluoProyecto(proyecto);
 
@@ -898,7 +896,7 @@ public class OrganigramView implements Serializable {
 			indicador.setValorMeta(Double.parseDouble(numValorMeta.getValue().toString().trim()));
 			indicador.setGluoProyecto((GluoProyecto) proyectoMap.get(currentSelection.getData()).getEntity());
 			indicador.setFechaCreacion(new Date());
-			indicador.setUsuCreador(1);
+			indicador.setUsuCreador(usuCreador.getUsuId());
 			businessDelegatorView.validateGluoIndicador(indicador);
 
 			String rowKey = "Ind" + contIndicador;
@@ -937,7 +935,7 @@ public class OrganigramView implements Serializable {
 			historialIndicador.setFecha(FacesUtils.checkDate(txtHIAno));
 			historialIndicador.setValorReal(Double.parseDouble(numHIValorReal.getValue().toString()));
 			historialIndicador.setFechaCreacion(new Date());
-			historialIndicador.setUsuCreador(1);
+			historialIndicador.setUsuCreador(usuCreador.getUsuId());
 			historialIndicador
 					.setGluoIndicador((GluoIndicador) indicadorMap.get(currentSelection.getData()).getEntity());
 			businessDelegatorView.validateGluoHistorialIndicador(historialIndicador);
