@@ -49,8 +49,6 @@ public class RegistroVista {
 	private SelectCheckboxMenu somRol;
 	private List<SelectItem> losRolesItem;
 	private String[] selectRoles;
-	private String[] selectedOpciones;
-	private List<SelectItem> lasOpcionesItem;
 	
 	//Variables botones
 	private CommandButton btnRegistrar;
@@ -99,14 +97,7 @@ public class RegistroVista {
 				businessDelegatorView.saveSegRolUsuario(rolUsuario);
 			}
 			
-			if(selectedOpciones.length != 0) {
-				for(int i = 0; i<selectedOpciones.length; i++) {
-					log.info(selectedOpciones[i]);
-				}
-			}
-			
 			usuario = null;
-			selectedOpciones = null;
 			selectRoles = null;
 			
 			FacesUtils.addInfoMessage("El usuario se registro correctamente");
@@ -209,29 +200,6 @@ public class RegistroVista {
 
 	public void setSelectRoles(String[] selectRoles) {
 		this.selectRoles = selectRoles;
-	}
-
-	public String[] getSelectedOpciones() {
-		return selectedOpciones;
-	}
-
-	public void setSelectedOpciones(String[] selectedOpciones) {
-		this.selectedOpciones = selectedOpciones;
-	}
-
-	public List<SelectItem> getLasOpcionesItem() throws Exception {
-		if (this.lasOpcionesItem == null) {
-			lasOpcionesItem =  new ArrayList<SelectItem>();
-			List<SegOpcion> opciones = businessDelegatorView.getSegOpcion();
-			for (SegOpcion opcion : opciones) {
-				lasOpcionesItem.add(new SelectItem(opcion.getOpcnId(), opcion.getNombre()));
-			}
-		}
-		return lasOpcionesItem;
-	}
-
-	public void setLasOpcionesItem(List<SelectItem> lasOpcionesItem) {
-		this.lasOpcionesItem = lasOpcionesItem;
 	}
 
 	public CommandButton getBtnRegistrar() {
