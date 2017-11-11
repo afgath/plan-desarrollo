@@ -22,7 +22,7 @@
 			<ps:menu id="sm_leftmenu">
 				<p:menuitem id="sm_dashboard" value="Dashboard"
 					icon="icon-home-outline" outcome="dashboard"
-					containerStyleClass="layout-menubar-active" />
+					containerStyleClass="layout-menubar-active" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/ALL/dashboard.xhtml"/>
 
 				<p:menuitem id="sm_fonts" value="Font Icons" icon="icon-book"
 					outcome="font-icons.xhtml" />

@@ -9,7 +9,7 @@
 		<intercept-url pattern="/" access="permitAll" />
 		<intercept-url pattern="/login.xhtml" access="permitAll" />
 		<intercept-url pattern="/XHTML/*"
-			access="hasRole('ROLE_USER') or hasRole('ROLE_ADMINISTRADOR')" />
+			access="hasRole('ROLE_USUARIO') or hasRole('ROLE_ADMINISTRADOR')" />
 		<intercept-url pattern="/ADMIN/*" access="hasRole('ROLE_ADMINISTRADOR')"/>
 		<form-login login-page="/login.xhtml"
 			authentication-failure-url="/login.xhtml?authfailed=true"
