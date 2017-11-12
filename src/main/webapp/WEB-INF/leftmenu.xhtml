@@ -41,6 +41,9 @@
 						url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/USERS/listadoPlanes.xhtml"/>
 				
 				</p:submenu>
+				
+				<p:menuitem icon="icon-chart-bar" value="Historial indicador" rendered="#{leftMenuVista.contains('HISTORIAL_INDICADOR')}"
+					url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/USERS/gestionHistorialIndicador.xhtml"/>
 			</ps:menu>
 		</h:form>
 	</div>

@@ -1,52 +1,59 @@
 package com.vortexbird.gluon.plan.presentation.backingBeans;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import javax.faces.model.SelectItem;
+import javax.faces.event.ActionEvent;
 
-import org.primefaces.component.checkbox.Checkbox;
-import org.primefaces.component.commandbutton.CommandButton;
-import org.primefaces.component.inputtext.InputText;
-import org.primefaces.component.password.Password;
-import org.primefaces.component.selectcheckboxmenu.SelectCheckboxMenu;
-import org.primefaces.component.selectonemenu.SelectOneMenu;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import com.vortexbird.gluon.plan.dto.mapper.ISegUsuarioMapper;
-import com.vortexbird.gluon.plan.dto.mapper.SegUsuarioMapper;
-import com.vortexbird.gluon.plan.modelo.SegOpcion;
-import com.vortexbird.gluon.plan.modelo.SegRol;
-import com.vortexbird.gluon.plan.modelo.SegRolUsuario;
-import com.vortexbird.gluon.plan.modelo.SegUsuario;
-import com.vortexbird.gluon.plan.modelo.dto.SegUsuarioDTO;
+import com.vortexbird.gluon.plan.modelo.GluoHistorialIndicador;
+import com.vortexbird.gluon.plan.modelo.GluoIndicador;
+import com.vortexbird.gluon.plan.modelo.dto.GluoPlanDesarrolloDTO;
 import com.vortexbird.gluon.plan.presentation.businessDelegate.IBusinessDelegatorView;
-import com.vortexbird.gluon.plan.utilities.FacesUtils;
 
 import static java.lang.Math.toIntExact;
 
 @ManagedBean
 @ViewScoped
 public class HistorialIndicadorVista {
-	
+
 	@ManagedProperty(value = "#{BusinessDelegatorView}")
 	private IBusinessDelegatorView businessDelegatorView;
-	
+
 	private static final Logger log = LoggerFactory.getLogger(HistorialIndicadorVista.class);
-	
-	private List<SegUsuarioDTO> losUsuarios;
-	
-	public String redirectToRegistro() {
-		return "registro.xhtml";
+
+	private List<GluoIndicador> losIndicadores;
+	private List<GluoHistorialIndicador> losHistorialesIndicadores;
+	private List<GluoPlanDesarrolloDTO> data;
+	private Integer selectedGluoPlanDesarrollo;
+
+	public void cargarIndicador(ActionEvent evt) {
+		selectedGluoPlanDesarrollo = (Integer) (evt.getComponent().getAttributes().get("selectedGluoPlanDesarrollo"));
+		
+		String query = "SELECT * FROM gluo_indicador WHERE proy_id IN (\n" + 
+				"	SELECT proy_id FROM gluo_proyecto  WHERE subp_id IN (\n" + 
+				"		SELECT subp_id FROM gluo_subprograma  WHERE prog_id IN (\n" + 
+				"			SELECT prog_id FROM gluo_programa  WHERE obje_id IN (\n" + 
+				"				SELECT obje_id FROM gluo_objetivo  WHERE sedi_id IN (\n" + 
+				"					SELECT sedi_id FROM gluo_sector_eje_dimension WHERE plan_id = "+selectedGluoPlanDesarrollo+")))));";
+		
+		String query2 = "SELECT ind FROM GluoIndicador ind WHERE proyId IN (\n" + 
+				"	SELECT proy.proyId FROM GluoProyecto proy WHERE subpId IN (\n" + 
+				"		SELECT subPrg.subpId FROM GluoSubprograma subPrg WHERE progId IN (\n" + 
+				"			SELECT prg.progId FROM GluoPrograma prg WHERE objeId IN (\n" + 
+				"				SELECT obj.objeId FROM GluoObjetivo obj WHERE sediId IN (\n" + 
+				"					SELECT eje.sediId FROM GluoSectorEjeDimension eje WHERE planId = "+selectedGluoPlanDesarrollo+")))));";
+		
+		losIndicadores = (List<GluoIndicador>) businessDelegatorView.findBySqlGluoIndicador(query2);
+		
+		log.info("Plan seleccionado: " + selectedGluoPlanDesarrollo);
+
 	}
-	
+
 	public IBusinessDelegatorView getBusinessDelegatorView() {
 		return businessDelegatorView;
 	}
@@ -55,16 +62,43 @@ public class HistorialIndicadorVista {
 		this.businessDelegatorView = businessDelegatorView;
 	}
 
-	public List<SegUsuarioDTO> getLosUsuarios() throws Exception {
-		if(losUsuarios==null) {
-			
-			losUsuarios=businessDelegatorView.getDataSegUsuario();
-			log.info("Despues del mapeado");
-		}
-		return losUsuarios;
+	public List<GluoIndicador> getLosIndicadores() {
+		return losIndicadores;
 	}
 
-	public void setLosUsuarios(List<SegUsuarioDTO> losUsuarios) {
-		this.losUsuarios = losUsuarios;
+	public void setLosIndicadores(List<GluoIndicador> losIndicadores) {
+		this.losIndicadores = losIndicadores;
+	}
+
+	public List<GluoPlanDesarrolloDTO> getData() {
+		try {
+			if (data == null) {
+				data = businessDelegatorView.getDataGluoPlanDesarrollo();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return data;
+	}
+
+	public void setData(List<GluoPlanDesarrolloDTO> gluoPlanDesarrolloDTO) {
+		this.data = gluoPlanDesarrolloDTO;
+	}
+
+	public Integer getSelectedGluoPlanDesarrollo() {
+		return selectedGluoPlanDesarrollo;
+	}
+
+	public void setSelectedGluoPlanDesarrollo(Integer selectedGluoPlanDesarrollo) {
+		this.selectedGluoPlanDesarrollo = selectedGluoPlanDesarrollo;
+	}
+
+	public List<GluoHistorialIndicador> getLosHistorialesIndicadores() {
+		return losHistorialesIndicadores;
+	}
+
+	public void setLosHistorialesIndicadores(List<GluoHistorialIndicador> losHistorialesIndicadores) {
+		this.losHistorialesIndicadores = losHistorialesIndicadores;
 	}
 }

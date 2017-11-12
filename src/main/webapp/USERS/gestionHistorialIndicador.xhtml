@@ -7,171 +7,67 @@
 	<ui:define name="content">
 
 
-		<h:form id="frm">
+		<h:form id="formPlan">
 
-			<p:panel id="panelDataTableGluoAnoFiscal" header="Gestión Año Fiscal">
+			<p:panel id="panelDataTableGluoPlanDesarrollo" header="Planes">
 				<p:growl id="men" />
-				<p:dataTable value="#{gluoAnoFiscalView.data}" var="gluoAnoFiscal"
-					paginator="true" rows="5">
+				<p:dataTable value="#{historialIndicadorVista.data}"
+					var="gluoPlanDesarrollo" paginator="true" rows="5">
 
-					<p:column filterBy="#{gluoAnoFiscal.activo}"
-						sortBy="#{gluoAnoFiscal.activo}">
+
+					<p:column filterBy="#{gluoPlanDesarrollo.nombreAlcalde}"
+						sortBy="#{gluoPlanDesarrollo.nombreAlcalde}">
 						<f:facet name="header">
-							<h:outputText value="Activo" />
+							<h:outputText value="Nombre del Alcalde" />
 						</f:facet>
-						<h:outputText value="#{gluoAnoFiscal.activo}" />
+						<h:outputText value="#{gluoPlanDesarrollo.nombreAlcalde}" />
 					</p:column>
 
-					<p:column filterBy="#{gluoAnoFiscal.anoFiscal}"
-						sortBy="#{gluoAnoFiscal.anoFiscal}">
+
+					<p:column filterBy="#{gluoPlanDesarrollo.descripcion}"
+						sortBy="#{gluoPlanDesarrollo.descripcion}">
 						<f:facet name="header">
-							<h:outputText value="AnoFiscal" />
+							<h:outputText value="Descripcion del Plan" />
 						</f:facet>
-						<h:outputText value="#{gluoAnoFiscal.anoFiscal}" />
+						<h:outputText value="#{gluoPlanDesarrollo.descripcion}" />
 					</p:column>
 
-					<p:column filterBy="#{gluoAnoFiscal.descripcion}"
-						sortBy="#{gluoAnoFiscal.descripcion}">
+					<p:column filterBy="#{gluoPlanDesarrollo.eslogan}"
+						sortBy="#{gluoPlanDesarrollo.eslogan}">
 						<f:facet name="header">
-							<h:outputText value="Descripcion" />
+							<h:outputText value="Eslogan del Plan" />
 						</f:facet>
-						<h:outputText value="#{gluoAnoFiscal.descripcion}" />
+						<h:outputText value="#{gluoPlanDesarrollo.eslogan}" />
 					</p:column>
 
-					<p:column filterBy="#{gluoAnoFiscal.emprId}"
-						sortBy="#{gluoAnoFiscal.emprId}">
+					<p:column filterBy="#{gluoPlanDesarrollo.anoInicio}"
+						sortBy="#{gluoPlanDesarrollo.anoInicio}">
 						<f:facet name="header">
-							<h:outputText value="EmprId" />
+							<h:outputText value="Año de Inicio del Plan" />
 						</f:facet>
-						<h:outputText value="#{gluoAnoFiscal.emprId}" />
+						<h:outputText value="#{gluoPlanDesarrollo.anoInicio}" />
 					</p:column>
 
-					<p:column filterBy="#{gluoAnoFiscal.estado}"
-						sortBy="#{gluoAnoFiscal.estado}">
+					<p:column filterBy="#{gluoPlanDesarrollo.anoFin}"
+						sortBy="#{gluoPlanDesarrollo.anoFin}">
 						<f:facet name="header">
-							<h:outputText value="Estado" />
+							<h:outputText value="Año de Finalización del Plan" />
 						</f:facet>
-						<h:outputText value="#{gluoAnoFiscal.estado}" />
-					</p:column>
-
-					<p:column filterBy="#{gluoAnoFiscal.fechaIncioAnoFiscal}"
-						sortBy="#{gluoAnoFiscal.fechaIncioAnoFiscal}">
-						<f:facet name="header">
-							<h:outputText value="FechaIncioAnoFiscal" />
-						</f:facet>
-						<h:outputText value="#{gluoAnoFiscal.fechaIncioAnoFiscal}" />
-					</p:column>
-
-					<p:column filterBy="#{gluoAnoFiscal.fechaModificacion}"
-						sortBy="#{gluoAnoFiscal.fechaModificacion}">
-						<f:facet name="header">
-							<h:outputText value="FechaModificacion" />
-						</f:facet>
-						<h:outputText value="#{gluoAnoFiscal.fechaModificacion}" />
-					</p:column>
-
-					<p:column filterBy="#{gluoAnoFiscal.usuModificador}"
-						sortBy="#{gluoAnoFiscal.usuModificador}">
-						<f:facet name="header">
-							<h:outputText value="Usuario Modificador" />
-						</f:facet>
-						<h:outputText value="#{gluoAnoFiscal.usuModificador}" />
-					</p:column>
-
-					<p:column filterBy="#{gluoAnoFiscal.valorSalarioMinimo}"
-						sortBy="#{gluoAnoFiscal.valorSalarioMinimo}">
-						<f:facet name="header">
-							<h:outputText value="ValorSalarioMinimo" />
-						</f:facet>
-						<h:outputText value="#{gluoAnoFiscal.valorSalarioMinimo}" />
+						<h:outputText value="#{gluoPlanDesarrollo.anoFin}" />
 					</p:column>
 
 					<p:column headerText="Opciones">
-					
-						<p:commandButton id="btnEdit" icon="ui-icon-pencil"
-							title="Editar"
-							update=":dialogGluoAnoFiscal"
-							actionListener="#{gluoAnoFiscalView.action_edit}">
-							<f:attribute name="selectedGluoAnoFiscal"
-								value="#{gluoAnoFiscal}" />
+						<p:commandButton id="btnVerIndicadores" icon="ui-icon-search"
+							value="Ver indicadores" update="@form" actionListener="#{historialIndicadorVista.cargarIndicador}">
+							<f:attribute name="selectedGluoPlanDesarrollo"
+								value="#{gluoPlanDesarrollo.planId}" />
 						</p:commandButton>
-						<p:commandButton id="btnDelete" title="Activar/Desactivar"
-							actionListener="#{gluoAnoFiscalView.action_delete_datatable}"
-							onclick="if(!confirm('¿Realmente deses Activar/Desactivar?')){return false;}"
-							icon="ui-icon-alert" update=":frm:panelDataTableGluoAnoFiscal">
-							<f:attribute name="selectedGluoAnoFiscal"
-								value="#{gluoAnoFiscal}" />
-						</p:commandButton>
-						
 					</p:column>
 				</p:dataTable>
 			</p:panel>
-			<p:panel id="panelBoton">
-				<div align="center">
-					<p:commandButton id="btnNew" value="Nuevo Año Fiscal"
-						action="#{gluoAnoFiscalView.action_new()}"
-						update=":dialogGluoAnoFiscal" />
-				</div>
-			</p:panel>
+
 		</h:form>
 
-		<!-- ************************************************** -->
-		<!-- **			 DIÁLOGO CREAR AÑO FISCAL			 ** -->
-		<!-- ************************************************** -->
-		<p:dialog id="dialogGluoAnoFiscal" appendTo="@(body)" draggable="true"
-			closable="false" visible="#{gluoAnoFiscalView.showDialog}"
-			resizable="false" modal="true" width="500">
-			<h:form id="formDialog">
-				<p:messages id="msg" />
-				<p:panel id="panelGluoAnoFiscal" header="GluoAnoFiscal">
-					<h:panelGrid columns="2" id="panelGrid">
-
-						<h:outputText id="msgAnoFiscal" value=" Año Fiscal" />
-						<p:inputMask id="txtAnoFiscal" mask="9999"
-							binding="#{gluoAnoFiscalView.mskAnoFiscal}" />
-						<h:outputText id="msgDescripcion" value=" Descripcion" />
-						<p:inputText id="txtDescripcion" disabled="false"
-							binding="#{gluoAnoFiscalView.txtDescripcion}" />
-						<h:outputText id="msgEstado" value=" Estado" />
-						<p:inputText id="txtEstado" disabled="false"
-							binding="#{gluoAnoFiscalView.txtEstado}" />
-						<h:outputText id="msgValorSalarioMinimo"
-							value=" ValorSalarioMinimo" />
-						<p:inputNumber id="txtValorSalarioMinimo" disabled="false"
-							binding="#{gluoAnoFiscalView.txtValorSalarioMinimo}"
-							minValue="0.0001" decimalPlaces="2" />
-
-
-						<h:outputText id="msgFechaIncioAnoFiscal"
-							value=" FechaIncioAnoFiscal" />
-						<p:calendar showOn="button" navigator="true" locale="en"
-							binding="#{gluoAnoFiscalView.txtFechaIncioAnoFiscal}">
-							<p:ajax event="dateSelect"
-								listener="#{gluoAnoFiscalView.listener_txtFechaIncioAnoFiscal}" />
-						</p:calendar>
-
-					</h:panelGrid>
-				</p:panel>
-				<p:panel id="panelBotones">
-					<div align="center">
-						<p:commandButton id="btnSave"
-							binding="#{gluoAnoFiscalView.btnSave}" value="Guardar"
-							action="#{gluoAnoFiscalView.action_save()}"
-							update=":dialogGluoAnoFiscal :frm:panelDataTableGluoAnoFiscal"
-							disabled="false" />
-						<p:commandButton id="btnClear" value="Limpiar"
-							action="#{gluoAnoFiscalView.action_clear()}"
-							update=":dialogGluoAnoFiscal" />
-						<p:commandButton id="btnExit" value="Salir"
-							action="#{gluoAnoFiscalView.action_closeDialog()}"
-							update=":dialogGluoAnoFiscal" />
-					</div>
-				</p:panel>
-			</h:form>
-		</p:dialog>
-		<!-- ************************************************** -->
-		<!-- **		FIN DIÁLOGO CREAR AÑO FISCAL			 ** -->
-		<!-- ************************************************** -->
 	</ui:define>
 </ui:composition>
 

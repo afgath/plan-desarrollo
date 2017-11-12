@@ -61,4 +61,6 @@ public interface IGluoIndicadorLogic {
 
     public void validateGluoIndicador(GluoIndicador gluoIndicador)
         throws Exception;
+
+	public List<GluoIndicador> find(String query);
 }

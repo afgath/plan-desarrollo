@@ -230,7 +230,7 @@ public interface IBusinessDelegatorView {
     public List<GluoHistorialIndicador> getGluoHistorialIndicador()
         throws Exception;
     
-    public List<GluoHistorialIndicador> findBySqlGluoHistorialIndicador(String query);
+    public List<GluoIndicador> findBySqlGluoIndicador(String query);
 
     public void saveGluoHistorialIndicador(GluoHistorialIndicador entity)
         throws Exception;

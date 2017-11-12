@@ -432,8 +432,8 @@ public class BusinessDelegatorView implements IBusinessDelegatorView {
         return gluoHistorialIndicadorLogic.getGluoHistorialIndicador();
     }
 
-    public List<GluoHistorialIndicador> findBySqlGluoHistorialIndicador(String query) {
-    	return gluoHistorialIndicadorLogic.find(query);
+    public List<GluoIndicador> findBySqlGluoIndicador(String query) {
+    	return gluoIndicadorLogic.find(query);
     }
     
     public void saveGluoHistorialIndicador(GluoHistorialIndicador entity)
