@@ -20,6 +20,12 @@ public interface IGluoHistorialIndicadorLogic {
     public List<GluoHistorialIndicador> getGluoHistorialIndicador()
         throws Exception;
 
+
+    /**
+     * Devuelve una lista de historialIndicador en base a una consulta sql
+     */
+    public List<GluoHistorialIndicador> find(String query);
+    
     /**
          * Save an new GluoHistorialIndicador entity
          */

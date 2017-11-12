@@ -57,6 +57,10 @@ public class GluoHistorialIndicadorLogic implements IGluoHistorialIndicadorLogic
     */
     @Autowired
     IGluoIndicadorLogic logicGluoIndicador1;
+    
+    public List<GluoHistorialIndicador> find(String query) {
+    	return gluoHistorialIndicadorDAO.find(query);
+    }
 
     public void validateGluoHistorialIndicador(
         GluoHistorialIndicador gluoHistorialIndicador)
