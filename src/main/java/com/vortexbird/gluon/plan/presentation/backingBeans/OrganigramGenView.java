@@ -200,9 +200,6 @@ public class OrganigramGenView implements Serializable {
 	public void init() {
 		selection = new DefaultOrganigramNode(null, "plan", null);
 		selection.setRowKey("selectionNode");
-
-		//RequestContext.getCurrentInstance().execute("PF('dlgAnadirPlan').show()");
-
 	}
 
 	public void nodeSelectListener(OrganigramNodeSelectEvent event) {
@@ -1132,24 +1129,22 @@ public class OrganigramGenView implements Serializable {
 	public void modificarPlanAction() {
 		log.info("modificarPlanAction");
 		try {
-
-			OrganigramNode nodePlan = rootNode;
-
-			plan.setNombreAlcalde(txtModNombreAlcaldePlan.getValue().toString());
-			plan.setEslogan(txtModAreaEsloganPlan.getValue().toString());
-			plan.setDescripcion(txtModAreaDescripcionPlan.getValue().toString());
-			plan.setAnoInicio(FacesUtils.checkDate(txtModPlanAnoInicioPlan.getValue().toString()));
-			plan.setAnoFin(FacesUtils.checkDate(txtModPlanAnoFinPlan.getValue().toString()));
-			plan.setFechaModificacion(new Date());
-			plan.setUsuModificador(usuario.getUsuId());
 			
-			nodePlan.setData(
-					plan.getDescripcion());
+			this.plan.setNombreAlcalde(txtModNombreAlcaldePlan.getValue().toString());
+			this.plan.setEslogan(txtModAreaEsloganPlan.getValue().toString());
+			this.plan.setDescripcion(txtModAreaDescripcionPlan.getValue().toString());
+			this.plan.setAnoInicio(FacesUtils.checkDate(txtModPlanAnoInicioPlan));
+			this.plan.setAnoFin(FacesUtils.checkDate(txtModPlanAnoFinPlan));
+			log.info("--PLAN--"+this.plan.getDescripcion());
+			rootNode.setData(this.plan.getDescripcion());
 			if (sbcModPlanActivo.isSelected() == true) {
 				plan.setActivo("S");
 			} else {
 				plan.setActivo("N");
 			}
+			
+			RequestContext.getCurrentInstance().update("formModal");
+			RequestContext.getCurrentInstance().update("form");
 
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
@@ -1392,7 +1387,13 @@ public class OrganigramGenView implements Serializable {
 
 				rootNode = new DefaultOrganigramNode("root", plan.getDescripcion(), null);
 				rootNode.setRowKey(rowKey);
-				rootNode.setSelectable(true);
+				if(plan.getActivo().equals("N")){
+					rootNode.setSelectable(true);
+					rootNode.setDraggable(false);
+					rootNode.setDroppable(false);
+				}else{
+					rootNode.setSelectable(true);
+				}
 				
 				
 				//CARGA DE LAS DIMENSIONES				
@@ -1673,6 +1674,7 @@ public class OrganigramGenView implements Serializable {
 					currentSelection.setSelectable(false);
 					elementoPlan = new ElementosPlan(currentSelection, histIndicador);
 					historialIndicadorMap.replace(key, elementoPlan);
+					actionGuardar();
 										
 					break;
 				
@@ -1693,6 +1695,8 @@ public class OrganigramGenView implements Serializable {
 							}
 						}
 					
+					actionGuardar();
+					
 					break;
 					
 				case "detalleProyecto":
@@ -1705,6 +1709,9 @@ public class OrganigramGenView implements Serializable {
 					currentSelection.setSelectable(false);
 					elementoPlan = new ElementosPlan(currentSelection, dtproy);
 					detalleProyectoMap.replace(key, elementoPlan);
+					
+					actionGuardar();
+					
 					break;
 	
 				case "proyecto":
@@ -1732,6 +1739,8 @@ public class OrganigramGenView implements Serializable {
 											}
 										}
 									}
+					
+					actionGuardar();
 					
 					break;
 	
@@ -1765,6 +1774,7 @@ public class OrganigramGenView implements Serializable {
 									}
 								}
 							
+					actionGuardar();
 					
 					break;
 	
@@ -1803,6 +1813,7 @@ public class OrganigramGenView implements Serializable {
 								}
 							}
 						
+					actionGuardar();
 					
 					break;
 	
@@ -1845,7 +1856,8 @@ public class OrganigramGenView implements Serializable {
 								}
 							}
 						}
-				
+						
+					actionGuardar();
 					
 					break;
 	
@@ -1892,8 +1904,59 @@ public class OrganigramGenView implements Serializable {
 								}
 							}
 						}
+					actionGuardar();
+					break;
 				}
-					
+				case "root":
+					if(sbcModPlanActivo.getValue().toString().equals("false")){
+						key = (String) currentSelection.getData();
+						GluoPlanDesarrollo planSelected = (GluoPlanDesarrollo) this.plan;
+						planSelected.setActivo("N");
+						rootNode.setDraggable(false);
+						rootNode.setDroppable(false);
+						rootNode.setSelectable(false);
+						Set<GluoSectorEjeDimension> ejeSon = planSelected.getGluoSectorEjeDimensions();
+						
+						for (GluoSectorEjeDimension gluoEje : ejeSon) {
+							gluoEje.setActivo("N");
+							Set<GluoObjetivo> objSon = gluoEje.getGluoObjetivos();
+						
+							for (GluoObjetivo gluoObjetivo : objSon) {
+								gluoObjetivo.setActivo("N");
+								Set<GluoPrograma> progSon = gluoObjetivo.getGluoProgramas(); 
+								
+								for (GluoPrograma gluoPrograma : progSon) {
+									gluoPrograma.setActivo("N");
+									Set<GluoSubprograma> sprogSon = gluoPrograma.getGluoSubprogramas();
+									
+									for (GluoSubprograma gluoSubprograma : sprogSon) {
+										gluoSubprograma.setActivo("N");
+										Set<GluoProyecto> proySon = gluoSubprograma.getGluoProyectos();
+										
+										for (GluoProyecto gluoProyecto : proySon) {
+											gluoProyecto.setActivo("N");
+											Set<GluoDetalleProyecto> dproySon = gluoProyecto.getGluoDetalleProyectos();
+											Set<GluoIndicador> indSon = gluoProyecto.getGluoIndicadors();
+											
+											for (GluoDetalleProyecto gluoDetalleProyecto : dproySon) {
+												gluoDetalleProyecto.setActivo("N");
+											}
+											for (GluoIndicador gluoIndicador : indSon) {
+												gluoIndicador.setActivo("N");
+												Set<GluoHistorialIndicador> hindSon = gluoIndicador.getGluoHistorialIndicadors();
+												
+												for (GluoHistorialIndicador gluoHistorialIndicador : hindSon) {
+													gluoHistorialIndicador.setActivo("N");
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					actionGuardar();
+					break;
+					}
 					RequestContext.getCurrentInstance().update("form");
 					FacesUtils.addInfoMessage("Se ha inactivado correctamente");
 					}
