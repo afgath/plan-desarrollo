@@ -670,7 +670,7 @@
 					<h:panelGrid columns="2" style="width: 100% !important">
 
 						<h:outputText id="msgModDescripcion" value=" Descripción del plan" />
-						<p:inputTextarea id="txtModDescripcion" disabled="false"
+						<p:inputTextarea id="txtModAreaDescripcion" disabled="false"
 							binding="#{organigramView.txtModAreaDescripcionPlan}" rows="6"
 							cols="33" />
 						<h:outputText id="msgModEslogan" value=" Eslogan del plan" />
@@ -708,7 +708,7 @@
 						oncomplete="PF('dlgModificarPlan').hide();"
 						actionListener="#{organigramView.modificarPlanAction}" />
 
-					<p:button value="Cancelar" icon="ui-icon-close"
+					<p:commandButton value="Cancelar" icon="ui-icon-close"
 						update=":formModal" />
 				</div>
 

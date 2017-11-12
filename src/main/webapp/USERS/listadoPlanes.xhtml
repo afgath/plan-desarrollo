@@ -205,8 +205,9 @@
 				<p:menuitem value="Añadir Dimensión" ajax="false"
 					icon="ui-icon-plus"
 					onclick="PF('dlgAnadirDimension').show(); return false;" />
-				<p:menuitem value="Detalles" update="organigram @form:growl"
-					icon="ui-icon-info" />
+				<p:menuitem value="Detalles" update="formModal"
+					oncomplete="PF('dlgModificarPlan').show()" icon="ui-icon-info"
+					action="#{organigramGenView.dialogModificarPlan}" />
 			</p:contextMenu>
 
 			<p:contextMenu for="organigram" nodeType="dimension">
@@ -706,6 +707,66 @@
 
 
 			<!-- DIALOGOS DE MODIFICAR -->
+			
+			<!-- ************************************************** -->
+			<!-- **			   DIÁLOGO MODIFICAR PLAN		 	 ** -->
+			<!-- ************************************************** -->
+			<p:dialog id="dlgModificarPlan" header="Modificar Plan"
+				widgetVar="dlgModificarPlan" modal="true" draggable="true"
+				closable="false" resizable="true" responsive="true"
+				style="width: 100% !important;">
+
+				<p:messages id="msgModificarPlan" autoUpdate="true" closable="true"
+					style="width: 100%;" />
+
+				<p:panel header="Modificar Plan">
+					<h:panelGrid columns="2" style="width: 100% !important">
+
+						<h:outputText id="msgModDescripcion" value=" Descripción del plan" />
+						<p:inputTextarea id="txtModAreaDescripcion" disabled="false"
+							binding="#{organigramView.txtModAreaDescripcionPlan}" rows="6"
+							cols="33" />
+						<h:outputText id="msgModEslogan" value=" Eslogan del plan" />
+						<p:inputTextarea id="txtModAreaEslogan" disabled="false"
+							binding="#{organigramView.txtModAreaEsloganPlan}" rows="6" cols="33" />
+						<h:outputText id="msgModNombreAlcalde" value=" Nombre del Alcalde" />
+						<p:inputText id="txtModNombreAlcalde" disabled="false"
+							binding="#{organigramView.txtModNombreAlcaldePlan}" />
+						<h:outputText id="msgModAnoInicio" value=" Año de inicio del plan" />
+						<p:calendar showOn="button" navigator="true" locale="en"
+							binding="#{organigramView.txtModAnoInicioPlan}">
+							<p:ajax event="dateSelect"
+								listener="#{organigramView.listener_txtAnoInicio}" />
+						</p:calendar>
+						<h:outputText id="msgModAnoFin" value=" Año de finalización del plan" />
+						<p:calendar showOn="button" navigator="true" locale="en"
+							binding="#{organigramView.txtModAnoFinPlan}">
+							<p:ajax event="dateSelect"
+								listener="#{organigramView.listener_txtAnoFin}" />
+						</p:calendar>
+						
+						<p:outputLabel value="¿Activo?:" />
+						<p:selectBooleanCheckbox id="sbcModPlanActivo"
+							binding="#{organigramView.sbcModPlanActivo}" />
+
+					</h:panelGrid>
+
+				</p:panel>
+
+				<br />
+
+				<div align="center">
+
+					<p:commandButton value="Modificar" update=":form:organigram"
+						oncomplete="PF('dlgModificarPlan').hide();"
+						actionListener="#{organigramView.modificarPlanAction}" />
+
+					<p:commandButton value="Cancelar" icon="ui-icon-close"
+						update=":formModal" />
+				</div>
+
+			</p:dialog>
+			<!-- FIN DIÁLOGO MODIFICAR PLAN -->
 
 			<!-- ************************************************** -->
 			<!-- **			 DIÁLOGO MODIFICAR DIMENSION		 ** -->

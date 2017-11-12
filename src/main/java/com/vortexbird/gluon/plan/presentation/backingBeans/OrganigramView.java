@@ -1136,22 +1136,22 @@ public class OrganigramView implements Serializable {
 	public void modificarPlanAction() {
 		log.info("modificarPlanAction");
 		try {
-
-			OrganigramNode nodePlan = rootNode;
-
-			plan.setNombreAlcalde(txtModNombreAlcaldePlan.getValue().toString());
-			plan.setEslogan(txtModAreaEsloganPlan.getValue().toString());
-			plan.setDescripcion(txtModAreaDescripcionPlan.getValue().toString());
-			plan.setAnoInicio(FacesUtils.checkDate(txtModPlanAnoInicioPlan.getValue().toString()));
-			plan.setAnoFin(FacesUtils.checkDate(txtModPlanAnoFinPlan.getValue().toString()));
 			
-			nodePlan.setData(
-					plan.getDescripcion());
+			this.plan.setNombreAlcalde(txtModNombreAlcaldePlan.getValue().toString());
+			this.plan.setEslogan(txtModAreaEsloganPlan.getValue().toString());
+			this.plan.setDescripcion(txtModAreaDescripcionPlan.getValue().toString());
+			this.plan.setAnoInicio(FacesUtils.checkDate(txtModPlanAnoInicioPlan));
+			this.plan.setAnoFin(FacesUtils.checkDate(txtModPlanAnoFinPlan));
+			log.info("--PLAN--"+this.plan.getDescripcion());
+			rootNode.setData(this.plan.getDescripcion());
 			if (sbcModPlanActivo.isSelected() == true) {
 				plan.setActivo("S");
 			} else {
 				plan.setActivo("N");
 			}
+			
+			RequestContext.getCurrentInstance().update("formModal");
+			RequestContext.getCurrentInstance().update("form");
 
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
