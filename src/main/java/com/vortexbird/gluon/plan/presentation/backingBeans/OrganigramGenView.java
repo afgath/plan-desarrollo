@@ -63,6 +63,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.FacesEvent;
 import javax.faces.model.SelectItem;
 
 @ManagedBean
@@ -955,8 +956,9 @@ public class OrganigramGenView implements Serializable {
 	}
 	
 	public void dialogModificarPlan() {
-		try {		
-			
+		try {				
+			Integer planId = new Integer(this.selectedGluoPlanDesarrollo.getPlanId());
+			plan = (GluoPlanDesarrollo) businessDelegatorView.getGluoPlanDesarrollo(planId);
 			 txtModNombreAlcaldePlan.setValue(plan.getNombreAlcalde());
 			 txtModAreaDescripcionPlan.setValue(plan.getDescripcion());
 			 txtModAreaEsloganPlan.setValue(plan.getEslogan());
@@ -1360,10 +1362,18 @@ public class OrganigramGenView implements Serializable {
 
 	}
 	
+	public void CargarInstanciaPlan(ActionEvent evt){
+		this.selectedGluoPlanDesarrollo = (GluoPlanDesarrolloDTO) (evt.getComponent()
+                .getAttributes()
+                .get("selectedGluoPlanDesarrollo"));
+		
+		cargarPlanDesarrollo(this.selectedGluoPlanDesarrollo);
+		
+	}
 	
-	public String cargarPlanDesarrollo(ActionEvent evt){
+	
+	public String cargarPlanDesarrollo(GluoPlanDesarrolloDTO selectedGluoPlanDesarrollo){
 		try {
-			plan = new GluoPlanDesarrollo();
 			eje = new GluoSectorEjeDimension();
 			contDimension=0;
 			contObjetivo=0;
@@ -1374,10 +1384,6 @@ public class OrganigramGenView implements Serializable {
 			contIndicador=0;
 			contHistorialIndicador=0;
 			//CARGA DEL PLAN	
-			selectedGluoPlanDesarrollo = (GluoPlanDesarrolloDTO) (evt.getComponent()
-                    .getAttributes()
-                    .get("selectedGluoPlanDesarrollo"));
-
 			Integer planId = new Integer(selectedGluoPlanDesarrollo.getPlanId());
 			plan = (GluoPlanDesarrollo) businessDelegatorView.getGluoPlanDesarrollo(planId);
 			Set<GluoSectorEjeDimension> gluoDimension =  plan.getGluoSectorEjeDimensions();
@@ -1640,9 +1646,7 @@ public class OrganigramGenView implements Serializable {
 					
 				}
 				
-				RequestContext.getCurrentInstance().update("form");
-				FacesUtils.addInfoMessage("Plan cargado correctamente");
-				
+				RequestContext.getCurrentInstance().update("form");				
 			}else{
 				throw new Exception("No se puede mostrar este plan");
 			}
@@ -1961,6 +1965,7 @@ public class OrganigramGenView implements Serializable {
 					FacesUtils.addInfoMessage("Se ha inactivado correctamente");
 					}
 			
+				cargarPlanDesarrollo(this.selectedGluoPlanDesarrollo);
 		} catch (Exception e) {
 			log.error("ERROR - "+e);
 		}

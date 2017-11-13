@@ -60,7 +60,7 @@
 					<p:column headerText="Opciones">
 						<p:commandButton id="btnVisualizar" icon="ui-icon-search"
 							value="Visualizar" update="@form"
-							actionListener="#{organigramGenView.cargarPlanDesarrollo}">
+							actionListener="#{organigramGenView.CargarInstanciaPlan}">
 							<f:attribute name="selectedGluoPlanDesarrollo"
 								value="#{gluoPlanDesarrollo}" />
 						</p:commandButton>
@@ -205,9 +205,9 @@
 				<p:menuitem value="Añadir Dimensión" ajax="false"
 					icon="ui-icon-plus"
 					onclick="PF('dlgAnadirDimension').show(); return false;" />
-				<p:menuitem value="Detalles" update="formModal"
+				<p:menuitem value="Detalles" update="organigram @form:growl"
 					oncomplete="PF('dlgModificarPlan').show()" icon="ui-icon-info"
-					action="#{organigramGenView.dialogModificarPlan}" />
+					actionListener="#{organigramGenView.dialogModificarPlan}" />
 			</p:contextMenu>
 
 			<p:contextMenu for="organigram" nodeType="dimension">
@@ -216,9 +216,6 @@
 				<p:menuitem value="Detalles" update="formModal"
 					oncomplete="PF('dlgModificarDimension').show()" icon="ui-icon-info"
 					action="#{organigramGenView.dialogModificarDimension}" />
-				<p:menuitem value="Eliminar" update="organigram @form:growl"
-					icon="ui-icon-trash"
-					actionListener="#{organigramGenView.eliminarNodoAction}" />
 			</p:contextMenu>
 
 			<p:contextMenu for="organigram" nodeType="objetivo">
@@ -227,9 +224,6 @@
 				<p:menuitem value="Detalles" update="formModal"
 					oncomplete="PF('dlgModificarObjetivo').show()" icon="ui-icon-info"
 					action="#{organigramGenView.dialogModificarObjetivo}" />
-				<p:menuitem value="Eliminar" update="organigram @form:growl"
-					icon="ui-icon-trash"
-					actionListener="#{organigramGenView.eliminarNodoAction}" />
 			</p:contextMenu>
 
 			<p:contextMenu for="organigram" nodeType="programa">
@@ -239,9 +233,6 @@
 				<p:menuitem value="Detalles" update="formModal"
 					oncomplete="PF('dlgModificarPrograma').show()" icon="ui-icon-info"
 					action="#{organigramGenView.dialogModificarPrograma}" />
-				<p:menuitem value="Eliminar" update="organigram @form:growl"
-					icon="ui-icon-trash"
-					actionListener="#{organigramGenView.eliminarNodoAction}" />
 			</p:contextMenu>
 
 			<p:contextMenu for="organigram" nodeType="subprograma">
@@ -251,9 +242,6 @@
 					oncomplete="PF('dlgModificarSubprograma').show()"
 					icon="ui-icon-info"
 					action="#{organigramGenView.dialogModificarSubPrograma}" />
-				<p:menuitem value="Eliminar" update="organigram @form:growl"
-					icon="ui-icon-trash"
-					actionListener="#{organigramGenView.eliminarNodoAction}" />
 			</p:contextMenu>
 
 			<p:contextMenu for="organigram" nodeType="proyecto">
@@ -266,9 +254,6 @@
 				<p:menuitem value="Detalles" update="formModal"
 					oncomplete="PF('dlgModificarProyecto').show()" icon="ui-icon-info"
 					action="#{organigramGenView.dialogModificarProyecto}" />
-				<p:menuitem value="Eliminar" update="organigram @form:growl"
-					icon="ui-icon-trash"
-					actionListener="#{organigramGenView.eliminarNodoAction}" />
 			</p:contextMenu>
 
 			<p:contextMenu for="organigram" nodeType="detalleProyecto">
@@ -276,9 +261,6 @@
 					oncomplete="PF('dlgModificarDetalleProyecto').show()"
 					icon="ui-icon-info"
 					action="#{organigramGenView.dialogModificarDetalleProyecto}" />
-				<p:menuitem value="Eliminar" update="organigram @form:growl"
-					icon="ui-icon-trash"
-					actionListener="#{organigramGenView.eliminarNodoAction}" />
 			</p:contextMenu>
 
 			<p:contextMenu for="organigram" nodeType="indicador">
@@ -311,7 +293,7 @@
 			<!-- ************************************************** -->
 			<p:dialog id="dlgAnadirPlan" header="Crear Plan"
 				widgetVar="dlgAnadirPlan" modal="true" draggable="true"
-				closable="false" resizable="true" responsive="true"
+				closable="false" resizable="true"
 				style="width: 100% !important;">
 
 				<p:messages id="msgPlan" autoUpdate="true" closable="true"
@@ -354,7 +336,7 @@
 					<p:commandButton value="Añadir"
 						binding="#{organigramGenView.btnAnadirPlan}"
 						action="#{organigramGenView.anadirPlanAction}"
-						update=":formModal:msgPlan" />
+						update=":formModal:msgPlan @form" />
 
 					<p:button value="Cancelar"
 						href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/font-icons.xhtml" />
@@ -724,30 +706,30 @@
 
 						<h:outputText id="msgModDescripcion" value=" Descripción del plan" />
 						<p:inputTextarea id="txtModAreaDescripcion" disabled="false"
-							binding="#{organigramView.txtModAreaDescripcionPlan}" rows="6"
+							binding="#{organigramGenView.txtModAreaDescripcionPlan}" rows="6"
 							cols="33" />
 						<h:outputText id="msgModEslogan" value=" Eslogan del plan" />
 						<p:inputTextarea id="txtModAreaEslogan" disabled="false"
-							binding="#{organigramView.txtModAreaEsloganPlan}" rows="6" cols="33" />
+							binding="#{organigramGenView.txtModAreaEsloganPlan}" rows="6" cols="33" />
 						<h:outputText id="msgModNombreAlcalde" value=" Nombre del Alcalde" />
 						<p:inputText id="txtModNombreAlcalde" disabled="false"
-							binding="#{organigramView.txtModNombreAlcaldePlan}" />
+							binding="#{organigramGenView.txtModNombreAlcaldePlan}" />
 						<h:outputText id="msgModAnoInicio" value=" Año de inicio del plan" />
 						<p:calendar showOn="button" navigator="true" locale="en"
-							binding="#{organigramView.txtModAnoInicioPlan}">
+							binding="#{organigramGenView.txtModAnoInicioPlan}">
 							<p:ajax event="dateSelect"
-								listener="#{organigramView.listener_txtAnoInicio}" />
+								listener="#{organigramGenView.listener_txtAnoInicio}" />
 						</p:calendar>
 						<h:outputText id="msgModAnoFin" value=" Año de finalización del plan" />
 						<p:calendar showOn="button" navigator="true" locale="en"
-							binding="#{organigramView.txtModAnoFinPlan}">
+							binding="#{organigramGenView.txtModAnoFinPlan}">
 							<p:ajax event="dateSelect"
-								listener="#{organigramView.listener_txtAnoFin}" />
+								listener="#{organigramGenView.listener_txtAnoFin}" />
 						</p:calendar>
 						
 						<p:outputLabel value="¿Activo?:" />
 						<p:selectBooleanCheckbox id="sbcModPlanActivo"
-							binding="#{organigramView.sbcModPlanActivo}" />
+							binding="#{organigramGenView.sbcModPlanActivo}" />
 
 					</h:panelGrid>
 
@@ -759,7 +741,7 @@
 
 					<p:commandButton value="Modificar" update=":form:organigram"
 						oncomplete="PF('dlgModificarPlan').hide();"
-						actionListener="#{organigramView.modificarPlanAction}" />
+						actionListener="#{organigramGenView.modificarPlanAction}" />
 
 					<p:commandButton value="Cancelar" icon="ui-icon-close"
 						update=":formModal" />
