@@ -1544,9 +1544,10 @@ public class OrganigramGenView implements Serializable {
 										dataNode = "(" + rowKey + ") - " + gluoProyecto.getDescripcion();
 										OrganigramNode nodoProyecto = new DefaultOrganigramNode("proyecto", dataNode, nodoSubprograma);
 										if(gluoSubprograma.getActivo().equals("N") || gluoProyecto.getActivo().equals("N")){
-											nodoProyecto.setDraggable(false);
-											nodoProyecto.setDroppable(false);
-											nodoProyecto.setSelectable(false);
+											nodoProyecto.setSelectable(true);
+											nodoProyecto.setDroppable(true);
+											nodoProyecto.setDraggable(true);
+											nodoProyecto.setType("inactivo");
 										}else{						
 											nodoProyecto.setSelectable(true);
 											nodoProyecto.setDroppable(true);
@@ -1575,9 +1576,10 @@ public class OrganigramGenView implements Serializable {
 											dataNode = "(" + rowKey + ") - " + gluoDetalleProyecto.getValorTotalPresupuesto();
 											OrganigramNode nodoDetalleProyecto = new DefaultOrganigramNode("detalleProyecto", dataNode, nodoProyecto);
 											if(gluoProyecto.getActivo().equals("N") || gluoDetalleProyecto.getActivo().equals("N")){
-												nodoDetalleProyecto.setDraggable(false);
-												nodoDetalleProyecto.setDroppable(false);
-												nodoDetalleProyecto.setSelectable(false);
+												nodoDetalleProyecto.setSelectable(true);
+												nodoDetalleProyecto.setDroppable(true);
+												nodoDetalleProyecto.setDraggable(true);
+												nodoDetalleProyecto.setType("inactivo");
 											}else{						
 												nodoDetalleProyecto.setSelectable(true);
 												nodoDetalleProyecto.setDroppable(true);
@@ -1605,9 +1607,10 @@ public class OrganigramGenView implements Serializable {
 											dataNode = "(" + rowKey + ") - " + gluoIndicador.getDescripcionIndicador();
 											OrganigramNode nodoIndicador = new DefaultOrganigramNode("indicador", dataNode, nodoProyecto);
 											if(gluoProyecto.getActivo().equals("N") || gluoIndicador.getActivo().equals("N")){
-												nodoIndicador.setDraggable(false);
-												nodoIndicador.setDroppable(false);
-												nodoIndicador.setSelectable(false);
+												nodoIndicador.setSelectable(true);
+												nodoIndicador.setDroppable(true);
+												nodoIndicador.setDraggable(true);
+												nodoIndicador.setType("inactivo");
 											}else{						
 												nodoIndicador.setSelectable(true);
 												nodoIndicador.setDroppable(true);
@@ -1634,9 +1637,10 @@ public class OrganigramGenView implements Serializable {
 												dataNode = "(" + rowKey + ") - " + gluoHistorialIndicador.getValorReal();
 												OrganigramNode nodoHistorialIndicador = new DefaultOrganigramNode("historialIndicador", dataNode, nodoIndicador);
 												if(gluoIndicador.getActivo().equals("N") || gluoHistorialIndicador.getActivo().equals("N")){
-													nodoHistorialIndicador.setDraggable(false);
-													nodoHistorialIndicador.setDroppable(false);
-													nodoHistorialIndicador.setSelectable(false);
+													nodoHistorialIndicador.setSelectable(true);
+													nodoHistorialIndicador.setDroppable(true);
+													nodoHistorialIndicador.setDraggable(true);
+													nodoHistorialIndicador.setType("inactivo");
 												}else{						
 													nodoHistorialIndicador.setSelectable(true);
 													nodoHistorialIndicador.setDroppable(true);
