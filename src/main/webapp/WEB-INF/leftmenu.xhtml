@@ -23,9 +23,6 @@
 				<p:menuitem id="sm_dashboard" value="Dashboard"
 					icon="icon-home-outline" outcome="dashboard"
 					containerStyleClass="layout-menubar-active" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/dashboard.xhtml"/>
-
-				<p:menuitem id="sm_fonts" value="Font Icons" icon="icon-book"
-					outcome="font-icons.xhtml" />
 				
 				<p:menuitem icon="icon-users" value="Usuarios" rendered="#{leftMenuVista.contains('USUARIOS')}"
 						url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/ADMIN/usuarios.xhtml"/>
@@ -41,9 +38,6 @@
 						url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/USERS/listadoPlanes.xhtml"/>
 				
 				</p:submenu>
-				
-				<p:menuitem icon="icon-chart-bar" value="Historial indicador" rendered="#{leftMenuVista.contains('HISTORIAL_INDICADOR')}"
-					url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/USERS/gestionHistorialIndicador.xhtml"/>
 			</ps:menu>
 		</h:form>
 	</div>
