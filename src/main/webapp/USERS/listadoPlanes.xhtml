@@ -129,6 +129,13 @@
 	background: -webkit-linear-gradient(top, #38ffc8 0%, #93fde5 100%);
 	background: linear-gradient(to bottom, #38ffc8 0%, #93fde5 100%);
 }
+
+.ui-organigram .ui-organigram-node.inactivo {
+	background: #605c5c;
+	background: -moz-linear-gradient(top, #605c5c 0%, #605c5c 100%);
+	background: -webkit-linear-gradient(top, #605c5c 0%, #605c5c 100%);
+	background: linear-gradient(to bottom, #605c5c 0%, #605c5c 100%);
+}
 </style>
 			<p:growl id="growl" />
 
@@ -193,6 +200,11 @@
 				</p:organigramNode>
 				<p:organigramNode type="historialIndicador"
 					styleClass="historialIndicador" icon="ui-icon-suitcase"
+					iconPos="left">
+					<h:outputText value="#{node.data}" />
+				</p:organigramNode>
+				<p:organigramNode type="inactivo"
+					styleClass="inactivo" icon="ui-icon-suitcase"
 					iconPos="left">
 					<h:outputText value="#{node.data}" />
 				</p:organigramNode>
@@ -266,7 +278,7 @@
 			<p:contextMenu for="organigram" nodeType="indicador">
 				<p:menuitem value="Detalles" update="formModal"
 					oncomplete="PF('dlgModificarIndicador').show()" icon="ui-icon-info"
-					action="#{organigramGenView.dialogModificarIndicador}" />
+					action="#{organigramGenView.dialogModificarHistorialIndicador}" />
 				<p:menuitem value="Añadir Historial Indicador" ajax="false"
 					icon="ui-icon-plus"
 					onclick="PF('dlgAnadirHistorialIndicador').show(); return false;" />

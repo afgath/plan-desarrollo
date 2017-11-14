@@ -1097,10 +1097,10 @@ public class OrganigramGenView implements Serializable {
 			txtModDescLineaBase.setValue(indicador.getDescripcionLineaBase());
 			txtModDescMeta.setValue(indicador.getDescripcionMeta());
 			numModValorMeta.setValue(indicador.getValorMeta());
-			if (proyecto.getActivo().toLowerCase().trim().equals("s")) {
-				sbcModProyActivo.setValue(true);
+			if (indicador.getActivo().toLowerCase().trim().equals("s")) {
+				sbcModIndicadorActivo.setValue(true);
 			} else {
-				sbcModProyActivo.setValue(false);
+				sbcModIndicadorActivo.setValue(false);
 			}
 
 		} catch (Exception e) {
@@ -1147,6 +1147,8 @@ public class OrganigramGenView implements Serializable {
 			
 			RequestContext.getCurrentInstance().update("formModal");
 			RequestContext.getCurrentInstance().update("form");
+			
+			desactivarNodosAction();
 
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
@@ -1203,6 +1205,8 @@ public class OrganigramGenView implements Serializable {
 			} else {
 				objetivo.setActivo("N");
 			}
+			
+			desactivarNodosAction();
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
@@ -1228,6 +1232,7 @@ public class OrganigramGenView implements Serializable {
 			} else {
 				programa.setActivo("N");
 			}
+			desactivarNodosAction();
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
@@ -1253,6 +1258,8 @@ public class OrganigramGenView implements Serializable {
 			} else {
 				subPrograma.setActivo("N");
 			}
+			
+			desactivarNodosAction();
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
@@ -1278,6 +1285,8 @@ public class OrganigramGenView implements Serializable {
 			} else {
 				proyecto.setActivo("N");
 			}
+			
+			desactivarNodosAction();
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
@@ -1307,7 +1316,7 @@ public class OrganigramGenView implements Serializable {
 			} else {
 				detalleProyecto.setActivo("N");
 			}
-			
+			desactivarNodosAction();
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
@@ -1332,6 +1341,7 @@ public class OrganigramGenView implements Serializable {
 			} else {
 				indicador.setActivo("N");
 			}
+			desactivarNodosAction();
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
@@ -1356,6 +1366,7 @@ public class OrganigramGenView implements Serializable {
 			} else {
 				historialIndicador.setActivo("N");
 			}
+			desactivarNodosAction();
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
@@ -1395,8 +1406,7 @@ public class OrganigramGenView implements Serializable {
 				rootNode.setRowKey(rowKey);
 				if(plan.getActivo().equals("N")){
 					rootNode.setSelectable(true);
-					rootNode.setDraggable(false);
-					rootNode.setDroppable(false);
+					rootNode.setType("inactivo");
 				}else{
 					rootNode.setSelectable(true);
 				}
@@ -1411,9 +1421,10 @@ public class OrganigramGenView implements Serializable {
 						String dataNode = "(" + rowKey + ") - " + gluoSectorEjeDimension.getDescripcion();
 						sector = new DefaultOrganigramNode("dimension", dataNode, rootNode);
 						if(gluoSectorEjeDimension.getActivo().equals("N") || plan.getActivo().equals("N")){
-							sector.setDraggable(false);
-							sector.setDroppable(false);
-							sector.setSelectable(false);
+							sector.setSelectable(true);
+							sector.setDroppable(true);
+							sector.setDraggable(true);
+							sector.setType("inactivo");
 						}else{						
 							sector.setSelectable(true);
 							sector.setDroppable(true);
@@ -1439,9 +1450,10 @@ public class OrganigramGenView implements Serializable {
 							dataNode = "(" + rowKey + ") - " + gluoObjetivo.getDescripcion();
 							nodoObjetivo = new DefaultOrganigramNode("objetivo", dataNode, sector);
 							if(gluoSectorEjeDimension.getActivo().equals("N") || gluoObjetivo.getActivo().equals("N")){
-								nodoObjetivo.setDraggable(false);
-								nodoObjetivo.setDroppable(false);
-								nodoObjetivo.setSelectable(false);
+								nodoObjetivo.setSelectable(true);
+								nodoObjetivo.setDroppable(true);
+								nodoObjetivo.setDraggable(true);
+								nodoObjetivo.setType("inactivo");
 							}else{						
 								nodoObjetivo.setSelectable(true);
 								nodoObjetivo.setDroppable(true);
@@ -1468,9 +1480,10 @@ public class OrganigramGenView implements Serializable {
 								dataNode = "(" + rowKey + ") - " + gluoPrograma.getDescripcion();
 								OrganigramNode nodoPrograma = new DefaultOrganigramNode("programa", dataNode, nodoObjetivo);
 								if(gluoObjetivo.getActivo().equals("N") || gluoPrograma.getActivo().equals("N")){
-									nodoPrograma.setDraggable(false);
-									nodoPrograma.setDroppable(false);
-									nodoPrograma.setSelectable(false);
+									nodoPrograma.setSelectable(true);
+									nodoPrograma.setDroppable(true);
+									nodoPrograma.setDraggable(true);
+									nodoPrograma.setType("inactivo");
 								}else{						
 									nodoPrograma.setSelectable(true);
 									nodoPrograma.setDroppable(true);
@@ -1499,9 +1512,10 @@ public class OrganigramGenView implements Serializable {
 									dataNode = "(" + rowKey + ") - " + gluoSubprograma.getDescripcion();
 									OrganigramNode nodoSubprograma = new DefaultOrganigramNode("subprograma", dataNode, nodoPrograma);
 									if(gluoPrograma.getActivo().equals("N") || gluoSubprograma.getActivo().equals("N")){
-										nodoSubprograma.setDraggable(false);
-										nodoSubprograma.setDroppable(false);
-										nodoSubprograma.setSelectable(false);
+										nodoSubprograma.setSelectable(true);
+										nodoSubprograma.setDroppable(true);
+										nodoSubprograma.setDraggable(true);
+										nodoSubprograma.setType("inactivo");
 									}else{						
 										nodoSubprograma.setSelectable(true);
 										nodoSubprograma.setDroppable(true);
@@ -1669,15 +1683,24 @@ public class OrganigramGenView implements Serializable {
 				switch (tipo) {
 				
 				case "historialIndicador":
+					if(sbcModHistorialIndicadorActivo.getValue().toString().equals("false")){
+						key = (String) currentSelection.getData();
+						GluoHistorialIndicador histIndicador = (GluoHistorialIndicador) historialIndicadorMap.get(key).getEntity();
+						histIndicador.setActivo("N");
+						currentSelection.setDraggable(false);
+						currentSelection.setDroppable(false);
+						currentSelection.setSelectable(false);
+						elementoPlan = new ElementosPlan(currentSelection, histIndicador);
+						historialIndicadorMap.replace(key, elementoPlan);
+					}else{
+						key = (String) currentSelection.getData();
+						GluoHistorialIndicador histIndicador = (GluoHistorialIndicador) historialIndicadorMap.get(key).getEntity();
+						histIndicador.setActivo("S");
+						
+						elementoPlan = new ElementosPlan(currentSelection, histIndicador);
+						historialIndicadorMap.replace(key, elementoPlan);
+					}
 					
-					key = (String) currentSelection.getData();
-					GluoHistorialIndicador histIndicador = (GluoHistorialIndicador) historialIndicadorMap.get(key).getEntity();
-					histIndicador.setActivo("N");
-					currentSelection.setDraggable(false);
-					currentSelection.setDroppable(false);
-					currentSelection.setSelectable(false);
-					elementoPlan = new ElementosPlan(currentSelection, histIndicador);
-					historialIndicadorMap.replace(key, elementoPlan);
 					actionGuardar();
 										
 					break;
@@ -1697,22 +1720,39 @@ public class OrganigramGenView implements Serializable {
 							for (GluoHistorialIndicador gluoHistorialIndicador : hindSon) {
 								gluoHistorialIndicador.setActivo("N");
 							}
-						}
+						}else{
+							key = (String) currentSelection.getData();
+							GluoIndicador indSelected = (GluoIndicador) indicadorMap.get(key).getEntity();
+							indSelected.setActivo("S");
+										
+								Set<GluoHistorialIndicador> hindSon = indSelected.getGluoHistorialIndicadors();
+								
+								for (GluoHistorialIndicador gluoHistorialIndicador : hindSon) {
+									gluoHistorialIndicador.setActivo("S");
+								}
+							}
 					
 					actionGuardar();
 					
 					break;
 					
 				case "detalleProyecto":
-					
-					key = (String) currentSelection.getData();
-					GluoDetalleProyecto dtproy = (GluoDetalleProyecto) detalleProyectoMap.get(key).getEntity();
-					dtproy.setActivo("N");
-					currentSelection.setDraggable(false);
-					currentSelection.setDroppable(false);
-					currentSelection.setSelectable(false);
-					elementoPlan = new ElementosPlan(currentSelection, dtproy);
-					detalleProyectoMap.replace(key, elementoPlan);
+					if(sbcModDPActivo.getValue().toString().equals("false")){
+						key = (String) currentSelection.getData();
+						GluoDetalleProyecto dtproy = (GluoDetalleProyecto) detalleProyectoMap.get(key).getEntity();
+						dtproy.setActivo("N");
+						currentSelection.setDraggable(false);
+						currentSelection.setDroppable(false);
+						currentSelection.setSelectable(false);
+						elementoPlan = new ElementosPlan(currentSelection, dtproy);
+						detalleProyectoMap.replace(key, elementoPlan);
+					}else{
+						key = (String) currentSelection.getData();
+						GluoDetalleProyecto dtproy = (GluoDetalleProyecto) detalleProyectoMap.get(key).getEntity();
+						dtproy.setActivo("S");
+						elementoPlan = new ElementosPlan(currentSelection, dtproy);
+						detalleProyectoMap.replace(key, elementoPlan);
+					}
 					
 					actionGuardar();
 					
@@ -1742,7 +1782,26 @@ public class OrganigramGenView implements Serializable {
 												gluoHistorialIndicador.setActivo("N");
 											}
 										}
-									}
+									}else{
+										key = (String) currentSelection.getData();
+										GluoProyecto proySelected = (GluoProyecto) proyectoMap.get(key).getEntity();
+										proySelected.setActivo("S");
+													
+														Set<GluoDetalleProyecto> dproySon = proySelected.getGluoDetalleProyectos();
+														Set<GluoIndicador> indSon = proySelected.getGluoIndicadors();
+														
+														for (GluoDetalleProyecto gluoDetalleProyecto : dproySon) {
+															gluoDetalleProyecto.setActivo("S");
+														}
+														for (GluoIndicador gluoIndicador : indSon) {
+															gluoIndicador.setActivo("S");
+															Set<GluoHistorialIndicador> hindSon = gluoIndicador.getGluoHistorialIndicadors();
+															
+															for (GluoHistorialIndicador gluoHistorialIndicador : hindSon) {
+																gluoHistorialIndicador.setActivo("S");
+															}
+														}
+													}
 					
 					actionGuardar();
 					
@@ -1776,7 +1835,31 @@ public class OrganigramGenView implements Serializable {
 											}
 										}
 									}
-								}
+								}else{
+									key = (String) currentSelection.getData();
+									GluoSubprograma sbprogSelected = (GluoSubprograma) subProgramaMap.get(key).getEntity();
+									sbprogSelected.setActivo("S");
+									
+									Set<GluoProyecto> proySon = sbprogSelected.getGluoProyectos(); 
+												
+												for (GluoProyecto gluoProyecto : proySon) {
+													gluoProyecto.setActivo("S");
+													Set<GluoDetalleProyecto> dproySon = gluoProyecto.getGluoDetalleProyectos();
+													Set<GluoIndicador> indSon = gluoProyecto.getGluoIndicadors();
+													
+													for (GluoDetalleProyecto gluoDetalleProyecto : dproySon) {
+														gluoDetalleProyecto.setActivo("S");
+													}
+													for (GluoIndicador gluoIndicador : indSon) {
+														gluoIndicador.setActivo("S");
+														Set<GluoHistorialIndicador> hindSon = gluoIndicador.getGluoHistorialIndicadors();
+														
+														for (GluoHistorialIndicador gluoHistorialIndicador : hindSon) {
+															gluoHistorialIndicador.setActivo("S");
+														}
+													}
+												}
+											}
 							
 					actionGuardar();
 					
@@ -1815,7 +1898,36 @@ public class OrganigramGenView implements Serializable {
 										}
 									}
 								}
-							}
+							}else{
+								key = (String) currentSelection.getData();
+								GluoPrograma progSelected = (GluoPrograma) programaMap.get(key).getEntity();
+								progSelected.setActivo("S");
+				
+								Set<GluoSubprograma> sprogSon = progSelected.getGluoSubprogramas(); 
+										
+										for (GluoSubprograma gluoSubprograma : sprogSon) {
+											gluoSubprograma.setActivo("S");
+											Set<GluoProyecto> proySon = gluoSubprograma.getGluoProyectos();
+											
+											for (GluoProyecto gluoProyecto : proySon) {
+												gluoProyecto.setActivo("S");
+												Set<GluoDetalleProyecto> dproySon = gluoProyecto.getGluoDetalleProyectos();
+												Set<GluoIndicador> indSon = gluoProyecto.getGluoIndicadors();
+												
+												for (GluoDetalleProyecto gluoDetalleProyecto : dproySon) {
+													gluoDetalleProyecto.setActivo("S");
+												}
+												for (GluoIndicador gluoIndicador : indSon) {
+													gluoIndicador.setActivo("S");
+													Set<GluoHistorialIndicador> hindSon = gluoIndicador.getGluoHistorialIndicadors();
+													
+													for (GluoHistorialIndicador gluoHistorialIndicador : hindSon) {
+														gluoHistorialIndicador.setActivo("S");
+													}
+												}
+											}
+										}
+									}
 						
 					actionGuardar();
 					
@@ -1859,7 +1971,41 @@ public class OrganigramGenView implements Serializable {
 									}
 								}
 							}
-						}
+						}else{
+							key = (String) currentSelection.getData();
+							GluoObjetivo objSelected = (GluoObjetivo) objetivoMap.get(key).getEntity();
+							objSelected.setActivo("S");
+							
+							Set<GluoPrograma> progSon = objSelected.getGluoProgramas(); 
+								
+								for (GluoPrograma gluoPrograma : progSon) {
+									gluoPrograma.setActivo("S");
+									Set<GluoSubprograma> sprogSon = gluoPrograma.getGluoSubprogramas();
+									
+									for (GluoSubprograma gluoSubprograma : sprogSon) {
+										gluoSubprograma.setActivo("S");
+										Set<GluoProyecto> proySon = gluoSubprograma.getGluoProyectos();
+										
+										for (GluoProyecto gluoProyecto : proySon) {
+											gluoProyecto.setActivo("S");
+											Set<GluoDetalleProyecto> dproySon = gluoProyecto.getGluoDetalleProyectos();
+											Set<GluoIndicador> indSon = gluoProyecto.getGluoIndicadors();
+											
+											for (GluoDetalleProyecto gluoDetalleProyecto : dproySon) {
+												gluoDetalleProyecto.setActivo("S");
+											}
+											for (GluoIndicador gluoIndicador : indSon) {
+												gluoIndicador.setActivo("S");
+												Set<GluoHistorialIndicador> hindSon = gluoIndicador.getGluoHistorialIndicadors();
+												
+												for (GluoHistorialIndicador gluoHistorialIndicador : hindSon) {
+													gluoHistorialIndicador.setActivo("S");
+												}
+											}
+										}
+									}
+								}
+							}
 						
 					actionGuardar();
 					
@@ -1907,10 +2053,51 @@ public class OrganigramGenView implements Serializable {
 									}
 								}
 							}
+						  }
+						}else{
+							key = (String) currentSelection.getData();
+							GluoSectorEjeDimension sedSelected = (GluoSectorEjeDimension) dimensionMap.get(key).getEntity();
+							sedSelected.setActivo("S");
+							
+							Set<GluoObjetivo> objSon = sedSelected.getGluoObjetivos(); 
+							
+							for (GluoObjetivo gluoObjetivo : objSon) {
+								gluoObjetivo.setActivo("S");
+								Set<GluoPrograma> progSon = gluoObjetivo.getGluoProgramas(); 
+								
+								for (GluoPrograma gluoPrograma : progSon) {
+									gluoPrograma.setActivo("S");
+									Set<GluoSubprograma> sprogSon = gluoPrograma.getGluoSubprogramas();
+									
+									for (GluoSubprograma gluoSubprograma : sprogSon) {
+										gluoSubprograma.setActivo("S");
+										Set<GluoProyecto> proySon = gluoSubprograma.getGluoProyectos();
+										
+										for (GluoProyecto gluoProyecto : proySon) {
+											gluoProyecto.setActivo("S");
+											Set<GluoDetalleProyecto> dproySon = gluoProyecto.getGluoDetalleProyectos();
+											Set<GluoIndicador> indSon = gluoProyecto.getGluoIndicadors();
+											
+											for (GluoDetalleProyecto gluoDetalleProyecto : dproySon) {
+												gluoDetalleProyecto.setActivo("S");
+											}
+											for (GluoIndicador gluoIndicador : indSon) {
+												gluoIndicador.setActivo("S");
+												Set<GluoHistorialIndicador> hindSon = gluoIndicador.getGluoHistorialIndicadors();
+												
+												for (GluoHistorialIndicador gluoHistorialIndicador : hindSon) {
+													gluoHistorialIndicador.setActivo("S");
+												}
+											}
+										}
+									}
+								}
+							}
 						}
-					actionGuardar();
-					break;
-				}
+						
+						actionGuardar();
+						break;
+						
 				case "root":
 					if(sbcModPlanActivo.getValue().toString().equals("false")){
 						key = (String) currentSelection.getData();
@@ -1958,11 +2145,56 @@ public class OrganigramGenView implements Serializable {
 								}
 							}
 						}
+					
+					}else{
+						key = (String) currentSelection.getData();
+						GluoPlanDesarrollo planSelected = (GluoPlanDesarrollo) this.plan;
+						planSelected.setActivo("S");
+	
+						Set<GluoSectorEjeDimension> ejeSon = planSelected.getGluoSectorEjeDimensions();
+						
+						for (GluoSectorEjeDimension gluoEje : ejeSon) {
+							gluoEje.setActivo("S");
+							Set<GluoObjetivo> objSon = gluoEje.getGluoObjetivos();
+						
+							for (GluoObjetivo gluoObjetivo : objSon) {
+								gluoObjetivo.setActivo("S");
+								Set<GluoPrograma> progSon = gluoObjetivo.getGluoProgramas(); 
+								
+								for (GluoPrograma gluoPrograma : progSon) {
+									gluoPrograma.setActivo("S");
+									Set<GluoSubprograma> sprogSon = gluoPrograma.getGluoSubprogramas();
+									
+									for (GluoSubprograma gluoSubprograma : sprogSon) {
+										gluoSubprograma.setActivo("S");
+										Set<GluoProyecto> proySon = gluoSubprograma.getGluoProyectos();
+										
+										for (GluoProyecto gluoProyecto : proySon) {
+											gluoProyecto.setActivo("S");
+											Set<GluoDetalleProyecto> dproySon = gluoProyecto.getGluoDetalleProyectos();
+											Set<GluoIndicador> indSon = gluoProyecto.getGluoIndicadors();
+											
+											for (GluoDetalleProyecto gluoDetalleProyecto : dproySon) {
+												gluoDetalleProyecto.setActivo("S");
+											}
+											for (GluoIndicador gluoIndicador : indSon) {
+												gluoIndicador.setActivo("S");
+												Set<GluoHistorialIndicador> hindSon = gluoIndicador.getGluoHistorialIndicadors();
+												
+												for (GluoHistorialIndicador gluoHistorialIndicador : hindSon) {
+													gluoHistorialIndicador.setActivo("S");
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					
+					}
+					
 					actionGuardar();
 					break;
-					}
-					RequestContext.getCurrentInstance().update("form");
-					FacesUtils.addInfoMessage("Se ha inactivado correctamente");
 					}
 			
 				cargarPlanDesarrollo(this.selectedGluoPlanDesarrollo);

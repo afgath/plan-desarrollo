@@ -1389,101 +1389,90 @@ public class OrganigramView implements Serializable {
 					
 						key = (String) currentSelection.getData();
 						proyectoMap.remove(key);
-						currentSelection.getParent().getChildren().remove(currentSelection);
 						List<OrganigramNode> nodosDetInd = currentSelection.getChildren();
-						
-						for (Iterator<OrganigramNode> it = nodosDetInd.iterator(); it.hasNext();) {
+						Iterator<OrganigramNode> it = nodosDetInd.iterator();
+						do{
+							log.info("--IT---"+it);
 							OrganigramNode organigramNode = it.next();
 							log.info("--EXISTE---"+detalleProyectoMap.get(organigramNode.getData()));
 							if(detalleProyectoMap.get(organigramNode.getData())!=null && organigramNode!=null){
 								detalleProyectoMap.remove(organigramNode.getData());
 								it.remove();
 							}else{
-								List<OrganigramNode> nodosHindi = organigramNode.getChildren();
 								indicadorMap.remove(organigramNode.getData());
-								for (Iterator<OrganigramNode> it2 = nodosHindi.iterator(); it2.hasNext();) {
-									if(it2.hasNext()){
-										OrganigramNode organigramNode2 = it2.next();
-										historialIndicadorMap.remove(organigramNode2.getData());
-										it2.remove();
-										organigramNode2.getParent().getChildren().remove(organigramNode2);
-									}
+								List<OrganigramNode> nodosHindi = organigramNode.getChildren();
+								Iterator<OrganigramNode> it2 = nodosHindi.iterator();
+								while ( it2.hasNext()) {
+									OrganigramNode organigramNode2 = it2.next();
+									historialIndicadorMap.remove(organigramNode2.getData());
+									organigramNode2.setType("inactivo");
+									it2.remove();
+									
 								}
 								
 							}
-							organigramNode.getParent().getChildren().remove(organigramNode);
-						}									
+							organigramNode.setType("inactivo");
+						}while (it.hasNext()); 	
+						currentSelection.setType("inactivo");
 					
 					
 					break;
 	
 				case "subprograma":
 					
-					if(sbcModSubProgActivo.getValue().toString().equals("false")){
-						key = (String) currentSelection.getData();
-						GluoSubprograma sbprogSelected = (GluoSubprograma) subProgramaMap.get(key).getEntity();
-						sbprogSelected.setActivo("N");
-						currentSelection.setDraggable(false);
-						currentSelection.setDroppable(false);
-						currentSelection.setSelectable(false);
-						Set<GluoProyecto> proySon = sbprogSelected.getGluoProyectos(); 
-									
-									for (GluoProyecto gluoProyecto : proySon) {
-										gluoProyecto.setActivo("N");
-										Set<GluoDetalleProyecto> dproySon = gluoProyecto.getGluoDetalleProyectos();
-										Set<GluoIndicador> indSon = gluoProyecto.getGluoIndicadors();
+					key = (String) currentSelection.getData();
+					subProgramaMap.remove(key);
+					currentSelection.setType("inactivo");
+					List<OrganigramNode> proyectos = currentSelection.getChildren();
+					Iterator<OrganigramNode> itp = proyectos.iterator();
+					while(itp.hasNext()){
+						OrganigramNode organigramNode = itp.next();
+						if(proyectoMap.get(organigramNode.getData())!=null){
+							proyectoMap.remove(organigramNode.getData());
+							organigramNode.setType("inactivo");
+							List<OrganigramNode> nodosDetInd2 = organigramNode.getChildren();
+							Iterator<OrganigramNode> it2 = nodosDetInd2.iterator();
+							do{
+								OrganigramNode organigramNode2 = it2.next();
+								log.info("--EXISTE---"+detalleProyectoMap.get(organigramNode2.getData()));
+								if(detalleProyectoMap.get(organigramNode2.getData())!=null && organigramNode2!=null){
+									detalleProyectoMap.remove(organigramNode2.getData());
+									it2.remove();
+								}else{
+									indicadorMap.remove(organigramNode2.getData());
+									List<OrganigramNode> nodosHindi = organigramNode2.getChildren();
+									Iterator<OrganigramNode> it3 = nodosHindi.iterator();
+									while ( it3.hasNext()) {
+										OrganigramNode organigramNode3 = it3.next();
+										historialIndicadorMap.remove(organigramNode3.getData());
+										organigramNode3.setType("inactivo");
+										it3.remove();
 										
-										for (GluoDetalleProyecto gluoDetalleProyecto : dproySon) {
-											gluoDetalleProyecto.setActivo("N");
-										}
-										for (GluoIndicador gluoIndicador : indSon) {
-											gluoIndicador.setActivo("N");
-											Set<GluoHistorialIndicador> hindSon = gluoIndicador.getGluoHistorialIndicadors();
-											
-											for (GluoHistorialIndicador gluoHistorialIndicador : hindSon) {
-												gluoHistorialIndicador.setActivo("N");
-											}
-										}
 									}
+									
 								}
+								organigramNode.setType("inactivo");
+							}while (it2.hasNext()); 	
+							currentSelection.getParent().getChildren().remove(currentSelection);
+							itp.remove();
+						}
+					}
 							
 					
 					break;
 	
 				case "programa":
 					
-					if(sbcModProgActivo.getValue().toString().equals("false")){
-						key = (String) currentSelection.getData();
-						GluoPrograma progSelected = (GluoPrograma) programaMap.get(key).getEntity();
-						progSelected.setActivo("N");
-						currentSelection.setDraggable(false);
-						currentSelection.setDroppable(false);
-						currentSelection.setSelectable(false);
-						Set<GluoSubprograma> sprogSon = progSelected.getGluoSubprogramas(); 
-								
-								for (GluoSubprograma gluoSubprograma : sprogSon) {
-									gluoSubprograma.setActivo("N");
-									Set<GluoProyecto> proySon = gluoSubprograma.getGluoProyectos();
-									
-									for (GluoProyecto gluoProyecto : proySon) {
-										gluoProyecto.setActivo("N");
-										Set<GluoDetalleProyecto> dproySon = gluoProyecto.getGluoDetalleProyectos();
-										Set<GluoIndicador> indSon = gluoProyecto.getGluoIndicadors();
-										
-										for (GluoDetalleProyecto gluoDetalleProyecto : dproySon) {
-											gluoDetalleProyecto.setActivo("N");
-										}
-										for (GluoIndicador gluoIndicador : indSon) {
-											gluoIndicador.setActivo("N");
-											Set<GluoHistorialIndicador> hindSon = gluoIndicador.getGluoHistorialIndicadors();
-											
-											for (GluoHistorialIndicador gluoHistorialIndicador : hindSon) {
-												gluoHistorialIndicador.setActivo("N");
-											}
-										}
-									}
-								}
-							}
+					key = (String) currentSelection.getData();
+					programaMap.remove(key);
+					currentSelection.setType("inactivo");
+					List<OrganigramNode> subprogs = currentSelection.getChildren();
+					Iterator<OrganigramNode> itsp = subprogs.iterator();
+					while(itsp.hasNext()){
+						OrganigramNode organigramNode = itsp.next();
+						
+						
+					}
 						
 					
 					break;
@@ -1575,55 +1564,7 @@ public class OrganigramView implements Serializable {
 							}
 						}
 					break;
-				}
-				case "root":
-					if(sbcModPlanActivo.getValue().toString().equals("false")){
-						key = (String) currentSelection.getData();
-						GluoPlanDesarrollo planSelected = (GluoPlanDesarrollo) this.plan;
-						planSelected.setActivo("N");
-						rootNode.setDraggable(false);
-						rootNode.setDroppable(false);
-						rootNode.setSelectable(false);
-						Set<GluoSectorEjeDimension> ejeSon = planSelected.getGluoSectorEjeDimensions();
-						
-						for (GluoSectorEjeDimension gluoEje : ejeSon) {
-							gluoEje.setActivo("N");
-							Set<GluoObjetivo> objSon = gluoEje.getGluoObjetivos();
-						
-							for (GluoObjetivo gluoObjetivo : objSon) {
-								gluoObjetivo.setActivo("N");
-								Set<GluoPrograma> progSon = gluoObjetivo.getGluoProgramas(); 
-								
-								for (GluoPrograma gluoPrograma : progSon) {
-									gluoPrograma.setActivo("N");
-									Set<GluoSubprograma> sprogSon = gluoPrograma.getGluoSubprogramas();
-									
-									for (GluoSubprograma gluoSubprograma : sprogSon) {
-										gluoSubprograma.setActivo("N");
-										Set<GluoProyecto> proySon = gluoSubprograma.getGluoProyectos();
-										
-										for (GluoProyecto gluoProyecto : proySon) {
-											gluoProyecto.setActivo("N");
-											Set<GluoDetalleProyecto> dproySon = gluoProyecto.getGluoDetalleProyectos();
-											Set<GluoIndicador> indSon = gluoProyecto.getGluoIndicadors();
-											
-											for (GluoDetalleProyecto gluoDetalleProyecto : dproySon) {
-												gluoDetalleProyecto.setActivo("N");
-											}
-											for (GluoIndicador gluoIndicador : indSon) {
-												gluoIndicador.setActivo("N");
-												Set<GluoHistorialIndicador> hindSon = gluoIndicador.getGluoHistorialIndicadors();
-												
-												for (GluoHistorialIndicador gluoHistorialIndicador : hindSon) {
-													gluoHistorialIndicador.setActivo("N");
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					break;
+				
 					}
 					RequestContext.getCurrentInstance().update("form");
 					FacesUtils.addInfoMessage("Se ha inactivado correctamente");
