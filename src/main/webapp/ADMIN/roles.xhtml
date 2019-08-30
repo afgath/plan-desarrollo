@@ -1,0 +1,68 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/WEB-INF/template.xhtml">
+
+	<ui:define name="content">
+
+		<h:form id="formRoles">
+
+			<p:panel id="pnlRoles"
+				style="margin-left: 30%; margin-right: 30%; margin-top: 20px;">
+				<p:growl id="msg" />
+				<p:dataList value="#{rolesVista.losRoles}" var="rol"
+					type="unordered" itemType="none" paginator="true" rows="10"
+					styleClass="paginated">
+					<f:facet name="header">
+            			Roles
+        			</f:facet>
+					<p:commandLink update=":formRoles:detalleRol"
+						oncomplete="PF('dialogRol').hide(); PF('dialogRol').show()"
+						title="Detalles" styleClass="ui-icon ui-icon-search"
+						style="float:left;margin-right:10px">
+						<f:setPropertyActionListener value="#{rol}"
+							target="#{rolesVista.selectRol}" />
+						<h:outputText value="#{rol.nombre}" />
+					</p:commandLink>
+					<h:outputText value="#{rol.nombre}" style="display:inline-block" />
+				</p:dataList>
+			</p:panel>
+
+			<p:dialog header="Información rol" widgetVar="dialogRol" modal="true"
+				showEffect="blind" hideEffect="explode" resizable="false">
+				<p:outputPanel id="detalleRol" style="text-align:center;">
+					<p:panelGrid columns="2"
+						rendered="#{not empty rolesVista.selectRol}"
+						columnClasses="label,value">
+						<f:facet name="header">
+							<p:outputLabel value="#{rolesVista.selectRol.nombre}" />
+						</f:facet>
+
+						<h:outputText value="Activo?" />
+						<p:selectBooleanCheckbox
+							value="#{((rolesVista.selectRol.activo == 'A') ? true : false)}" />
+
+						<h:outputText value="Usuario creador" />
+						<h:outputText value="#{rolesVista.selectRol.usuCreador}" />
+
+						<h:outputText value="Opciones"/>
+						<p:selectManyCheckbox id="opciones"
+							value="#{rolesVista.selectedOpciones}" layout="responsive"
+							columns="1">
+							<f:selectItems value="#{rolesVista.lasOpcionesItem}" />
+						</p:selectManyCheckbox>
+						
+						<p:commandButton value="Guardar cambios"/>
+
+					</p:panelGrid>
+				</p:outputPanel>
+			</p:dialog>
+
+		</h:form>
+
+
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,94 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <script type="text/javascript">
+            function skinChart() {
+                this.cfg.shadow = false;
+                this.cfg.seriesColors = ['#dae8ef', '#27aae1'];
+                this.cfg.grid = {
+                    background: '#f3f5f7',
+                    borderColor: '#e5ebf0',
+                    gridLineColor: '#e5ebf0',
+                    shadow: false
+                };
+                this.cfg.axesDefaults = {
+                    rendererOptions: {
+                        textColor: '#9fadb5'
+                    }
+                };
+                this.cfg.seriesDefaults = {
+                    shadow: false,
+                    markerOptions: {
+                        shadow: false
+                    }
+                }
+            }
+
+            function skinPie() {
+                this.cfg.seriesColors = ['#dae8ef', '#27aae1', '#33ccff', '#9fadb5'];
+                this.cfg.grid = {
+                    background: '#ffffff',
+                    borderColor: '#eaeaea',
+                    gridLineColor: '#e5ebf0',
+                    shadow: false,
+                    borderWidth: 0
+                };
+                this.cfg.seriesDefaults.shadow = false;
+            }
+        </script>
+        <style type="text/css">
+            .jqplot-target, .jqplot-axis {
+                color: #9fadb5;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="content">
+        <div class="Container100">
+            <div class="ContainerIndent">
+                <div class="EmptyBox20"></div>
+
+                <div class="Container50 Responsive">
+                    <div class="ContainerIndent">
+                        <p:panel style="min-height: 300px;">
+                            <i class="icon-user-2 Fs50 Fleft Wid25 hardblue TexAlCenter"></i>
+                            <div class="Fs24 Fright MarTop10 leaden Wid70"><p:outputLabel class="hardblue" value="#{dashboardVista.usuario.usuLogin}"/>, Bienvenido</div>
+                            <div class="EmptyBox10"></div>
+                            <p:separator styleClass="Wid100"></p:separator>
+                            <div class="EmptyBox10"></div>
+                            <i class="icon-key softgray MarRight10 Fs14 Fright"> Your Last Login - 18.08.2014, 18:30</i>
+                            <div class="EmptyBox10"></div>
+                            <p:separator styleClass="Wid100"></p:separator>
+
+                        </p:panel>
+                    </div>
+                </div>
+
+                <div class="Container50 Responsive">
+                    <div class="ContainerIndent">
+                        <p:panel style="min-height: 300px;">
+                            <div class="Container">
+                                <i class=" icon-data-science-inv Fs50 Fleft Wid25 orange TexAlCenter"></i>
+                                <div class="Fs24 Fright MarTop10 leaden Wid70">Reportes</div>
+                                <div class="EmptyBox10"></div>
+                                <p:separator styleClass="Wid100"></p:separator>
+                                <div class="EmptyBox10"></div>
+                                <div class="Fs12 Fright leaden Wid50 TexAlCenter Responsive">Número de usaurios<br/><p:outputLabel class="Fs24 orange" value="#{dashboardVista.totalUsuarios}"/></div>
+                                <div class="Fs12 Fright leaden Wid50 TexAlCenter Responsive">Número de planes<br/><p:outputLabel class="Fs24 red" value="#{dashboardVista.totalPlanes}"/></div>
+                            </div>
+                        </p:panel>
+                    </div>
+                </div>
+
+                <div class="EmptyBox10"></div>
+            </div>
+        </div>
+
+    </ui:define>
+
+</ui:composition>

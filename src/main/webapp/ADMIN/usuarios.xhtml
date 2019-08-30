@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/WEB-INF/template.xhtml">
+
+	<ui:define name="content">
+
+		<h:form id="formUsuarios">
+
+			<p:panel id="pnlUsuarios" header="Usuarios">
+				<p:growl id="msg" />
+				<p:dataTable value="#{usuariosVista.losUsuarios}" var="usuario"
+					paginator="true" rows="10" widgetVar="tablaUsuarios"
+					emptyMessage="No existen usuarios">
+
+					<p:column filterBy="#{usuario.usuLogin}"
+						sortBy="#{usuario.usuLogin}">
+						<f:facet name="header">
+							<h:outputText value="Login" />
+						</f:facet>
+						<h:outputText value="#{usuario.usuLogin}" />
+					</p:column>
+					<p:column filterBy="#{usuario.usuCreador}"
+						sortBy="#{usuario.usuCreador}">
+						<f:facet name="header">
+							<h:outputText value="Usuario creador" />
+						</f:facet>
+						<h:outputText value="#{usuario.usuCreador}" />
+					</p:column>
+					<p:column filterBy="#{usuario.fechaCreacion}"
+						sortBy="#{usuario.fechaCreacion}">
+						<f:facet name="header">
+							<h:outputText value="Usuario creador" />
+						</f:facet>
+						<h:outputText value="#{usuario.fechaCreacion}" />
+					</p:column>
+					<p:column filterBy="#{usuario.activo}"
+						sortBy="#{usuario.activo}">
+						<f:facet name="header">
+							<h:outputText value="Estado" />
+						</f:facet>
+						<h:outputText value="#{usuario.activo=='A' ? 'Activo' : 'Inactivo'}" />
+					</p:column>
+					
+				</p:dataTable>
+			</p:panel>
+			<p:panelGrid columns="1" layout="grid"
+				style="padding-left: 46%; border: none;">
+				<p:commandButton value="Crear Usuario" action="#{usuariosVista.redirectToRegistro()}"/>
+			</p:panelGrid>
+		</h:form>
+
+
+	</ui:define>
+</ui:composition>

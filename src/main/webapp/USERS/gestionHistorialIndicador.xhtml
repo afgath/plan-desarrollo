@@ -1,0 +1,73 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="content">
+
+
+		<h:form id="formPlan">
+
+			<p:panel id="panelDataTableGluoPlanDesarrollo" header="Planes">
+				<p:growl id="men" />
+				<p:dataTable value="#{historialIndicadorVista.data}"
+					var="gluoPlanDesarrollo" paginator="true" rows="5">
+
+
+					<p:column filterBy="#{gluoPlanDesarrollo.nombreAlcalde}"
+						sortBy="#{gluoPlanDesarrollo.nombreAlcalde}">
+						<f:facet name="header">
+							<h:outputText value="Nombre del Alcalde" />
+						</f:facet>
+						<h:outputText value="#{gluoPlanDesarrollo.nombreAlcalde}" />
+					</p:column>
+
+
+					<p:column filterBy="#{gluoPlanDesarrollo.descripcion}"
+						sortBy="#{gluoPlanDesarrollo.descripcion}">
+						<f:facet name="header">
+							<h:outputText value="Descripcion del Plan" />
+						</f:facet>
+						<h:outputText value="#{gluoPlanDesarrollo.descripcion}" />
+					</p:column>
+
+					<p:column filterBy="#{gluoPlanDesarrollo.eslogan}"
+						sortBy="#{gluoPlanDesarrollo.eslogan}">
+						<f:facet name="header">
+							<h:outputText value="Eslogan del Plan" />
+						</f:facet>
+						<h:outputText value="#{gluoPlanDesarrollo.eslogan}" />
+					</p:column>
+
+					<p:column filterBy="#{gluoPlanDesarrollo.anoInicio}"
+						sortBy="#{gluoPlanDesarrollo.anoInicio}">
+						<f:facet name="header">
+							<h:outputText value="Año de Inicio del Plan" />
+						</f:facet>
+						<h:outputText value="#{gluoPlanDesarrollo.anoInicio}" />
+					</p:column>
+
+					<p:column filterBy="#{gluoPlanDesarrollo.anoFin}"
+						sortBy="#{gluoPlanDesarrollo.anoFin}">
+						<f:facet name="header">
+							<h:outputText value="Año de Finalización del Plan" />
+						</f:facet>
+						<h:outputText value="#{gluoPlanDesarrollo.anoFin}" />
+					</p:column>
+
+					<p:column headerText="Opciones">
+						<p:commandButton id="btnVerIndicadores" icon="ui-icon-search"
+							value="Ver indicadores" update="@form" actionListener="#{historialIndicadorVista.cargarIndicador}">
+							<f:attribute name="selectedGluoPlanDesarrollo"
+								value="#{gluoPlanDesarrollo.planId}" />
+						</p:commandButton>
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>
+

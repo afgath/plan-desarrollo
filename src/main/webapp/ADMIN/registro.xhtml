@@ -1,0 +1,71 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/WEB-INF/template.xhtml">
+
+	<ui:define name="content">
+
+		<h:form id="formRegistro" styleClass="panel-center"
+			style="margin-left: 22%; margin-right: 22%; margin-bottom: 10px;">
+
+			<p:panel>
+
+				<p:panel id="pnlInfoUsuario" header="Información Usuario"
+					styleClass="panel-center">
+					<p:panelGrid columns="2" layout="grid"
+						style="padding-left: 15%; border: none;">
+
+						<p:outputLabel value="Login:* " />
+						<p:inputText placeholder="login" style="width: 200px;"
+							binding="#{registroVista.txtLogin}" />
+
+						<p:outputLabel value="Contraseña:* " />
+						<p:password placeholder="contraseña" style="width: 200px;"
+							binding="#{registroVista.passContraseña}" />
+
+						<p:outputLabel value="Repetir Contraseña:* " />
+						<p:password placeholder="repetir contraseña" style="width: 200px;"
+							binding="#{registroVista.passRepetirContraseña}" />
+
+					</p:panelGrid>
+				</p:panel>
+
+				<br></br>
+
+				<p:panel id="pnlPermisos" header="Permisos">
+					<p:panelGrid columns="1" layout="grid" style="border: none;">
+						<p:panelGrid columns="2" layout="grid"
+							style="padding-left: 15%; border: none;">
+
+							<p:outputLabel value="Rol: " />
+							<p:selectCheckboxMenu id="scmRoles"
+								binding="#{registroVista.somRol}"
+								value="#{registroVista.selectRoles}" label="Roles"
+								multiple="true" filter="true" filterMatchMode="startsWith"
+								panelStyle="width:240px" style="width: 200px;">
+								<f:selectItems value="#{registroVista.losRolesItem}" />
+							</p:selectCheckboxMenu>
+
+						</p:panelGrid>
+					</p:panelGrid>
+				</p:panel>
+
+				<p:panel>
+					<p:messages id="messages" autoUpdate="true" closable="true" />
+					<p:panelGrid columns="2" layout="grid"
+						style="padding-left: 20%; border: none;">
+						<p:commandButton value="Registrar"
+							action="#{registroVista.registrarAction}" />
+						<p:commandButton value="Limpiar" />
+					</p:panelGrid>
+				</p:panel>
+
+			</p:panel>
+		</h:form>
+
+
+	</ui:define>
+</ui:composition>
